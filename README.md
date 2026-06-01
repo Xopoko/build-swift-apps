@@ -100,6 +100,92 @@ Install only the tool groups you need:
 See [docs/INSTALL.md](docs/INSTALL.md) for full install instructions,
 dependency profiles, and manual setup notes.
 
+## Token Efficiency
+
+Build Swift Apps is designed to keep startup context small. In Codex-style skill
+loading, the agent starts with lightweight skill metadata: the skill name,
+description, and file pointer. The full `SKILL.md` body is loaded only when that
+skill is selected for the current task.
+
+These estimates are generated with `scripts/token-report.py` using `tiktoken`
+and the `o200k_base` encoding. Different agents may format metadata slightly
+differently, but the split is the important part: small always-visible routing
+metadata, larger instructions on demand.
+
+| Metric | Tokens | Notes |
+| --- | ---: | --- |
+| Startup metadata | 3,935 | Name, description, and file pointer for all 59 skills. |
+| On-demand skill bodies | 36,063 | Full body text loaded only when a skill is selected. |
+| Full `SKILL.md` files | 39,013 | Frontmatter plus body, useful as an audit baseline. |
+
+| Skill | Startup metadata | On-demand body |
+| --- | ---: | ---: |
+| `apple-dev-research` | 58 | 386 |
+| `apple-firmware-inspector` | 78 | 676 |
+| `appstore-ads-operator` | 63 | 843 |
+| `appstore-archive-uploader` | 64 | 800 |
+| `appstore-aso-auditor` | 71 | 687 |
+| `appstore-build-monitor` | 51 | 334 |
+| `appstore-connect-cli` | 56 | 521 |
+| `appstore-crash-insights` | 60 | 494 |
+| `appstore-id-resolver` | 56 | 318 |
+| `appstore-metadata-localizer` | 73 | 893 |
+| `appstore-metadata-sync` | 71 | 856 |
+| `appstore-notary-runner` | 57 | 770 |
+| `appstore-pricing-planner` | 66 | 850 |
+| `appstore-record-creator` | 59 | 570 |
+| `appstore-release-director` | 79 | 726 |
+| `appstore-release-notes-writer` | 67 | 641 |
+| `appstore-release-planner` | 77 | 870 |
+| `appstore-revenuecat-sync` | 72 | 784 |
+| `appstore-review-readiness` | 55 | 969 |
+| `appstore-screenshot-pipeline` | 63 | 973 |
+| `appstore-screenshot-studio` | 64 | 653 |
+| `appstore-screenshot-validator` | 58 | 637 |
+| `appstore-signing-setup` | 56 | 646 |
+| `appstore-subscription-localizer` | 64 | 673 |
+| `appstore-testflight-coordinator` | 55 | 346 |
+| `appstore-wall-publisher` | 79 | 373 |
+| `appstore-workflow-runner` | 65 | 793 |
+| `ios-ettrace-profiler` | 60 | 1,034 |
+| `ios-icon-studio` | 78 | 641 |
+| `ios-intents-architect` | 69 | 556 |
+| `ios-liquid-glass-designer` | 69 | 452 |
+| `ios-memgraph-inspector` | 62 | 581 |
+| `ios-rocketsim-operator` | 68 | 486 |
+| `ios-simulator-debugger` | 62 | 480 |
+| `ios-swiftui-architect` | 71 | 708 |
+| `macos-appkit-bridge` | 87 | 566 |
+| `macos-liquid-glass-designer` | 78 | 593 |
+| `macos-notarization-packager` | 72 | 252 |
+| `macos-runtime-debugger` | 75 | 770 |
+| `macos-signing-inspector` | 73 | 379 |
+| `macos-swiftpm-runner` | 76 | 280 |
+| `macos-swiftui-architect` | 69 | 821 |
+| `macos-telemetry-probe` | 63 | 412 |
+| `macos-test-diagnoser` | 74 | 323 |
+| `macos-view-architect` | 61 | 500 |
+| `macos-window-architect` | 67 | 799 |
+| `swiftpm-build-inspector` | 62 | 457 |
+| `swiftui-performance-inspector` | 61 | 543 |
+| `swiftui-view-architect` | 60 | 481 |
+| `tuist-flaky-test-stabilizer` | 74 | 554 |
+| `tuist-generation-doctor` | 68 | 629 |
+| `tuist-migration-planner` | 66 | 577 |
+| `tuist-workspace-navigator` | 71 | 500 |
+| `xcode-build-baseline` | 57 | 550 |
+| `xcode-build-strategist` | 69 | 880 |
+| `xcode-build-tuner` | 68 | 749 |
+| `xcode-compile-profiler` | 61 | 494 |
+| `xcode-project-auditor` | 59 | 483 |
+| `xcode-ui-test-stabilizer` | 88 | 451 |
+
+Regenerate the report after skill edits:
+
+```bash
+python3 scripts/token-report.py
+```
+
 ## Included Skills
 
 The skill IDs follow a deliberate naming system:
