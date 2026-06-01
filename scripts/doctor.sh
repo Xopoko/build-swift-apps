@@ -19,7 +19,7 @@ Profiles:
   github       GitHub CLI workflows
   tuist        Tuist-generated project workflows
   app-store    App Store Connect, packaging, notarization, signing
-  screenshots  Store screenshot generation scripts and Node dependencies
+  screenshots  Store screenshot capture/generation tools, AXe, and Node dependencies
   performance  ETTrace and build-performance tooling
   firmware     ipsw firmware analysis
   simulator    RocketSim app and bundled CLI
@@ -239,6 +239,7 @@ check_profile() {
       check_executable spctl /usr/sbin/spctl optional "macOS Gatekeeper tool should exist at /usr/sbin/spctl."
       ;;
     screenshots)
+      check_command axe required "Install AXe for asc screenshots capture/run: brew install cameroncooke/axe/axe."
       check_command node required "Install Node.js, for example: brew install node."
       check_command npm required "Install Node.js, for example: brew install node."
       check_screenshot_deps

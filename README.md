@@ -115,8 +115,8 @@ metadata, larger instructions on demand.
 | Metric | Tokens | Notes |
 | --- | ---: | --- |
 | Startup metadata | 3,935 | Name, description, and file pointer for all 59 skills. |
-| On-demand skill bodies | 36,063 | Full body text loaded only when a skill is selected. |
-| Full `SKILL.md` files | 39,013 | Frontmatter plus body, useful as an audit baseline. |
+| On-demand skill bodies | 36,103 | Full body text loaded only when a skill is selected. |
+| Full `SKILL.md` files | 39,053 | Frontmatter plus body, useful as an audit baseline. |
 
 | Skill | Startup metadata | On-demand body |
 | --- | ---: | ---: |
@@ -139,7 +139,7 @@ metadata, larger instructions on demand.
 | `appstore-release-planner` | 77 | 870 |
 | `appstore-revenuecat-sync` | 72 | 784 |
 | `appstore-review-readiness` | 55 | 969 |
-| `appstore-screenshot-pipeline` | 63 | 973 |
+| `appstore-screenshot-pipeline` | 63 | 1,013 |
 | `appstore-screenshot-studio` | 64 | 653 |
 | `appstore-screenshot-validator` | 58 | 637 |
 | `appstore-signing-setup` | 56 | 646 |
@@ -308,7 +308,7 @@ preflight them and fail clearly when missing. Dependency profiles are:
 | `github` | `gh` for GitHub-oriented publishing and issue or PR workflows. |
 | `tuist` | `mise` and `tuist@latest`. |
 | `app-store` | `asc`, `notarytool`, `stapler`, signing tools, and App Store Connect credentials. |
-| `screenshots` | Node.js plus the bundled `appstore-screenshot-studio` script dependency: `sharp`. |
+| `screenshots` | AXe (`axe`) for `asc screenshots capture/run`, plus Node.js and the bundled `appstore-screenshot-studio` script dependency: `sharp`. |
 | `performance` | `ettrace`, Xcode tools, Python helper scripts, and dSYM utilities. |
 | `firmware` | `ipsw`. |
 | `simulator` | RocketSim.app with its bundled Agent Skill and CLI. |

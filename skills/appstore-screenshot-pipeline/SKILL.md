@@ -11,7 +11,7 @@ Defaults: settings `.asc/screenshot.settings.json`, plan `.asc/screenshots.json`
 
 ## Workflow
 
-1. Verify the current CLI surface with `asc screenshots --help` and subcommand help.
+1. Verify the current CLI surface with `asc screenshots --help`, subcommand help, and `axe --version`. If `axe` is missing, install it with `brew install cameroncooke/axe/axe` or run `./scripts/install-deps.sh --profile screenshots`.
 2. Create/update settings with bundle id, project/scheme, UDID, paths, `frame_enabled`, `upload_enabled`, and upload target.
 3. Build/install/launch:
 

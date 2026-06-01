@@ -159,7 +159,7 @@ Profiles:
 | `github` | GitHub publishing and issue or PR workflows | Installs `gh` with Homebrew when missing. |
 | `tuist` | Tuist migration, generated projects, flaky-test/debugging workflows | Installs `mise` with Homebrew when missing, then installs `tuist@latest` through `mise`. |
 | `app-store` | App Store Connect, notarization, packaging, signing | Installs/checks the public `asc` CLI and checks Xcode notarization tools. |
-| `screenshots` | App Store screenshot generation scripts | Installs/checks Node.js, then installs bundled `appstore-screenshot-studio` script dependencies with `npm install --prefix skills/appstore-screenshot-studio/scripts`. |
+| `screenshots` | App Store screenshot capture and generation scripts | Installs/checks AXe (`axe`) for `asc screenshots capture/run`, Node.js, and bundled `appstore-screenshot-studio` script dependencies with `npm install --prefix skills/appstore-screenshot-studio/scripts`. |
 | `performance` | ETTrace and build-performance analysis | Installs `ettrace` with Homebrew when missing. Xcode tools remain manual. |
 | `firmware` | Apple firmware and binary reverse engineering | Installs `ipsw` with Homebrew when missing. |
 | `simulator` | RocketSim simulator interaction workflows | Checks for RocketSim.app and its bundled CLI. Installation is manual through the Mac App Store or RocketSim distribution channel. |
@@ -170,12 +170,12 @@ Profiles:
 Every installable tool is optional. You can skip individual tools:
 
 ```bash
-./scripts/install-deps.sh --all --skip gh --skip asc --skip screenshot-deps --skip ettrace --skip ipsw
+./scripts/install-deps.sh --all --skip gh --skip asc --skip axe --skip screenshot-deps --skip ettrace --skip ipsw
 ```
 
 You can also run the plugin with partial dependencies. Skills that require a
 missing tool should fail early with a clear preflight error. For example, you
-can use SwiftUI refactor skills without `asc`, `screenshot-deps`, `ipsw`, `ettrace`, or
+can use SwiftUI refactor skills without `asc`, `axe`, `screenshot-deps`, `ipsw`, `ettrace`, or
 `RocketSim`.
 
 ## Manual Setup Notes
@@ -267,19 +267,28 @@ Notarization and packaging workflows also use Xcode-provided tools such as
 
 ### Store Screenshot Generation
 
-The `appstore-screenshot-studio` skill bundles Node scripts under `skills/appstore-screenshot-studio/scripts` for
-workspace scaffolding, public App Store metadata lookup, and panel cropping.
-Install those dependencies with:
+Local capture through `asc screenshots capture` and `asc screenshots run` uses
+the AXe simulator automation binary (`axe`) for iOS Simulator accessibility and
+HID control. The `appstore-screenshot-studio` skill also bundles Node scripts
+under `skills/appstore-screenshot-studio/scripts` for workspace scaffolding,
+public App Store metadata lookup, and panel cropping. Install both through the
+profile:
 
 ```bash
 ./scripts/install-deps.sh --profile screenshots
-# or:
+axe --version
+```
+
+Manual install:
+
+```bash
+brew install cameroncooke/axe/axe
 npm install --prefix skills/appstore-screenshot-studio/scripts
 ```
 
 Image generation is intentionally left to the active agent environment or the
-project's own design pipeline. Cropping and workspace setup use local Node
-dependencies only.
+project's own design pipeline. Capture uses `axe`; cropping and workspace setup
+use local Node dependencies.
 
 When runtime cache copies already exist, `install-deps.sh --profile screenshots`
 also installs `sharp` into detected Codex and Claude plugin cache directories so

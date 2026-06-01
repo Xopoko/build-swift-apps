@@ -22,7 +22,7 @@ Profiles:
   github       GitHub CLI workflows
   tuist        Tuist-generated project workflows
   app-store    App Store Connect, packaging, notarization, signing
-  screenshots  Store screenshot generation scripts and Node dependencies
+  screenshots  Store screenshot capture/generation tools, AXe, and Node dependencies
   performance  ETTrace and build-performance tooling
   firmware     ipsw firmware analysis
   simulator    RocketSim app and bundled CLI
@@ -31,7 +31,7 @@ Profiles:
 Options:
   --profile NAME   Add a profile. Can be repeated.
   --all            Install/check every profile.
-  --skip TOOL      Skip a tool. Can be repeated. Examples: gh, node, asc.
+  --skip TOOL      Skip a tool. Can be repeated. Examples: gh, node, asc, axe.
   --dry-run        Print actions without running installers.
   --yes            Do not prompt before installable actions.
   --no-brew        Do not use Homebrew. Print manual instructions instead.
@@ -125,6 +125,7 @@ request_profile_tools() {
       request_tool asc
       ;;
     screenshots)
+      request_tool axe
       request_tool node
       request_tool screenshot-deps
       ;;
@@ -286,6 +287,14 @@ install_asc() {
   brew_install asc "App Store Connect CLI workflows. Configure with: asc auth login --key-id ... --issuer-id ... --private-key /path/to/AuthKey.p8"
 }
 
+install_axe() {
+  if command -v axe >/dev/null 2>&1; then
+    echo "axe already available."
+    return
+  fi
+  brew_install cameroncooke/axe/axe "AXe iOS Simulator accessibility/HID automation used by asc screenshots capture/run"
+}
+
 install_screenshot_deps() {
   local scripts_dirs=()
   local seen="|"
@@ -383,6 +392,7 @@ install_tool() {
     gh) install_gh ;;
     tuist) install_tuist ;;
     asc) install_asc ;;
+    axe) install_axe ;;
     screenshot-deps) install_screenshot_deps ;;
     ettrace) install_ettrace ;;
     ipsw) install_ipsw ;;
