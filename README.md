@@ -26,6 +26,15 @@ one app architecture.
 
 ## Quick Start
 
+### Easiest: Ask Your Agent
+
+For most users, the simplest install path is to paste this prompt into the
+coding agent they already use:
+
+```text
+Install the Build Swift Apps plugin from https://github.com/Xopoko/build-swift-apps on this computer. Follow the repository installation instructions for the agent you are running in, install required dependencies, ask before installing optional tools, run the doctor checks, and report what was installed.
+```
+
 ### Codex
 
 ```bash
