@@ -38,8 +38,8 @@
       "Refactor SwiftUI or AppKit code.",
       "Benchmark and fix Xcode build performance."
     ],
-    "brandColor": "#0A84FF",
-    "composerIcon": "./assets/build-ios-apps-small.svg",
+    "brandColor": "#FF7A00",
+    "composerIcon": "./assets/build-swift-apps-small.png",
     "logo": "./assets/build-swift-apps-icon.png",
     "screenshots": []
   }

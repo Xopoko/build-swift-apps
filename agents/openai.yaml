@@ -1,6 +1,6 @@
 interface:
   display_name: "Build Swift Apps"
   short_description: "Build, debug, profile, test, package, and release Swift apps across iOS and macOS"
-  icon_small: "./assets/build-ios-apps-small.svg"
+  icon_small: "./assets/build-swift-apps-small.png"
   icon_large: "./assets/build-swift-apps-icon.png"
   default_prompt: "Use Build Swift Apps for iOS, macOS, SwiftUI, AppKit, Xcode, SwiftPM, simulator debugging, build performance, App Store Connect, and Apple-platform research workflows."
