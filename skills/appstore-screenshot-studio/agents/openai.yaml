@@ -1,0 +1,4 @@
+interface:
+  display_name: "App Store Screenshot Studio"
+  short_description: "Create App Store screenshots"
+  default_prompt: "Use $appstore-screenshot-studio to create, revise, translate, or scrape store listing screenshots for this app."

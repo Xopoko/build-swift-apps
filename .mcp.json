@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "xcodebuildmcp": {
+      "command": "npx",
+      "args": ["-y", "xcodebuildmcp@latest", "mcp"],
+      "env": {
+        "XCODEBUILDMCP_ENABLED_WORKFLOWS": "simulator,ui-automation,debugging,logging"
+      }
+    },
+    "apple-docs": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://sosumi.ai/mcp"]
+    },
+    "xcode": {
+      "command": "xcrun",
+      "args": ["mcpbridge"],
+      "enabled": false
+    }
+  }
+}

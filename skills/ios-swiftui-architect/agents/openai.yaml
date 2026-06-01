@@ -1,0 +1,4 @@
+interface:
+  display_name: "iOS SwiftUI Architect"
+  short_description: "Apply practical SwiftUI UI patterns"
+  default_prompt: "Use $ios-swiftui-architect to design or refactor this SwiftUI UI with strong default patterns."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "macOS Window Architect"
+  short_description: "Customize SwiftUI window chrome, drag regions, behavior, and placement"
+  default_prompt: "Use $macos-window-architect to tailor SwiftUI macOS windows with scene/window modifiers, including titlebar and toolbar styling, WindowDragGesture drag regions, minimize/restoration behavior, default and ideal placement, plain window style, and launch behavior."

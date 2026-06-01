@@ -1,0 +1,4 @@
+interface:
+  display_name: "macOS View Architect"
+  short_description: "Refactor macOS SwiftUI views and scenes toward stable desktop structure"
+  default_prompt: "Use $macos-view-architect to split oversized macOS scenes, stabilize sidebar and selection structure, extract commands and toolbar logic, and keep AppKit escape hatches narrow."

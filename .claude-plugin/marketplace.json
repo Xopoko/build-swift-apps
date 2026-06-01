@@ -1,0 +1,49 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthropics/claude-code/refs/heads/main/marketplace/marketplace.schema.json",
+  "name": "build-swift-apps",
+  "version": "0.3.5",
+  "owner": {
+    "name": "Build Swift Apps Maintainers",
+    "email": "xopoko@users.noreply.github.com"
+  },
+  "metadata": {
+    "description": "Multi-skill Swift and Apple-platform development plugin for build, debug, simulator, SwiftUI, AppKit, performance, release, and Tuist workflows."
+  },
+  "plugins": [
+    {
+      "name": "build-swift-apps",
+      "description": "Agent skills for building, debugging, profiling, testing, refactoring, and shipping Swift apps across Apple platforms.",
+      "repository": "https://github.com/Xopoko/build-swift-apps",
+      "version": "0.3.5",
+      "author": {
+        "name": "Build Swift Apps Maintainers",
+        "email": "xopoko@users.noreply.github.com",
+        "url": "https://github.com/Xopoko"
+      },
+      "license": "MIT",
+      "category": "development",
+      "keywords": [
+        "swift",
+        "ios",
+        "macos",
+        "swiftui",
+        "appkit",
+        "xcode",
+        "swiftpm",
+        "simulator",
+        "app-store-connect",
+        "tuist"
+      ],
+      "tags": [
+        "swift",
+        "apple-platforms",
+        "xcode",
+        "ios",
+        "macos",
+        "build-tools",
+        "agent-skills"
+      ],
+      "source": "./"
+    }
+  ]
+}

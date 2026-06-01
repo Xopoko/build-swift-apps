@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "build-swift-apps",
+  "displayName": "Build Swift Apps",
+  "version": "0.3.5",
+  "description": "Agent skills for building, debugging, profiling, testing, refactoring, and shipping Swift apps across Apple platforms.",
+  "author": {
+    "name": "Build Swift Apps Maintainers",
+    "email": "xopoko@users.noreply.github.com",
+    "url": "https://github.com/Xopoko"
+  },
+  "homepage": "https://github.com/Xopoko/build-swift-apps",
+  "repository": "https://github.com/Xopoko/build-swift-apps",
+  "license": "MIT",
+  "keywords": [
+    "swift",
+    "ios",
+    "macos",
+    "swiftui",
+    "appkit",
+    "xcode",
+    "swiftpm",
+    "simulator",
+    "app-store-connect",
+    "tuist"
+  ]
+}

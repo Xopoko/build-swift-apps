@@ -1,0 +1,46 @@
+{
+  "name": "build-swift-apps",
+  "version": "0.3.5",
+  "description": "Build, debug, profile, test, package, and release Swift apps across iOS and macOS.",
+  "author": {
+    "name": "Build Swift Apps Maintainers",
+    "url": "https://github.com/Xopoko"
+  },
+  "homepage": "https://github.com/Xopoko/build-swift-apps",
+  "repository": "https://github.com/Xopoko/build-swift-apps",
+  "license": "MIT",
+  "keywords": [
+    "swift",
+    "ios",
+    "macos",
+    "swiftui",
+    "appkit",
+    "xcode",
+    "swiftpm",
+    "simulator",
+    "app-store-connect"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Build Swift Apps",
+    "shortDescription": "Build, refine, debug, test, profile, and ship iOS and macOS apps with Swift workflows",
+    "longDescription": "A Swift development bundle that combines iOS, macOS, SwiftUI, AppKit, Xcode, SwiftPM, simulator debugging, build-performance analysis, App Store Connect, firmware inspection, RocketSim, UI testing, Apple developer search, Tuist, and Apple-platform release workflows.",
+    "developerName": "Build Swift Apps Maintainers",
+    "category": "Coding",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Build or debug an iOS app on a simulator.",
+      "Refactor SwiftUI or AppKit code.",
+      "Benchmark and fix Xcode build performance."
+    ],
+    "brandColor": "#0A84FF",
+    "composerIcon": "./assets/build-ios-apps-small.svg",
+    "logo": "./assets/build-swift-apps-icon.png",
+    "screenshots": []
+  }
+}

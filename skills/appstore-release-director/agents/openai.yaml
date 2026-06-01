@@ -1,0 +1,4 @@
+interface:
+  display_name: "App Store Release Director"
+  short_description: "Ship iOS apps to App Store Connect."
+  default_prompt: "Use $appstore-release-director to publish this iOS app end to end: prepare signing, metadata, screenshots, compliance, build, upload, and submit for review."

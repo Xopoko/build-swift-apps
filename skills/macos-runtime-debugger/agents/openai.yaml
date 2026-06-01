@@ -1,0 +1,4 @@
+interface:
+  display_name: "macOS Runtime Debugger"
+  short_description: "Build and debug macOS apps with shell-first workflows"
+  default_prompt: "Use $macos-runtime-debugger to discover the local project, build it for macOS, launch the app or executable, and summarize the real blocker when something fails."

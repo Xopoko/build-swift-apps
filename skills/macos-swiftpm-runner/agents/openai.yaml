@@ -1,0 +1,4 @@
+interface:
+  display_name: "macOS SwiftPM Runner"
+  short_description: "Build, run, and test macOS Swift packages"
+  default_prompt: "Use $macos-swiftpm-runner to inspect the package graph, build the package, run executable products, and explain SwiftPM-specific failures clearly."

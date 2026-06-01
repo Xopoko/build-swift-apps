@@ -1,0 +1,4 @@
+interface:
+  display_name: "Apple Developer Research"
+  short_description: "Search Apple dev blogs"
+  default_prompt: "Use $apple-dev-research to find strong community blog posts and tutorials from Apple Dev Search."

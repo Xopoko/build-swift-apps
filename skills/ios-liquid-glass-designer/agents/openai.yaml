@@ -1,0 +1,4 @@
+interface:
+  display_name: "iOS Liquid Glass Designer"
+  short_description: "Build SwiftUI Liquid Glass features"
+  default_prompt: "Use $ios-liquid-glass-designer to implement or review a SwiftUI feature using Liquid Glass APIs."
