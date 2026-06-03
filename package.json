@@ -47,7 +47,7 @@
       "./skills/tuist-generation-doctor",
       "./skills/tuist-flaky-test-stabilizer",
       "./skills/tuist-workspace-navigator",
-      "./skills/ios-icon-studio",
+      "./skills/app-icon-studio",
       "./skills/ios-intents-architect",
       "./skills/ios-simulator-debugger",
       "./skills/ios-ettrace-profiler",

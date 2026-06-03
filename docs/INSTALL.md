@@ -154,7 +154,7 @@ Profiles:
 
 | Profile | Covers | Install behavior |
 | --- | --- | --- |
-| `core` | Xcode, SwiftPM, simulator, signing, logging, Python helpers | Installs `python3` and `git` with Homebrew when missing. Xcode is manual. |
+| `core` | Xcode, SwiftPM, simulator, signing, logging, Python helpers, and macOS icon export tools (`sips`, `iconutil`) | Installs `python3` and `git` with Homebrew when missing. Xcode and macOS system tools are manual. |
 | `mcp` | Bundled MCP servers in `.mcp.json` | Installs Node.js, including `node`, `npm`, and `npx`, with Homebrew when missing. |
 | `github` | GitHub publishing and issue or PR workflows | Installs `gh` with Homebrew when missing. |
 | `tuist` | Tuist migration, generated projects, flaky-test/debugging workflows | Installs `mise` with Homebrew when missing, then installs `tuist@latest` through `mise`. |

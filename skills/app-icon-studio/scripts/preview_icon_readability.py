@@ -5,20 +5,26 @@ import shutil
 from pathlib import Path
 
 
-SIZES = [180, 120, 80, 60, 40, 29]
+SIZES = [180, 128, 120, 80, 64, 60, 40, 32, 16]
 
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Create an HTML preview that shows an iOS icon at practical small sizes."
+        description="Create an HTML preview that shows an app icon at practical small sizes."
     )
     parser.add_argument("source_png", type=Path, help="Source icon PNG.")
     parser.add_argument("output_dir", type=Path, help="Directory for preview.html and copied source image.")
-    parser.add_argument("--title", default="iOS App Icon Preview", help="Preview page title.")
+    parser.add_argument("--title", default="App Icon Preview", help="Preview page title.")
+    parser.add_argument(
+        "--mask",
+        choices=("ios", "none"),
+        default="ios",
+        help="Preview with the iOS rounded mask or without masking for macOS-style icons.",
+    )
     return parser.parse_args()
 
 
-def write_preview(source: Path, output_dir: Path, title: str):
+def write_preview(source: Path, output_dir: Path, title: str, mask: str):
     output_dir.mkdir(parents=True, exist_ok=True)
     preview_image = output_dir / "icon-source.png"
     shutil.copy2(source, preview_image)
@@ -34,6 +40,9 @@ def write_preview(source: Path, output_dir: Path, title: str):
         """
         for size in SIZES
     )
+
+    border_radius = "22.37%" if mask == "ios" else "0"
+    fit = "cover" if mask == "ios" else "contain"
 
     html_doc = f"""<!doctype html>
 <html lang="en">
@@ -79,15 +88,15 @@ def write_preview(source: Path, output_dir: Path, title: str):
     }}
     .icon-frame {{
       overflow: hidden;
-      border-radius: 22.37%;
+      border-radius: {border_radius};
       box-shadow: 0 2px 8px rgba(0,0,0,.18);
-      background: #ddd;
+      background: transparent;
     }}
     .icon-frame img {{
       display: block;
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: {fit};
     }}
     .label {{
       font-size: 12px;
@@ -126,7 +135,7 @@ def main() -> int:
     source = args.source_png.expanduser().resolve()
     if not source.exists():
         raise SystemExit(f"error: source file does not exist: {source}")
-    preview = write_preview(source, args.output_dir.expanduser().resolve(), args.title)
+    preview = write_preview(source, args.output_dir.expanduser().resolve(), args.title, args.mask)
     print(preview)
     return 0
 

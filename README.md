@@ -114,12 +114,13 @@ metadata, larger instructions on demand.
 
 | Metric | Tokens | Notes |
 | --- | ---: | --- |
-| Startup metadata | 3,935 | Name, description, and file pointer for all 59 skills. |
-| On-demand skill bodies | 36,103 | Full body text loaded only when a skill is selected. |
-| Full `SKILL.md` files | 39,053 | Frontmatter plus body, useful as an audit baseline. |
+| Startup metadata | 3,918 | Name, description, and file pointer for all 59 skills. |
+| On-demand skill bodies | 36,446 | Full body text loaded only when a skill is selected. |
+| Full `SKILL.md` files | 39,380 | Frontmatter plus body, useful as an audit baseline. |
 
 | Skill | Startup metadata | On-demand body |
 | --- | ---: | ---: |
+| `app-icon-studio` | 61 | 984 |
 | `apple-dev-research` | 58 | 386 |
 | `apple-firmware-inspector` | 78 | 676 |
 | `appstore-ads-operator` | 63 | 843 |
@@ -148,7 +149,6 @@ metadata, larger instructions on demand.
 | `appstore-wall-publisher` | 79 | 373 |
 | `appstore-workflow-runner` | 65 | 793 |
 | `ios-ettrace-profiler` | 60 | 1,034 |
-| `ios-icon-studio` | 78 | 641 |
 | `ios-intents-architect` | 69 | 556 |
 | `ios-liquid-glass-designer` | 69 | 452 |
 | `ios-memgraph-inspector` | 62 | 581 |
@@ -190,6 +190,7 @@ python3 scripts/token-report.py
 
 The skill IDs follow a deliberate naming system:
 
+- `app-icon-studio` for cross-platform Apple app icon generation and export.
 - `appstore-*` for App Store Connect, TestFlight, screenshots, metadata, pricing, and release operations.
 - `ios-*` and `macos-*` for platform-specific runtime, UI, packaging, and debugging work.
 - `swiftui-*`, `xcode-*`, `swiftpm-*`, `tuist-*`, and `apple-*` for framework, build, package, project-generation, and research workflows.
@@ -247,7 +248,7 @@ The skill IDs follow a deliberate naming system:
 | `macos-signing-inspector` | Inspect code signing, entitlements, sandboxing, hardened runtime, and Gatekeeper issues. |
 | `macos-notarization-packager` | Prepare and troubleshoot macOS packaging, signing, and notarization workflows. |
 | `appstore-release-director` | Orchestrate an end-to-end iOS App Store release from local repo state through App Store Connect review readiness. |
-| `ios-icon-studio` | Create, evaluate, export, and install AppIcon asset catalogs for iOS apps. |
+| `app-icon-studio` | Create, evaluate, export, and install iOS AppIcon asset catalogs or macOS .icns bundle icons. |
 | `appstore-screenshot-studio` | Generate, revise, translate, scrape, and crop App Store marketing screenshot panels. |
 
 ### App Store Connect (`asc` CLI)

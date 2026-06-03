@@ -4,12 +4,13 @@
 
 Before generating, reduce the app to a clear icon brief:
 
-- App name and category.
+- App name, category, and target platform: iOS, macOS, or both.
 - Target user and the moment they notice the icon.
 - Core job: what the app helps the user do.
 - Emotional promise: fast, calm, powerful, safe, playful, premium, social, creative, etc.
 - Main differentiator: why this app is not just another app in the category.
-- Existing visual language: brand colors, screenshots, typography, logo, product metaphors.
+- Existing visual language: brand colors, screenshots, typography, logo,
+  product metaphors, and platform conventions.
 - Competitive shelf: what common icons in the category look like and what to avoid copying.
 
 Do not let the icon become a feature list. A good app icon usually represents one of these:
@@ -54,11 +55,11 @@ Generate distinct directions first, then refine one direction. Avoid asking for 
 
 ```text
 Use case: logo-brand
-Asset type: iOS app icon, square 1024x1024 master artwork
-Primary request: create a polished iOS app icon for <app name>, a <category> app that helps <target user> <core job>
+Asset type: Apple-platform app icon, square 1024x1024 master artwork for <iOS|macOS|iOS and macOS>
+Primary request: create a polished app icon for <app name>, a <category> app that helps <target user> <core job>
 Subject: one simplified <object/metaphor> representing <core value>
-Style/medium: premium modern app icon, tactile bitmap illustration, simple bold silhouette, no text
-Composition/framing: centered subject, large readable shape, generous safe margin for iOS rounded mask
+Style/medium: premium modern Apple app icon, tactile bitmap illustration, simple bold silhouette, no text
+Composition/framing: centered subject, large readable shape, generous safe margin for platform masks and small sizes
 Color palette: <brand colors or 2-4 high-contrast colors>
 Constraints: no words, no UI screenshot, no watermark, no flags, no tiny details, no baked rounded corners, no transparent background
 ```
@@ -67,23 +68,36 @@ Constraints: no words, no UI screenshot, no watermark, no flags, no tiny details
 
 ```text
 Use case: logo-brand
-Asset type: iOS app icon, square 1024x1024 master artwork
+Asset type: Apple-platform app icon, square 1024x1024 master artwork
 Primary request: create a distinctive abstract app icon mark for <app name>, expressing <core motion/transformation>
 Subject: one bold geometric symbol based on <metaphor>
-Style/medium: clean premium iOS icon, memorable silhouette, subtle depth, vector-friendly but rendered as polished bitmap
+Style/medium: clean premium Apple app icon, memorable silhouette, subtle depth, vector-friendly but rendered as polished bitmap
 Composition/framing: centered, simple, readable at 60 px
 Color palette: <palette>
 Constraints: no letters, no words, no UI, no tiny lines, no generic gradient blob, no baked rounded corners
+```
+
+### macOS Utility / Developer Tool
+
+```text
+Use case: logo-brand
+Asset type: macOS app icon, square 1024x1024 master artwork
+Primary request: create a polished macOS app icon for <app name>, a utility that helps <target user> <core job>
+Subject: one dimensional <object/metaphor> representing <core value>, with at most one supporting detail
+Style/medium: premium modern macOS app icon, dimensional bitmap illustration, simple readable silhouette, no text
+Composition/framing: centered object, readable at 32 px and 16 px, safe margin, no baked iOS rounded mask
+Color palette: <2-4 colors with strong shape contrast>
+Constraints: no words, no UI screenshot, no watermark, no flags, no tiny numbers, no clutter
 ```
 
 ### Human Communication / Voice / Translation
 
 ```text
 Use case: logo-brand
-Asset type: iOS app icon, square 1024x1024 master artwork
+Asset type: Apple-platform app icon, square 1024x1024 master artwork
 Primary request: create a memorable app icon for a live voice translation app
 Subject: two clearly human side-profile heads facing each other with a simple flowing voice wave between them
-Style/medium: minimal premium iOS app icon, tactile paper or soft 3D shapes, strong silhouette, warm and trustworthy
+Style/medium: minimal premium Apple app icon, tactile paper or soft 3D shapes, strong silhouette, warm and trustworthy
 Composition/framing: heads large, faces unmistakably head-like with forehead/nose/mouth/chin cues, wave centered, safe margin for iOS mask
 Color palette: light neutral background, one dark cool head, one warm coral head, small purple/orange voice wave accent
 Constraints: no kidney/bean-shaped heads, no text, no flags, no UI screenshot, no tiny waveform lines, no baked rounded corners, no transparent background
@@ -105,7 +119,8 @@ Review every candidate as if it is already on the App Store and home screen:
 
 - Can I describe it in five words?
 - Would I recognize it in a grid of 30 apps?
-- Is the main symbol still visible at `60x60`?
+- Is the main symbol still visible at `60x60` for iOS and `32x32` or `16x16`
+  for macOS?
 - Does it avoid accidental meanings, such as body organs, flags, political symbols, or medical cues?
 - Does it communicate benefit or identity, not only functionality?
 - Does it look like an app icon, not a poster, sticker, screenshot, or logo mockup?

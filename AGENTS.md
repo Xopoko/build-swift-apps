@@ -35,7 +35,7 @@ generic and reusable.
 | iOS simulator and runtime evidence | `ios-simulator-debugger`, `ios-rocketsim-operator`, `ios-ettrace-profiler`, `ios-memgraph-inspector`, `swiftui-performance-inspector` |
 | SwiftUI, AppKit, and product UI | `ios-swiftui-architect`, `macos-swiftui-architect`, `swiftui-view-architect`, `macos-view-architect`, `macos-appkit-bridge`, `macos-window-architect`, `ios-intents-architect`, `macos-liquid-glass-designer`, `ios-liquid-glass-designer` |
 | Xcode build performance | `xcode-build-strategist`, `xcode-build-baseline`, `xcode-compile-profiler`, `xcode-project-auditor`, `swiftpm-build-inspector`, `xcode-build-tuner` |
-| Release and distribution | `macos-signing-inspector`, `macos-notarization-packager`, and the `appstore-*` App Store Connect skills |
+| Release and distribution | `app-icon-studio`, `macos-signing-inspector`, `macos-notarization-packager`, and the `appstore-*` App Store Connect skills |
 | Tuist and generated projects | `tuist-migration-planner`, `tuist-workspace-navigator`, `tuist-generation-doctor`, `tuist-flaky-test-stabilizer` |
 | Research and low-level Apple work | `apple-dev-research`, `apple-firmware-inspector` |
 

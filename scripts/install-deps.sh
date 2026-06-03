@@ -209,13 +209,15 @@ install_xcode() {
   command -v xcodebuild >/dev/null 2>&1 || ok=false
   command -v xcrun >/dev/null 2>&1 || ok=false
   command -v swift >/dev/null 2>&1 || ok=false
+  command -v sips >/dev/null 2>&1 || ok=false
+  command -v iconutil >/dev/null 2>&1 || ok=false
 
   if [[ "$ok" == true ]]; then
     echo "Xcode tools already available."
     return
   fi
 
-  require_manual xcode "Install Xcode or run xcode-select --install, then select Xcode with sudo xcode-select -s /Applications/Xcode.app/Contents/Developer when needed."
+  require_manual xcode "Install Xcode or run xcode-select --install, then select Xcode with sudo xcode-select -s /Applications/Xcode.app/Contents/Developer when needed. macOS system tools sips and iconutil are also required for app icon export."
 }
 
 install_git() {

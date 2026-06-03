@@ -1,4 +1,0 @@
-interface:
-  display_name: "iOS Icon Studio"
-  short_description: "Generate and ship readable iOS app icons"
-  default_prompt: "Use $ios-icon-studio to invent, generate, evaluate, export, and install an iOS AppIcon.appiconset."

@@ -215,6 +215,8 @@ check_profile() {
       check_executable codesign /usr/bin/codesign optional "Install Xcode or Command Line Tools."
       check_executable security /usr/bin/security optional "macOS keychain tool should exist at /usr/bin/security."
       check_executable plutil /usr/bin/plutil optional "macOS plist tool should exist at /usr/bin/plutil."
+      check_executable sips /usr/bin/sips required "macOS image utility should exist at /usr/bin/sips."
+      check_executable iconutil /usr/bin/iconutil required "macOS icon utility should exist at /usr/bin/iconutil."
       check_executable spctl /usr/sbin/spctl optional "macOS Gatekeeper tool should exist at /usr/sbin/spctl."
       ;;
     mcp)
