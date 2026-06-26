@@ -1,89 +1,39 @@
 ---
 name: appstore-review-readiness
-description: Validate App Store submission readiness, submit prepared versions, monitor or cancel review status, and repair common ASC blockers with current `asc` commands.
+description: Validate App Store submission readiness and execute prepared review actions with current `asc` commands. Use after appstore-release-planner chooses the review path, or when the user directly asks to validate, stage, submit, monitor, cancel, or repair ASC review blockers.
 ---
 
 # App Store Review Readiness
 
 Use `asc validate` and current review commands. Do not use legacy submit-preflight or submit-create shortcuts.
 
+For go/no-go planning, first-submission strategy, or choosing which release skill owns a blocker, use `appstore-release-planner` first. This skill owns command execution once the review-readiness path is selected.
+
 Preconditions: auth configured; app/version/build IDs resolved; build processing complete unless using `--wait`; metadata, app info, screenshots, review details, content rights, encryption, pricing, availability, and App Privacy expected complete.
 
-## Readiness
+## Command Plan Helper
+
+For a deterministic dry-run command plan, run the helper from the plugin root:
 
 ```bash
-asc builds info --build-id "BUILD_ID"
-asc validate --app "APP_ID" --version "1.2.3" --platform IOS --output table
-asc validate --app "APP_ID" --version "1.2.3" --platform IOS --strict --output table
-asc validate --app "APP_ID" --version-id "VERSION_ID" --platform IOS --output table
+python3 "$PLUGIN_ROOT/skills/appstore-review-readiness/scripts/review_readiness_plan.py" \
+  --app "APP_ID" --version "1.2.3" --platform IOS --build "BUILD_ID" \
+  --version-id "VERSION_ID" --submission-id "SUBMISSION_ID" \
+  --metadata-dir "./metadata" --include-submit
 ```
 
-Check `processingState=VALID`, encryption, content rights, localizations, screenshots, app-info/privacy URL, digital goods, IAP/subscriptions, and App Privacy.
+The helper prints commands only; it does not call ASC, mutate review state, or read credentials. Pass `--json` for machine-readable output. Pass `--confirming-actions` only after manually verifying that generated `--confirm` commands are intended.
 
-Common repairs:
+## Workflow
 
-```bash
-asc encryption declarations list --app "APP_ID"
-asc encryption declarations create --app "APP_ID" --app-description "Uses standard HTTPS/TLS" \
-  --contains-proprietary-cryptography=false --contains-third-party-cryptography=true \
-  --available-on-french-store=true
-asc encryption declarations assign-builds --id "DECLARATION_ID" --build "BUILD_ID"
-asc encryption declarations exempt-declare --plist "./Info.plist"
+1. Generate the helper plan unless the user requested one specific command.
+2. Run read-only readiness checks first: processed build state, normal validate, strict validate, and version-id validate when available.
+3. Repair blockers in the smallest owning surface: encryption, content rights, metadata, screenshots, IAP/subscriptions, or App Privacy.
+4. Submit only after dry-run output is clean and the user has clearly selected the build/version to send.
+5. Monitor by app, version ID, or submission ID; cancel only when the active submission is identified and the user intends cancellation.
 
-asc apps content-rights view --app "APP_ID"
-asc apps content-rights edit --app "APP_ID" --uses-third-party-content=false
+For macOS App Store review, use the same flow with `--platform MAC_OS`.
 
-asc metadata pull --app "APP_ID" --version "1.2.3" --platform IOS --dir "./metadata"
-asc metadata validate --dir "./metadata" --output table
-asc metadata push --app "APP_ID" --version "1.2.3" --platform IOS --dir "./metadata" --dry-run --output table
+## References
 
-asc screenshots list --version-localization "LOC_ID" --output table
-asc screenshots validate --path "./screenshots" --device-type "IPHONE_65" --output table
-asc validate iap --app "APP_ID" --output table
-asc validate subscriptions --app "APP_ID" --output table
-```
-
-App Privacy publish state is not fully verifiable through the public API; use experimental web flow or confirm manually:
-
-```bash
-asc web privacy pull --app "APP_ID" --out "./privacy.json"
-asc web privacy plan --app "APP_ID" --file "./privacy.json"
-asc web privacy apply --app "APP_ID" --file "./privacy.json"
-asc web privacy publish --app "APP_ID" --confirm
-```
-
-## Submit
-
-```bash
-asc review submit --app "APP_ID" --version "1.2.3" --build "BUILD_ID" --dry-run --output table
-asc review submit --app "APP_ID" --version "1.2.3" --build "BUILD_ID" --confirm
-
-asc publish appstore --app "APP_ID" --ipa "./App.ipa" --version "1.2.3" --submit --dry-run --output table
-asc publish appstore --app "APP_ID" --ipa "./App.ipa" --version "1.2.3" --submit --confirm
-```
-
-Add `--wait` when build processing should be awaited.
-
-Multi-item submissions:
-
-```bash
-asc review submissions-create --app "APP_ID" --platform IOS
-asc review items-add --submission "SUBMISSION_ID" --item-type appStoreVersions --item-id "VERSION_ID"
-asc review items-add --submission "SUBMISSION_ID" --item-type gameCenterChallengeVersions --item-id "GC_CHALLENGE_VERSION_ID"
-asc review submissions-submit --id "SUBMISSION_ID" --confirm
-```
-
-For non-renewing IAPs that must be selected with the next version and public APIs reject the path, use `asc web review iaps attach --app "APP_ID" --iap-id "IAP_ID" --confirm` and document that it is unofficial.
-
-## Monitor / Retry
-
-```bash
-asc status --app "APP_ID"
-asc submit status --id "SUBMISSION_ID"
-asc submit status --version-id "VERSION_ID"
-asc review submissions-list --app "APP_ID" --paginate
-asc submit cancel --id "SUBMISSION_ID" --confirm
-asc review submissions-cancel --id "SUBMISSION_ID" --confirm
-```
-
-For state errors, re-check valid build attachment, export compliance, content rights, localizations/screenshots, review details, pricing/availability, and App Privacy. macOS uses the same review flow with `--platform MAC_OS`.
+- `references/appstore-review-readiness.md` for detailed ASC repair, submit, multi-item submission, monitor, and retry commands.

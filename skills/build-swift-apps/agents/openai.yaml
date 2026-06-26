@@ -1,0 +1,4 @@
+interface:
+  display_name: "Build Swift Apps Router"
+  short_description: "Route Swift and Apple-platform workflows"
+  default_prompt: "Use $build-swift-apps to choose the right Build Swift Apps skill before acting."

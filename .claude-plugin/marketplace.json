@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/anthropics/claude-code/refs/heads/main/marketplace/marketplace.schema.json",
   "name": "build-swift-apps",
-  "version": "0.3.5",
+  "version": "0.3.7",
   "owner": {
     "name": "Build Swift Apps Maintainers",
     "email": "xopoko@users.noreply.github.com"
@@ -14,7 +14,7 @@
       "name": "build-swift-apps",
       "description": "Agent skills for building, debugging, profiling, testing, refactoring, and shipping Swift apps across Apple platforms.",
       "repository": "https://github.com/Xopoko/build-swift-apps",
-      "version": "0.3.5",
+      "version": "0.3.7",
       "author": {
         "name": "Build Swift Apps Maintainers",
         "email": "xopoko@users.noreply.github.com",

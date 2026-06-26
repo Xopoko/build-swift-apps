@@ -102,7 +102,7 @@ When drafting What's New, optionally draft a matching **Promotional Text** (170 
 
 ## Localization Notes
 
-- **Formal register** across all languages — use formal "you" forms (Russian: вы, German: Sie, French: vous, Spanish: usted)
+- **Formal register** across all languages — use formal "you" forms (Russian: vy, German: Sie, French: vous, Spanish: usted)
 - **Cultural adaptation over literal translation** — idioms and playful phrases need local equivalents, not word-for-word translation
 - **Load locale-specific keywords** and echo them in the translated notes (each locale has different keywords)
 - **Account for text expansion** — some languages expand 30-40% vs. English. Aim for 500-1500 chars in English to leave room.

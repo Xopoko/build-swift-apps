@@ -156,7 +156,7 @@ ipsw class-dump dyld_shared_cache_arm64e UIKit --theme github
 
 ## Swift Dumping
 
-**Swift class-dump (WIP):**
+**Swift class-dump:**
 ```bash
 ipsw swift-dump dyld_shared_cache_arm64e SwiftUI
 ```

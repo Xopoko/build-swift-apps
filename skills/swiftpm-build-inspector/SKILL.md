@@ -5,6 +5,8 @@ description: Analyze Swift Package Manager dependencies, plugins, module variant
 
 # SwiftPM Build Inspector
 
+Bundled commands use `$PLUGIN_ROOT` (`$env:PLUGIN_ROOT` in PowerShell; same path suffix) for the plugin root. Set it once: use the host's plugin-root variable when defined (Claude Code: `PLUGIN_ROOT="$CLAUDE_PLUGIN_ROOT"`), otherwise the absolute path of this plugin's root directory.
+
 Gather evidence before recommending package changes. Do not edit manifests/dependencies without explicit approval.
 
 ## Inspect
@@ -21,7 +23,7 @@ Before recommending a local package, prove it is in the project graph: check `XC
 For branch-pinned dependencies:
 
 ```bash
-python3 scripts/check_spm_pins.py --project App.xcodeproj
+python3 "$PLUGIN_ROOT/skills/swiftpm-build-inspector/scripts/check_spm_pins.py" --project App.xcodeproj
 ```
 
 If tags exist, recommend tag pins when appropriate; otherwise recommend a revision hash for determinism. Distinguish intentional branch tracking from missing-tag upstreams.

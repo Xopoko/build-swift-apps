@@ -18,14 +18,14 @@ manual setup instructions for tools that cannot be installed safely.
 
 Profiles:
   core         Xcode, SwiftPM, simulator, signing, logging, Python helpers
-  mcp          Node/npm/npx for bundled MCP servers
+  mcp          Node/npm/npx for bundled MCP servers and browser-preview helpers
   github       GitHub CLI workflows
   tuist        Tuist-generated project workflows
   app-store    App Store Connect, packaging, notarization, signing
   screenshots  Store screenshot capture/generation tools, AXe, and Node dependencies
   performance  ETTrace and build-performance tooling
   firmware     ipsw firmware analysis
-  simulator    RocketSim app and bundled CLI
+  simulator    RocketSim app, bundled CLI, and serve-sim browser mirror prerequisites
   all          All profiles
 
 Options:
@@ -139,6 +139,7 @@ request_profile_tools() {
       ;;
     simulator)
       request_tool xcode
+      request_tool node
       request_tool rocketsim
       ;;
   esac

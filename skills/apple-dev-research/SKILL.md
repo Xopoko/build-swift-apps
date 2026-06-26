@@ -5,6 +5,8 @@ description: Search Apple Dev Search for Swift, SwiftUI, Xcode, iOS, macOS, and 
 
 # Apple Developer Research
 
+Bundled commands use `$PLUGIN_ROOT` (`$env:PLUGIN_ROOT` in PowerShell; same path suffix) for the plugin root. Set it once: use the host's plugin-root variable when defined (Claude Code: `PLUGIN_ROOT="$CLAUDE_PLUGIN_ROOT"`), otherwise the absolute path of this plugin's root directory.
+
 Use Apple Dev Search for Apple-platform community content when the user wants articles, tutorials, or reading material rather than official docs or generic web results. Do not hard-code service counts; query `--counts` when counts matter.
 
 ## Workflow
@@ -20,11 +22,11 @@ Use Apple Dev Search for Apple-platform community content when the user wants ar
 ## Commands
 
 ```bash
-python3 scripts/appledevsearch.py --query 'build speed' --limit 5
-python3 scripts/appledevsearch.py --query '"incremental builds" | "compile time"' --title-only --limit 5
-python3 scripts/appledevsearch.py --query 'swift testing -uikit' --limit 5
-python3 scripts/appledevsearch.py --recent --limit 8
-python3 scripts/appledevsearch.py --counts
+python3 "$PLUGIN_ROOT/skills/apple-dev-research/scripts/appledevsearch.py" --query 'build speed' --limit 5
+python3 "$PLUGIN_ROOT/skills/apple-dev-research/scripts/appledevsearch.py" --query '"incremental builds" | "compile time"' --title-only --limit 5
+python3 "$PLUGIN_ROOT/skills/apple-dev-research/scripts/appledevsearch.py" --query 'swift testing -uikit' --limit 5
+python3 "$PLUGIN_ROOT/skills/apple-dev-research/scripts/appledevsearch.py" --recent --limit 8
+python3 "$PLUGIN_ROOT/skills/apple-dev-research/scripts/appledevsearch.py" --counts
 ```
 
 Use full text for errors/API/framework names; title-only for broad topics. Keep user terminology in at least one query before expanding synonyms.

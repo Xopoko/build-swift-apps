@@ -3,12 +3,23 @@
 Contributions are welcome when they keep the plugin focused on reusable
 Swift and Apple-platform development workflows.
 
+## Repository Relationship
+
+This repository remains the focused install and discovery surface for Swift
+developers. The broader Plug'n Skills hub lives at
+<https://github.com/Xopoko/plug-n-skills> and also contains this plugin under
+`plugins/build-swift-apps`.
+
+Swift-specific skill and packaging changes are welcome here. Portfolio-wide
+installer, marketplace, or cross-plugin policy changes usually belong in the
+hub first, then should be mirrored here when they affect Build Swift Apps.
+
 ## Principles
 
 - Keep every skill narrow, actionable, and evidence-oriented.
 - Prefer references to `shared/` over duplicating long procedures.
-- Keep examples generic; do not include private company names, project names,
-  customer names, credentials, or internal URLs.
+- Keep examples generic; do not include private names, project names,
+  credentials, or internal URLs.
 - Document every new required host tool in `docs/INSTALL.md`,
   `scripts/doctor.sh`, and `scripts/install-deps.sh`.
 - Update all agent packaging surfaces when adding or removing skills.

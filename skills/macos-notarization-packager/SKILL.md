@@ -1,6 +1,6 @@
 ---
 name: macos-notarization-packager
-description: Prepare and troubleshoot packaging, signing, and notarization workflows for macOS distribution. Use when asked to archive a Mac app, validate bundle structure, reason about notarization readiness, or explain distribution-only failures.
+description: Use when preparing or diagnosing macOS Developer ID distribution artifacts, including archives, exported app bundles, bundle structure, hardened runtime, notarization readiness, or distribution-only failures. Not for local signing-only diagnosis or direct `asc notarization` execution.
 ---
 
 # macOS Notarization Packager
@@ -10,6 +10,8 @@ description: Prepare and troubleshoot packaging, signing, and notarization workf
 Use this skill when the work is about shipping the app rather than merely
 running it locally: archives, exported app bundles, notarization readiness,
 hardened runtime, or distribution validation.
+
+Use `macos-signing-inspector` for local signing/trust diagnosis on an existing artifact. Use `appstore-notary-runner` when the artifact is ready and the task is to run `asc notarization` submit/status/log/staple commands.
 
 ## Workflow
 

@@ -15,7 +15,7 @@ Key takeaways:
 - Run scripts should declare inputs and outputs so Xcode can skip unnecessary work.
 - `.xcfilelist` files are appropriate when scripts have many inputs or outputs.
 - Custom frameworks and libraries benefit from module maps, typically by enabling `DEFINES_MODULE`.
-- Module reuse is strongest when related sources compile with consistent options.
+- Module reuse works best when related sources compile with consistent options.
 - Breaking monolithic targets into better-scoped modules can reduce unnecessary rebuilds.
 
 ## Apple: Improving build efficiency with good coding practices

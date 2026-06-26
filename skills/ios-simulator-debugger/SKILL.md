@@ -1,11 +1,13 @@
 ---
 name: ios-simulator-debugger
-description: Build, run, launch, inspect, interact with, and debug iOS simulator apps using XcodeBuildMCP tools, UI descriptions, screenshots, and log capture.
+description: Build, run, launch, inspect, interact with, and debug iOS simulator apps using XcodeBuildMCP tools, UI descriptions, screenshots, and log capture. Prefer ios-simulator-browser for user-facing browser mirrors, visible simulator proof, or SwiftUI preview viewing.
 ---
 
 # iOS Simulator Debugger
 
 Use XcodeBuildMCP for simulator control, build/run, UI inspection, screenshots, interaction, and logs.
+
+If the user should see or interact with the running app, prefer `ios-simulator-browser` after this skill has selected or launched the Simulator. Keep this skill focused on build/run, logs, bundle IDs, UI tree inspection, and headless simulator automation.
 
 ## Workflow
 

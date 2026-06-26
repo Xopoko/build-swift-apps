@@ -1,6 +1,6 @@
 ---
 name: macos-signing-inspector
-description: Inspect signing, entitlements, hardened runtime, and Gatekeeper issues for macOS apps. Use when asked to diagnose code signing failures, missing entitlements, sandbox problems, notarization prerequisites, or trust-policy launch errors.
+description: Use when an existing macOS app or binary needs code-signing, entitlement, hardened runtime, sandbox, Gatekeeper, or trust-policy diagnosis. Not for full distribution packaging or running notarization submissions.
 ---
 
 # macOS Signing Inspector
@@ -10,6 +10,8 @@ description: Inspect signing, entitlements, hardened runtime, and Gatekeeper iss
 Use this skill when the failure smells like codesigning rather than compilation:
 launch refusal, missing entitlement, invalid signature, sandbox mismatch,
 hardened runtime confusion, or trust-policy rejection.
+
+Use `macos-notarization-packager` when the goal is a distributable notarized artifact. Use `appstore-notary-runner` when the next step is executing `asc notarization` submit/status/log/staple commands.
 
 ## Workflow
 

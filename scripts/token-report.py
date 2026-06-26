@@ -18,7 +18,6 @@ class SkillBudget:
     path: Path
     startup_tokens: int
     body_tokens: int
-    full_tokens: int
 
 
 def load_encoder(name: str):
@@ -86,7 +85,6 @@ def collect(skills_dir: Path, plugin_prefix: str, encoding: str) -> tuple[str, l
                 path=relative_path,
                 startup_tokens=count_tokens(startup_line, encoder),
                 body_tokens=count_tokens(body, encoder),
-                full_tokens=count_tokens(skill_path.read_text(encoding="utf-8"), encoder),
             )
         )
 
@@ -96,14 +94,12 @@ def collect(skills_dir: Path, plugin_prefix: str, encoding: str) -> tuple[str, l
 def markdown(mode: str, rows: list[SkillBudget]) -> str:
     startup_total = sum(row.startup_tokens for row in rows)
     body_total = sum(row.body_tokens for row in rows)
-    full_total = sum(row.full_tokens for row in rows)
 
     lines = [
         "| Metric | Tokens | Notes |",
         "| --- | ---: | --- |",
         f"| Startup metadata | {startup_total:,} | Name, description, and file pointer for all {len(rows)} skills. |",
         f"| On-demand skill bodies | {body_total:,} | Full body text loaded only when a skill is selected. |",
-        f"| Full `SKILL.md` files | {full_total:,} | Frontmatter plus body, useful as an audit baseline. |",
         "",
         "| Skill | Startup metadata | On-demand body |",
         "| --- | ---: | ---: |",
@@ -133,7 +129,6 @@ def main() -> int:
                     "skills": len(rows),
                     "startup_tokens": sum(row.startup_tokens for row in rows),
                     "body_tokens": sum(row.body_tokens for row in rows),
-                    "full_tokens": sum(row.full_tokens for row in rows),
                     "rows": [row.__dict__ | {"path": str(row.path)} for row in rows],
                 },
                 indent=2,

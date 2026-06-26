@@ -1,11 +1,13 @@
 ---
 name: appstore-notary-runner
-description: Archive, export, sign, notarize, staple, and troubleshoot macOS Developer ID distribution with xcodebuild and `asc notarization`.
+description: Use for the concrete macOS Developer ID notarization command path with xcodebuild export plus `asc notarization` submit, status, log, and stapling. Not for broad packaging readiness review or signing-only diagnosis.
 ---
 
 # App Store Notary Runner
 
 Use for macOS apps distributed outside the App Store with Developer ID signing and Apple notarization.
+
+Use `macos-notarization-packager` first when the artifact is not clearly distribution-ready. Use `macos-signing-inspector` for local code-signing, entitlement, Gatekeeper, or trust-policy diagnosis.
 
 ## Preconditions
 
@@ -14,79 +16,32 @@ Use for macOS apps distributed outside the App Store with Developer ID signing a
 - Developer ID Application certificate in keychain.
 - App builds for macOS.
 
-## Preflight
+## Command Plan Helper
+
+For a deterministic command plan, run the helper from the plugin root:
 
 ```bash
-security find-identity -v -p codesigning | grep "Developer ID Application"
+python3 "$PLUGIN_ROOT/skills/appstore-notary-runner/scripts/notary_plan.py" \
+  --app-name "YourApp" --scheme "YourMacScheme" \
+  --archive-path "/tmp/YourApp.xcarchive" \
+  --export-path "/tmp/YourAppExport" \
+  --app-path "/tmp/YourAppExport/YourApp.app" \
+  --zip-path "/tmp/YourAppExport/YourApp.zip" \
+  --file "/tmp/YourAppExport/YourApp.zip" \
+  --include-archive --include-export --include-zip --include-submit \
+  --wait --confirming-actions
 ```
 
-If missing, create the cert in Apple Developer; ASC API cannot create Developer ID certs.
+The helper prints commands only; it does not build, export, upload, staple, or change trust settings. Commands that write local files or submit to Apple require `--confirming-actions`. Pass `--json` for machine-readable output.
 
-For trust errors such as `Invalid trust settings` or `errSecInternalComponent`:
+## Workflow
 
-```bash
-security dump-trust-settings 2>&1 | grep -A1 "Developer ID"
-security find-certificate -c "Developer ID Application" -p ~/Library/Keychains/login.keychain-db > /tmp/devid-cert.pem
-security remove-trusted-cert /tmp/devid-cert.pem
-```
+1. Run read-only preflight first: signing identities, trust settings, recent notarization submissions, and existing submission status/log when an ID is known.
+2. If the artifact is not clearly Developer ID ready, route to `macos-notarization-packager` before exporting or submitting.
+3. Archive, export with Developer ID options, verify code-signing authority/timestamp, package as zip/DMG/PKG, then submit.
+4. Fetch status/log output and repair signed nested binaries, hardened runtime, timestamp, or trust issues before retrying.
+5. Staple only after Apple accepts the notarization submission.
 
-Verify chain/timestamp after export:
+## References
 
-```bash
-codesign -dvvv "/tmp/YourAppExport/YourApp.app" 2>&1 | grep -E "Authority|Timestamp"
-```
-
-## Archive, Export, Submit
-
-```bash
-xcodebuild archive -scheme "YourMacScheme" -configuration Release \
-  -archivePath /tmp/YourApp.xcarchive -destination "generic/platform=macOS"
-```
-
-ExportOptions must use `method=developer-id`, `signingStyle=automatic`, and your `teamID`.
-
-```bash
-xcodebuild -exportArchive -archivePath /tmp/YourApp.xcarchive \
-  -exportPath /tmp/YourAppExport -exportOptionsPlist ExportOptions.plist
-ditto -c -k --keepParent "/tmp/YourAppExport/YourApp.app" "/tmp/YourAppExport/YourApp.zip"
-asc notarization submit --file "/tmp/YourAppExport/YourApp.zip" --wait
-```
-
-Custom polling:
-
-```bash
-asc notarization submit --file "/tmp/YourAppExport/YourApp.zip" --wait --poll-interval 30s --timeout 1h
-```
-
-## Status, Logs, Stapling
-
-```bash
-asc notarization status --id "SUBMISSION_ID" --output table
-asc notarization log --id "SUBMISSION_ID"
-asc notarization list --limit 5 --output table
-xcrun stapler staple "/tmp/YourAppExport/YourApp.app"
-```
-
-For DMG:
-
-```bash
-hdiutil create -volname "YourApp" -srcfolder "/tmp/YourAppExport/YourApp.app" -ov -format UDZO "/tmp/YourApp.dmg"
-xcrun stapler staple "/tmp/YourApp.dmg"
-```
-
-For PKG, use a separate Developer ID Installer certificate:
-
-```bash
-productsign --sign "Developer ID Installer: YOUR NAME (TEAM_ID)" unsigned.pkg signed.pkg
-asc notarization submit --file signed.pkg --wait
-```
-
-## Troubleshooting
-
-- Invalid trust settings: remove custom trust overrides as above.
-- Not Developer ID signed: re-export with `method=developer-id`.
-- Missing secure timestamp: use `xcodebuild -exportArchive` or manual `codesign --timestamp`.
-- Large upload timeout: `ASC_UPLOAD_TIMEOUT=5m asc notarization submit --file ./LargeApp.zip --wait`.
-- Invalid result: fetch `asc notarization log --id ...`; common causes are unsigned nested binaries, missing hardened runtime, or embedded libraries without timestamps.
-
-Notes: `asc notarization` uses Apple Notary API v2, streams uploads to Apple's S3 bucket, supports multipart over 5 GB, and should be checked with `asc notarization submit --help`.
+- `references/appstore-notary-runner.md` for detailed preflight, archive, export, submit, status, stapling, DMG, PKG, and troubleshooting commands.

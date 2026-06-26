@@ -4,12 +4,27 @@ This repository is a multi-agent skill pack for Swift and Apple-platform
 development. It should stay generic, public-safe, and useful across Codex,
 Claude Code, Cursor, pi, and manual skill installs.
 
+## Repository Role
+
+This repository is the focused distribution mirror and public landing page for
+the Build Swift Apps plugin. Keep it active and installable for Swift
+developers instead of turning it into a redirect-only archive.
+
+The broader source hub is
+`https://github.com/Xopoko/plug-n-skills`, where this plugin is also maintained
+under `plugins/build-swift-apps` with the rest of the plugin portfolio. When a
+skill, script, reference, manifest, or install contract changes here, keep the
+hub copy aligned before release. When portfolio-wide tooling changes in the
+hub, mirror the Build Swift Apps plugin state back here before publication.
+
 ## Project Shape
 
 - `skills/` contains installable Agent Skills. Each directory must contain one
   `SKILL.md` entrypoint and any local scripts or references that skill needs.
 - `shared/` contains canonical support files used by multiple skills. Link to
   shared files instead of duplicating long guidance.
+- `references/` contains plugin-level audits, ledgers, and routing notes that
+  should not live in hot skill files.
 - `commands/` contains short command entrypoints that delegate to canonical
   skills.
 - `.codex-plugin/`, `.claude-plugin/`, `.cursor-plugin/`, `agents/`, and
@@ -23,16 +38,17 @@ Claude Code, Cursor, pi, and manual skill installs.
 ## Scope
 
 The plugin is for Swift application development across Apple platforms, with the
-strongest coverage for iOS and macOS. Do not add company-specific workflows,
-private service names, customer project names, or credentials. Keep examples
+deepest coverage for iOS and macOS. Do not add private/internal workflows,
+private service names, project names, or credentials. Keep examples
 generic and reusable.
 
 ## Skill Catalog
 
 | Area | Skills |
 | --- | --- |
+| Router | `build-swift-apps` |
 | Build, run, debug, test | `macos-runtime-debugger`, `macos-swiftpm-runner`, `macos-test-diagnoser`, `xcode-ui-test-stabilizer`, `macos-telemetry-probe` |
-| iOS simulator and runtime evidence | `ios-simulator-debugger`, `ios-rocketsim-operator`, `ios-ettrace-profiler`, `ios-memgraph-inspector`, `swiftui-performance-inspector` |
+| iOS simulator and runtime evidence | `ios-simulator-browser`, `ios-simulator-debugger`, `ios-rocketsim-operator`, `ios-ettrace-profiler`, `ios-memgraph-inspector`, `swiftui-performance-inspector` |
 | SwiftUI, AppKit, and product UI | `ios-swiftui-architect`, `macos-swiftui-architect`, `swiftui-view-architect`, `macos-view-architect`, `macos-appkit-bridge`, `macos-window-architect`, `ios-intents-architect`, `macos-liquid-glass-designer`, `ios-liquid-glass-designer` |
 | Xcode build performance | `xcode-build-strategist`, `xcode-build-baseline`, `xcode-compile-profiler`, `xcode-project-auditor`, `swiftpm-build-inspector`, `xcode-build-tuner` |
 | Release and distribution | `app-icon-studio`, `macos-signing-inspector`, `macos-notarization-packager`, and the `appstore-*` App Store Connect skills |
@@ -43,7 +59,7 @@ generic and reusable.
 
 - Prefer small, focused skills over broad catch-all instructions.
 - Put repeated logic in `shared/` and reference it from skills.
-- Do not copy private company workflows into this repository.
+- Do not copy private/internal workflows into this repository.
 - Keep skill descriptions trigger-friendly and specific.
 - Use ASCII by default in repository files.
 - Do not add host-tool assumptions without documenting them in

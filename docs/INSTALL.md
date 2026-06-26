@@ -155,14 +155,14 @@ Profiles:
 | Profile | Covers | Install behavior |
 | --- | --- | --- |
 | `core` | Xcode, SwiftPM, simulator, signing, logging, Python helpers, and macOS icon export tools (`sips`, `iconutil`) | Installs `python3` and `git` with Homebrew when missing. Xcode and macOS system tools are manual. |
-| `mcp` | Bundled MCP servers in `.mcp.json` | Installs Node.js, including `node`, `npm`, and `npx`, with Homebrew when missing. |
+| `mcp` | Bundled MCP servers in `.mcp.json` and browser-preview helpers | Installs Node.js, including `node`, `npm`, and `npx`, with Homebrew when missing. |
 | `github` | GitHub publishing and issue or PR workflows | Installs `gh` with Homebrew when missing. |
 | `tuist` | Tuist migration, generated projects, flaky-test/debugging workflows | Installs `mise` with Homebrew when missing, then installs `tuist@latest` through `mise`. |
 | `app-store` | App Store Connect, notarization, packaging, signing | Installs/checks the public `asc` CLI and checks Xcode notarization tools. |
 | `screenshots` | App Store screenshot capture and generation scripts | Installs/checks AXe (`axe`) for `asc screenshots capture/run`, Node.js, and bundled `appstore-screenshot-studio` script dependencies with `npm install --prefix skills/appstore-screenshot-studio/scripts`. |
 | `performance` | ETTrace and build-performance analysis | Installs `ettrace` with Homebrew when missing. Xcode tools remain manual. |
 | `firmware` | Apple firmware and binary reverse engineering | Installs `ipsw` with Homebrew when missing. |
-| `simulator` | RocketSim simulator interaction workflows | Checks for RocketSim.app and its bundled CLI. Installation is manual through the Mac App Store or RocketSim distribution channel. |
+| `simulator` | RocketSim simulator interaction workflows and `serve-sim` browser mirroring | Checks for RocketSim.app, its bundled CLI, Xcode simulator tools, and Node/npx. RocketSim installation is manual through the Mac App Store or RocketSim distribution channel. |
 | `all` | Every profile above | Combines all checks and install prompts. |
 
 ## Skip Or Select Tools
@@ -323,6 +323,14 @@ The RocketSim skill requires a current RocketSim.app bundle that contains:
 
 The doctor script checks common install paths and the currently running
 RocketSim process, but installation is manual.
+
+### Simulator Browser
+
+The iOS Simulator browser skill uses `npx serve-sim@latest` to mirror a specific
+Simulator UDID into the Codex in-app browser. SwiftUI package previews also use
+the bundled Node launcher at
+`skills/ios-simulator-browser/scripts/swiftui-preview-browser.mjs`, which
+generates a disposable Xcode host project outside the user's source tree.
 
 ## Updating
 

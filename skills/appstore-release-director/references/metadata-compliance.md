@@ -29,7 +29,7 @@ A Privacy Policy URL is required for App Store submission. It must be functional
 
 It should cover:
 
-- App name and company/legal entity.
+- App name and seller/legal entity.
 - Contact email or postal contact.
 - Data collected by the app.
 - Data processed by backend services.
@@ -40,7 +40,7 @@ It should cover:
 - International data transfers if applicable.
 - Effective date and update policy.
 
-If drafting a policy from another company policy, keep the business/legal details but adapt data categories to the current app. Tell the user which facts still need legal owner confirmation.
+If drafting from another app's privacy policy, keep the relevant legal details but adapt data categories to the current app. Tell the user which facts still need legal owner confirmation.
 
 ## Terms Of Use / EULA
 

@@ -15,14 +15,14 @@ Checks host tools used by the Build Swift Apps plugin.
 
 Profiles:
   core         Xcode, SwiftPM, simulator, signing, logging, Python helpers
-  mcp          Node/npm/npx for bundled MCP servers
+  mcp          Node/npm/npx for bundled MCP servers and browser-preview helpers
   github       GitHub CLI workflows
   tuist        Tuist-generated project workflows
   app-store    App Store Connect, packaging, notarization, signing
   screenshots  Store screenshot capture/generation tools, AXe, and Node dependencies
   performance  ETTrace and build-performance tooling
   firmware     ipsw firmware analysis
-  simulator    RocketSim app and bundled CLI
+  simulator    RocketSim app, bundled CLI, and serve-sim browser mirror prerequisites
   all          All profiles
 
 Options:
@@ -259,6 +259,8 @@ check_profile() {
     simulator)
       check_rocketsim
       check_command xcrun required "Install Xcode or Command Line Tools."
+      check_command node required "Install Node.js, for example: brew install node."
+      check_command npx required "Install Node.js, for example: brew install node."
       ;;
   esac
 }

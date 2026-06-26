@@ -1,6 +1,6 @@
 {
   "name": "build-swift-apps",
-  "version": "0.3.5",
+  "version": "0.3.7",
   "description": "Agent skills for building, debugging, profiling, testing, refactoring, and shipping Swift apps across Apple platforms.",
   "license": "MIT",
   "repository": {
@@ -17,6 +17,7 @@
   ],
   "pi": {
     "skills": [
+      "./skills/build-swift-apps",
       "./skills/macos-appkit-bridge",
       "./skills/apple-dev-research",
       "./skills/appstore-release-director",
@@ -50,6 +51,7 @@
       "./skills/app-icon-studio",
       "./skills/ios-intents-architect",
       "./skills/ios-simulator-debugger",
+      "./skills/ios-simulator-browser",
       "./skills/ios-ettrace-profiler",
       "./skills/ios-memgraph-inspector",
       "./skills/apple-firmware-inspector",

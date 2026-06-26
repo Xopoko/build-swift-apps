@@ -1,11 +1,13 @@
 ---
 name: appstore-release-notes-writer
-description: Draft, localize, validate, and upload App Store What's New release notes from git log, bullets, or free text using canonical `./metadata`. Optionally update promotional text.
+description: Use when the requested App Store artifact is What's New release notes or promotional text, drafted from git history, bullets, or free text and optionally localized. Not for full listing translation, canonical metadata field sync, or subscription/IAP display names.
 ---
 
 # App Store Release Notes Writer
 
 Write human-focused release notes, optionally localized to every existing metadata locale.
+
+Use `appstore-metadata-sync` for general listing metadata edits, `appstore-metadata-localizer` for full listing translation, and `appstore-subscription-localizer` for subscription/IAP display-name localization.
 
 ## Preconditions
 
@@ -23,7 +25,7 @@ Write human-focused release notes, optionally localized to every existing metada
    - If absent, ask what changed.
 2. Classify user-visible changes into `New`, `Improved`, `Fixed`; omit empty sections.
 3. Draft primary locale notes:
-   - lead with the strongest hook in the first ~170 chars;
+   - lead with the clearest user-facing hook in the first ~170 chars;
    - describe user impact, not implementation;
    - use concrete action verbs;
    - naturally echo relevant local keywords from `metadata/version/<version>/<locale>.json` when present;

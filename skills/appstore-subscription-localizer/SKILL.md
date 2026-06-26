@@ -1,11 +1,13 @@
 ---
 name: appstore-subscription-localizer
-description: Bulk-create or update App Store subscription, subscription group, and in-app purchase display-name localizations with `asc`. Use to fill missing locales without clicking through App Store Connect.
+description: Use when App Store subscription groups, subscriptions, or in-app purchases need localized display names or descriptions created or updated with `asc`. Not for app listing metadata, What's New release notes, keywords, screenshots, or pricing.
 ---
 
 # App Store Subscription Localizer
 
 Use for subscription/IAP display names and descriptions, not general App Store metadata (`appstore-metadata-localizer` owns that).
+
+Use `appstore-pricing-planner` for price points, availability, or schedules. Use `appstore-revenuecat-sync` when the work also maps ASC products to RevenueCat offerings or entitlements.
 
 ## Preconditions
 
@@ -13,58 +15,27 @@ Use for subscription/IAP display names and descriptions, not general App Store m
 - `APP_ID`, group/subscription/IAP IDs resolved.
 - Products already exist.
 
-Supported locales: `ar-SA, ca, cs, da, de-DE, el, en-AU, en-CA, en-GB, en-US, es-ES, es-MX, fi, fr-CA, fr-FR, he, hi, hr, hu, id, it, ja, ko, ms, nl-NL, no, pl, pt-BR, pt-PT, ro, ru, sk, sv, th, tr, uk, vi, zh-Hans, zh-Hant`.
+## Command Plan Helper
 
-## Commands
-
-Resolve:
+For a deterministic command plan, run the helper from the plugin root:
 
 ```bash
-asc subscriptions groups list --app "APP_ID" --output table
-asc subscriptions list --group-id "GROUP_ID" --output table
-asc iap list --app "APP_ID" --output table
+python3 "$PLUGIN_ROOT/skills/appstore-subscription-localizer/scripts/subscription_localization_plan.py" \
+  --app "APP_ID" --group-id "GROUP_ID" --subscription-id "SUB_ID" --iap-id "IAP_ID" \
+  --locale "en-US,fr-FR" --name "Display Name"
 ```
 
-List existing localizations before creating anything:
+The helper prints commands only; it does not call ASC or change localizations. Create/update commands require `--confirming-actions`. Pass `--json` for machine-readable output.
 
-```bash
-asc subscriptions localizations list --subscription-id "SUB_ID" --paginate --output table
-asc subscriptions groups localizations list --group-id "GROUP_ID" --paginate --output table
-asc iap localizations list --iap-id "IAP_ID" --paginate --output table
-```
+## Workflow
 
-Create missing locales:
+1. Resolve `APP_ID`, group IDs, subscription IDs, IAP IDs, and existing localization IDs before mutation.
+2. List existing localizations before creating anything; duplicate locale creates fail.
+3. Skip locales that already exist unless the user asked to update.
+4. If the user gives one display name, use it for all locales; if they provide per-locale names, honor them.
+5. Pass `--description` only when supplied, usually for IAP localizations.
+6. Process many products sequentially by group for readable output, record per-locale failures, and verify with the matching list command after the batch.
 
-```bash
-asc subscriptions localizations create --subscription-id "SUB_ID" --locale "LOCALE" --name "Display Name"
-asc subscriptions groups localizations create --group-id "GROUP_ID" --locale "LOCALE" --name "Group Display Name"
-asc iap localizations create --iap-id "IAP_ID" --locale "LOCALE" --name "Display Name"
-```
+## References
 
-Optional fields:
-
-```bash
-asc subscriptions groups localizations create --group-id "GROUP_ID" --locale "LOCALE" --name "Group Display Name" --custom-app-name "My App"
-asc iap localizations create --iap-id "IAP_ID" --locale "LOCALE" --name "Unlock All Features" --description "One-time purchase..."
-```
-
-Update existing:
-
-```bash
-asc subscriptions localizations update --id "LOC_ID" --name "New Name"
-asc subscriptions groups localizations update --id "LOC_ID" --name "New Group Name"
-asc iap localizations update --localization-id "LOC_ID" --name "New Name"
-```
-
-For full-app coverage: list groups, localize each group, list each group's subscriptions, localize each subscription, then localize IAPs.
-
-## Agent Rules
-
-- Never create before listing; duplicate locale creates fail.
-- Skip locales that already exist unless the user asked to update.
-- If the user gives one display name, use it for all locales; if they provide per-locale names, honor them.
-- Pass `--description` only when supplied.
-- Use table output for verification, JSON for automation.
-- Process many products sequentially by group for readable output.
-- On per-locale failure, record the locale/error, continue, and report all failures together.
-- Verify with the matching list command after the batch.
+- `references/appstore-subscription-localizer.md` for supported locales and detailed resolve, list, create, update, and batch rules.

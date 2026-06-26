@@ -22,7 +22,6 @@ These sources were used to validate command/tool assumptions and workflow bounda
 - iOS product setup in App Store Connect (store-side creation details):
   - https://www.revenuecat.com/docs/getting-started/entitlements/ios-products
 
-## RevenueCat MCP launch context
+## RevenueCat MCP Context
 
-- Launch post and current beta limitations:
-  - https://www.revenuecat.com/blog/company/introducing-revenuecat-mcp/
+- Check current RevenueCat MCP docs or release notes before relying on beta behavior.

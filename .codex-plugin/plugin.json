@@ -1,7 +1,7 @@
 {
   "name": "build-swift-apps",
-  "version": "0.3.5",
-  "description": "Build, debug, profile, test, package, and release Swift apps across iOS and macOS.",
+  "version": "0.3.7",
+  "description": "Agent skills for building, debugging, profiling, testing, refactoring, and shipping Swift apps across Apple platforms.",
   "author": {
     "name": "Build Swift Apps Maintainers",
     "url": "https://github.com/Xopoko"
@@ -10,15 +10,16 @@
   "repository": "https://github.com/Xopoko/build-swift-apps",
   "license": "MIT",
   "keywords": [
-    "swift",
+    "app-store-connect",
+    "appkit",
     "ios",
     "macos",
-    "swiftui",
-    "appkit",
-    "xcode",
-    "swiftpm",
     "simulator",
-    "app-store-connect"
+    "swift",
+    "swiftpm",
+    "swiftui",
+    "tuist",
+    "xcode"
   ],
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
@@ -39,8 +40,8 @@
       "Benchmark and fix Xcode build performance."
     ],
     "brandColor": "#FF7A00",
-    "composerIcon": "./assets/build-swift-apps-small.png",
-    "logo": "./assets/build-swift-apps-icon.png",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/icon.png",
     "screenshots": []
   }
 }

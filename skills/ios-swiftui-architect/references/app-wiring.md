@@ -2,17 +2,17 @@
 
 ## Intent
 
-Show how to wire the app shell (TabView + NavigationStack + sheets) and install a global dependency graph (environment objects, services, streaming clients, SwiftData ModelContainer) in one place.
+Wire the app shell (TabView + NavigationStack + sheets) and install a global dependency graph (environment objects, services, streaming clients, SwiftData ModelContainer) in one place.
 
 ## Recommended structure
 
 1) Root view sets up tabs, per-tab routers, and sheets.
-2) A dedicated view modifier installs global dependencies and lifecycle tasks (auth state, streaming watchers, push tokens, data containers).
+2) One view modifier installs global dependencies and lifecycle tasks (auth state, streaming watchers, push tokens, data containers).
 3) Feature views pull only what they need from the environment; feature-specific state stays local.
 
 ## Dependency selection
 
-- Use `@Environment` for app-level services, shared clients, theme/configuration, and values that many descendants genuinely need.
+- Use `@Environment` for app-level services, shared clients, theme/configuration, and values many descendants genuinely need.
 - Prefer initializer injection for feature-local dependencies and models. Do not move a dependency into the environment just to avoid passing one or two arguments.
 - Keep mutable feature state out of the environment unless it is intentionally shared across broad parts of the app.
 - Use `@EnvironmentObject` only as a legacy fallback or when the project already standardizes on it for a truly shared object.
@@ -91,7 +91,7 @@ enum Route: Hashable {
 
 ## Dependency graph modifier (generic)
 
-Use a single modifier to install environment objects and handle lifecycle hooks when the active account/client changes. This keeps wiring consistent and avoids forgetting a dependency in call sites.
+A single modifier installs environment objects and handles lifecycle hooks when the active account/client changes — wiring stays consistent and no call site forgets a dependency.
 
 ```swift
 extension View {
@@ -149,7 +149,7 @@ Notes:
 
 ## SwiftData / ModelContainer
 
-Install your `ModelContainer` at the root so all feature views share the same store. Keep the list minimal to the models that need persistence.
+Install your `ModelContainer` at the root so all feature views share the same store (no duplicated stores per sheet or tab). Keep the list minimal to the models that need persistence.
 
 ```swift
 extension View {
@@ -158,8 +158,6 @@ extension View {
   }
 }
 ```
-
-Why: a single container avoids duplicated stores per sheet or tab and keeps data consistent.
 
 ## Sheet routing (enum-driven)
 
@@ -186,7 +184,7 @@ extension View {
 }
 ```
 
-Why: enum-driven sheets keep presentation centralized and testable; adding a new sheet means adding one enum case and one switch branch.
+Adding a new sheet means adding one enum case and one switch branch.
 
 ## When to use
 

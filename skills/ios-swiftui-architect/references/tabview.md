@@ -70,23 +70,8 @@ struct AppView: View {
 
   var body: some View {
     TabView(selection: $selectedTab) {
-      ForEach(availableSections) { section in
-        TabSection(section.title) {
-          ForEach(section.tabs) { tab in
-            Tab(value: tab) {
-              tab.makeContentView(
-                homeTimeline: $timeline,
-                selectedTab: $selectedTab,
-                pinnedFilters: $pinnedFilters
-              )
-            } label: {
-              tab.label
-            }
-            .tabPlacement(tab.tabPlacement)
-          }
-        }
-        .tabPlacement(.sidebarOnly)
-      }
+      // ForEach/TabSection body identical to the previous example;
+      // only the selection binding differs.
     }
   }
 }

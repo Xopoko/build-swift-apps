@@ -5,6 +5,8 @@ description: "Recommend-first Xcode build optimization: benchmark, run specialis
 
 # Xcode Build Strategist
 
+Bundled commands use `$PLUGIN_ROOT` (`$env:PLUGIN_ROOT` in PowerShell; same path suffix) for the plugin root. Set it once: use the host's plugin-root variable when defined (Claude Code: `PLUGIN_ROOT="$CLAUDE_PLUGIN_ROOT"`), otherwise the absolute path of this plugin's root directory.
+
 Entry point for end-to-end Xcode build optimization. Phase 1 recommends only; Phase 2 executes only after explicit approval.
 
 ## Non-Negotiables
@@ -35,7 +37,7 @@ Entry point for end-to-end Xcode build optimization. Phase 1 recommends only; Ph
    - `swiftpm-build-inspector`
 7. Generate `.build-benchmark/optimization-plan.md`:
    ```bash
-   python3 scripts/generate_optimization_report.py \
+   python3 "$PLUGIN_ROOT/skills/xcode-build-strategist/scripts/generate_optimization_report.py" \
      --benchmark .build-benchmark/<artifact>.json \
      --project-path App.xcodeproj \
      --diagnostics .build-benchmark/<diagnostics>.json \

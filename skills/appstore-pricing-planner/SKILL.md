@@ -14,81 +14,27 @@ Use current `asc` pricing families to inspect, dry-run, apply, and verify region
 - Base territory chosen, usually `USA`.
 - Run `asc pricing territories list --paginate` if territory IDs are unknown.
 
-## Subscriptions
+## Command Plan Helper
 
-New product setup:
-
-```bash
-asc subscriptions setup --app "APP_ID" --group-reference-name "Pro" \
-  --reference-name "Pro Monthly" --product-id "com.example.pro.monthly" \
-  --subscription-period ONE_MONTH --locale "en-US" --display-name "Pro Monthly" \
-  --description "Unlock everything" --price "9.99" --price-territory "USA" \
-  --territories "USA,CAN,GBR" --output json
-```
-
-Inspect first:
+For a deterministic command plan, run the helper from the plugin root:
 
 ```bash
-asc subscriptions pricing summary --subscription-id "SUB_ID" --territory "USA"
-asc subscriptions pricing prices list --subscription-id "SUB_ID" --paginate
+python3 "$PLUGIN_ROOT/skills/appstore-pricing-planner/scripts/pricing_plan.py" \
+  --subscription-id "SUB_ID" --territory "USA" \
+  --include-subscription-import --prices-csv "./ppp-prices.csv"
 ```
 
-Bulk PPP update via CSV:
+The helper prints commands only; it does not call ASC, import CSV data, or change prices. Commands that create products, apply imports, set prices, edit availability, or create schedules require `--confirming-actions`. Pass `--json` for machine-readable output.
 
-```csv
-territory,price,start_date,preserved
-IND,2.99,2026-04-01,false
-BRA,4.99,2026-04-01,false
-```
+## Workflow
 
-```bash
-asc subscriptions pricing prices import --subscription-id "SUB_ID" --input "./ppp-prices.csv" --dry-run --output table
-asc subscriptions pricing prices import --subscription-id "SUB_ID" --input "./ppp-prices.csv" --output table
-```
+1. Resolve app, subscription, IAP, territory, and price point IDs before planning mutations.
+2. Inspect summaries and price lists first, especially the base territory and high-revenue localized territories.
+3. For PPP or regional bulk changes, prepare CSV with required `territory` and `price`; optional fields include `currency_code`, `start_date`, `preserved`, `preserve_current_price`, and `price_point_id`.
+4. Dry-run broad subscription CSV imports before applying.
+5. Verify summaries after applying important price, schedule, or availability changes.
+6. Expect propagation delay in App Store Connect/storefronts. Older `asc subscriptions prices ...` paths may exist, but the `pricing` family is canonical.
 
-Required CSV: `territory`, `price`. Optional: `currency_code`, `start_date`, `preserved`, `preserve_current_price`, `price_point_id`. When omitted, price points are resolved automatically.
+## References
 
-Small manual overrides:
-
-```bash
-asc subscriptions pricing prices set --subscription-id "SUB_ID" --price "2.99" --territory "IND"
-asc subscriptions pricing prices set --subscription-id "SUB_ID" --tier 5 --territory "BRA"
-asc subscriptions pricing prices set --subscription-id "SUB_ID" --price-point "PRICE_POINT_ID" --territory "DEU"
-```
-
-Use `--start-date` for scheduled changes and `--preserved` to preserve current price relationship. Enable territories when needed:
-
-```bash
-asc subscriptions pricing availability edit --subscription-id "SUB_ID" --territories "USA,CAN,IND,BRA"
-asc subscriptions pricing availability view --subscription-id "SUB_ID"
-```
-
-## IAP
-
-New product setup:
-
-```bash
-asc iap setup --app "APP_ID" --type NON_CONSUMABLE \
-  --reference-name "Pro Lifetime" --product-id "com.example.pro.lifetime" \
-  --locale "en-US" --display-name "Pro Lifetime" --description "Unlock everything" \
-  --price "9.99" --base-territory "USA" --output json
-```
-
-Inspect and schedule:
-
-```bash
-asc iap pricing summary --iap-id "IAP_ID" --territory "USA"
-asc iap pricing price-points list --iap-id "IAP_ID" --territory "USA" --paginate --price "9.99"
-asc iap pricing schedules create --iap-id "IAP_ID" --base-territory "USA" --price "4.99" --start-date "2026-04-01"
-asc iap pricing schedules view --iap-id "IAP_ID"
-```
-
-Use `--tier` or `--price-point-id`/`--prices` when deterministic tier/ID setup matters.
-
-## Rules
-
-- Prefer `asc subscriptions setup`, `asc iap setup`, `asc subscriptions pricing ...`, and `asc iap pricing ...`.
-- Dry-run broad subscription CSV imports before applying.
-- Verify summaries before and after for important territories.
-- Price changes may take time to propagate in App Store Connect/storefronts.
-- Older `asc subscriptions prices ...` paths may exist, but the `pricing` family is canonical.
+- `references/appstore-pricing-planner.md` for detailed subscription setup, IAP setup, CSV import, manual override, availability, and schedule commands.
