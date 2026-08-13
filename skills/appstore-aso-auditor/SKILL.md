@@ -1,6 +1,6 @@
 ---
 name: appstore-aso-auditor
-description: Run an offline ASO audit on canonical App Store metadata under `./metadata` and, when available, add Astro MCP keyword-gap analysis and Apple app-tag context. Use after `asc metadata pull`.
+description: "App Store ASO audit: analyze canonical `./metadata` offline after `asc metadata pull`; add Astro MCP keyword gaps and Apple app-tag context when available."
 ---
 
 # App Store ASO Auditor

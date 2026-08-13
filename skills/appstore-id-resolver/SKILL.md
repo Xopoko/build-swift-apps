@@ -1,6 +1,6 @@
 ---
 name: appstore-id-resolver
-description: Resolve App Store Connect IDs (apps, builds, versions, groups, testers) from human-friendly names using asc. Use when commands require IDs.
+description: "App Store Connect IDs: resolve apps, builds, versions, groups, testers, and review submissions from names with deterministic `asc` lookups."
 ---
 
 # App Store ID Resolver
@@ -38,8 +38,11 @@ Use this skill to map names to IDs needed by other commands.
 - `asc review submissions-list --app "APP_ID" --paginate`
 
 ## Output tips
-- JSON is default; use `--pretty` for debug.
-- For human viewing, use `--output table` or `--output markdown`.
+- Output defaults are TTY-aware: interactive terminals use tables, while pipes,
+  files, and CI use JSON.
+- For automation, always pass `--output json`; use `--pretty` only when a human
+  needs formatted JSON. For human viewing, use `--output table` or
+  `--output markdown`.
 
 ## Guardrails
 - Prefer `--paginate` on list commands to avoid missing IDs.

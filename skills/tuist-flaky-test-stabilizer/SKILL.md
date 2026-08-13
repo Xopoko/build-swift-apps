@@ -1,6 +1,6 @@
 ---
 name: tuist-flaky-test-stabilizer
-description: Investigate and fix flaky tests using Tuist test insights and local repeated test runs. Use when a user provides a flaky test URL, test case identifier, or asks to find and stabilize flaky tests.
+description: Stabilize flaky Tuist tests identified by test-insights URLs, test case IDs, or inconsistent local runs; covers test and product-code causes.
 ---
 
 # Tuist Flaky Test Stabilizer

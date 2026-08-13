@@ -4,19 +4,6 @@ This repository is a multi-agent skill pack for Swift and Apple-platform
 development. It should stay generic, public-safe, and useful across Codex,
 Claude Code, Cursor, pi, and manual skill installs.
 
-## Repository Role
-
-This repository is the focused distribution mirror and public landing page for
-the Build Swift Apps plugin. Keep it active and installable for Swift
-developers instead of turning it into a redirect-only archive.
-
-The broader source hub is
-`https://github.com/Xopoko/plug-n-skills`, where this plugin is also maintained
-under `plugins/build-swift-apps` with the rest of the plugin portfolio. When a
-skill, script, reference, manifest, or install contract changes here, keep the
-hub copy aligned before release. When portfolio-wide tooling changes in the
-hub, mirror the Build Swift Apps plugin state back here before publication.
-
 ## Project Shape
 
 - `skills/` contains installable Agent Skills. Each directory must contain one

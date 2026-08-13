@@ -1,6 +1,6 @@
 ---
 name: appstore-metadata-localizer
-description: Use when App Store listing text must be translated or market-adapted across locales, including descriptions, keywords, What's New, subtitles, names, privacy text, and App Store Connect languages. Not for non-translation metadata edits, release-note drafting, or subscription/IAP display-name localization.
+description: "App Store listing text: translate and market-adapt descriptions, keywords, What's New, names, subtitles, and privacy text across locales. Excludes non-translation edits, standalone release notes, and IAP/subscription names."
 ---
 
 # App Store Metadata Localizer

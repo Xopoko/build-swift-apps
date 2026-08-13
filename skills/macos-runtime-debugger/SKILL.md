@@ -1,6 +1,6 @@
 ---
 name: macos-runtime-debugger
-description: Build, run, and debug local macOS apps or desktop executables with shell-first Xcode/Swift workflows. Use for Mac app builds, launch scripts, compiler/linker/startup failures, logs, telemetry, or desktop runtime debugging.
+description: "macOS app runtimes: build, launch, and debug Xcode or SwiftPM GUI/CLI targets with shell-first workflows; diagnose compiler, linker, startup, log, and telemetry failures; exclude iOS Simulator work."
 ---
 
 # macOS Runtime Debugger

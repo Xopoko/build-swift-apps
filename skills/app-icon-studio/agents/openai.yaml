@@ -1,4 +1,4 @@
 interface:
   display_name: "App Icon Studio"
-  short_description: "Generate and ship readable iOS and macOS app icons"
+  short_description: "Apple app icons: create and ship"
   default_prompt: "Use $app-icon-studio to invent, generate, evaluate, export, and install iOS AppIcon.appiconset assets or macOS .icns bundle icons."

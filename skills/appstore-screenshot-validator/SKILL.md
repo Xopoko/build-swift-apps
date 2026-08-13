@@ -1,6 +1,6 @@
 ---
 name: appstore-screenshot-validator
-description: Resize, strip alpha, color-convert, validate, and upload App Store screenshots using current `asc screenshots` size data and macOS `sips`.
+description: App Store screenshot validation and upload with live `asc` size data and macOS `sips` to resize, strip alpha, and color-convert copies.
 ---
 
 # App Store Screenshot Validator
@@ -14,7 +14,11 @@ asc screenshots sizes --output table
 asc screenshots sizes --all --output table
 ```
 
-Common anchors: `IPHONE_65` and `IPAD_PRO_3GEN_129`. Use `--all` for other iPhone sizes, Apple TV, Mac, Vision Pro, iMessage, or Watch.
+For apps that run on each device family, the current required anchors are the
+iPhone 6.9-inch slot (`IPHONE_69`) and iPad 13-inch slot
+(`IPAD_PRO_3GEN_129`). Apple accepts the iPhone 6.5-inch slot when 6.9-inch
+screenshots are not provided. Use `--all` for every accepted iPhone size, Apple
+TV, Mac, Vision Pro, iMessage, or Watch slot.
 
 ## Local Audit Helper
 
@@ -22,7 +26,7 @@ After choosing target dimensions from ASC, inspect local screenshots with the bu
 
 ```bash
 python3 "$PLUGIN_ROOT/skills/appstore-screenshot-validator/scripts/screenshot_audit.py" \
-  "./screenshots/iphone" --recursive --allow-size 1284x2778 --allow-rotated --fail-on-alpha
+  "./screenshots/iphone" --recursive --allow-size 1290x2796 --allow-rotated --fail-on-alpha
 ```
 
 The helper reads PNG/JPEG headers only. It does not resize, rewrite, strip alpha, upload, or call ASC. Pass `--json` for machine-readable output.

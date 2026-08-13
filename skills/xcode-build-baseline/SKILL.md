@@ -1,6 +1,6 @@
 ---
 name: xcode-build-baseline
-description: Benchmark Xcode clean, cached-clean, zero-change, and incremental builds with repeatable inputs, timing summaries, and `.build-benchmark/` artifacts.
+description: Benchmark Xcode clean, cached-clean, zero-change, and incremental builds with fixed inputs, timing summaries, and `.build-benchmark/` artifacts.
 ---
 
 # Xcode Build Baseline
@@ -10,6 +10,7 @@ Measure before recommending build-time changes. Do not edit project files while 
 ## Rules
 
 - Keep workspace/project, scheme, configuration, destination, DerivedData path, and warm-up rules consistent.
+- Pin the toolchain: verify the active Xcode with `xcode-select -p` and record it in the artifact. When several Xcode versions are installed, switch with `sudo xcode-select -s /Applications/Xcode.app/Contents/Developer` before the first measured run, never mid-series — a toolchain switch invalidates every prior measurement.
 - Capture clean and incremental behavior separately.
 - Write timestamped JSON artifacts under `.build-benchmark/`.
 - Report medians and spread, not only the fastest run.

@@ -1,6 +1,6 @@
 ---
 name: appstore-release-planner
-description: Answer App Store release go/no-go questions and choose the next focused release skill. Use for readiness planning, first-submission blockers, release sequencing, or deciding whether to stage or submit; use appstore-review-readiness for concrete validate, submit, monitor, cancel, and repair commands.
+description: App Store release go/no-go planning for readiness, first-submission blockers, sequencing, and stage-versus-submit decisions. Routes execution to focused skills; review commands belong to appstore-review-readiness.
 ---
 
 # App Store Release Planner

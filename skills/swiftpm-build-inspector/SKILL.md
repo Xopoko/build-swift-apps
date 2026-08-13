@@ -1,6 +1,6 @@
 ---
 name: swiftpm-build-inspector
-description: Analyze Swift Package Manager dependencies, plugins, module variants, branch pins, package graph shape, macros, binary targets, and CI/local build overhead that slow Xcode builds.
+description: Diagnose SwiftPM graph overhead across dependencies, plugins, module variants, branch pins, macros, binary targets, and slow CI or local Xcode builds.
 ---
 
 # SwiftPM Build Inspector

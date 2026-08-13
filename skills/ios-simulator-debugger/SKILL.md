@@ -1,6 +1,6 @@
 ---
 name: ios-simulator-debugger
-description: Build, run, launch, inspect, interact with, and debug iOS simulator apps using XcodeBuildMCP tools, UI descriptions, screenshots, and log capture. Prefer ios-simulator-browser for user-facing browser mirrors, visible simulator proof, or SwiftUI preview viewing.
+description: Debug iOS Simulator apps with XcodeBuildMCP for build, run, launch, UI inspection, interaction, screenshots, and logs; route user-visible mirrors and SwiftUI previews to `ios-simulator-browser`.
 ---
 
 # iOS Simulator Debugger
@@ -27,7 +27,11 @@ If the user should see or interact with the running app, prefer `ios-simulator-b
 
 ## Logs
 
-Start capture with `mcp__XcodeBuildMCP__start_sim_log_cap` and the app bundle id. Stop with `mcp__XcodeBuildMCP__stop_sim_log_cap` and summarize important lines. For console output, set `captureConsole: true` and relaunch if required.
+Use `mcp__XcodeBuildMCP__build_run_sim` or
+`mcp__XcodeBuildMCP__launch_app_sim`; current XcodeBuildMCP releases capture
+runtime logs automatically and return the log path in the structured result.
+Read that returned file and summarize important lines. Relaunch through the
+same tool when fresh console output is required.
 
 ## Troubleshooting
 

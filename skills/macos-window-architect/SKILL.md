@@ -1,6 +1,6 @@
 ---
 name: macos-window-architect
-description: "Customize macOS 15+ SwiftUI windows and scene behavior: toolbar/title visibility, drag regions, window materials, minimize/restoration, default/ideal placement, launch behavior, and borderless windows."
+description: "macOS 15+ SwiftUI windows: customize toolbar/title chrome, drag regions, materials, minimize/restoration, placement, launch behavior, and borderless styles; prefer SwiftUI before NSWindow."
 ---
 
 # macOS Window Architect

@@ -1,6 +1,6 @@
 ---
 name: macos-swiftpm-runner
-description: Build, run, and test pure SwiftPM-based macOS packages and executables. Use when the repo is package-first, when there is no Xcode project, or when Swift package workflows are the fastest path to diagnosis.
+description: "macOS SwiftPM packages: build, run, and test package-first repositories and executables when `Package.swift` is primary or no Xcode project exists; not for Xcode-only app bundles."
 ---
 
 # macOS SwiftPM Runner

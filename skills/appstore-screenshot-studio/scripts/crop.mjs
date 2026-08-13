@@ -5,7 +5,7 @@ import process from "node:process";
 import sharp from "sharp";
 
 const PRESETS = {
-  iphone: { width: 1284, height: 2778, panels: 3 },
+  iphone: { width: 1290, height: 2796, panels: 3 },
   ipad: { width: 2048, height: 2732, panels: 3 },
 };
 

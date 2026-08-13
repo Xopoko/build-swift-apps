@@ -46,7 +46,9 @@ Use this reference when package dependencies or package plugins are suspected bu
 
 ## Circular Dependency Detection
 
-- SPM supports cyclic *package* dependencies (since May 2024) but not cyclic *target* dependencies.
+- With `swift-tools-version: 6.0` or later, SwiftPM permits a cycle in the
+  package graph only when it does not create a target-level build cycle. Target
+  dependency cycles remain invalid.
 - Circular module dependencies should always be refactored: extract the shared contract (protocols, DTOs) into a separate module that both sides depend on.
 - Check for hidden cycles through transitive dependencies by tracing the full dependency graph.
 

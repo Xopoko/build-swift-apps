@@ -1,6 +1,6 @@
 ---
 name: ios-memgraph-inspector
-description: Capture, inspect, compare, and prove iOS leaks with Apple's `leaks`, simulator memgraphs, retain-cycle evidence, and before/after leak summaries.
+description: "iOS memgraph leak analysis: capture, inspect, compare, and prove memory leaks with Apple's `leaks` tool, retain-cycle evidence, and before/after checks."
 ---
 
 # iOS Memgraph Inspector

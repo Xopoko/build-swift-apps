@@ -1,6 +1,6 @@
 ---
 name: appstore-pricing-planner
-description: Set territory-specific subscription and IAP pricing with `asc` setup, pricing summary, CSV import, price-point, availability, and schedule commands. Use for PPP or localized pricing strategies.
+description: App Store subscription and IAP pricing by territory with `asc`, including price points, PPP/localized CSV imports, availability, summaries, and schedules; mutating actions require confirmation.
 ---
 
 # App Store Pricing Planner

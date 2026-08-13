@@ -1,6 +1,6 @@
 ---
 name: appstore-testflight-coordinator
-description: Orchestrate TestFlight distribution, groups, testers, and What to Test notes using asc. Use when rolling out betas.
+description: Coordinate TestFlight beta distribution, groups, testers, and What to Test notes with `asc` for beta rollouts.
 ---
 
 # App Store TestFlight Coordinator

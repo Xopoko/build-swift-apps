@@ -1,6 +1,6 @@
 ---
 name: xcode-build-tuner
-description: Apply approved Xcode build optimization changes and re-benchmark. Use after `xcode-build-strategist` approval, or for explicit build-setting, script-phase, Swift compilation, or SwiftPM graph fixes.
+description: Implement approved Xcode build-speed fixes after strategist approval or explicit requests covering build settings, script phases, Swift compilation, or SwiftPM graphs; re-benchmark results.
 ---
 
 # Xcode Build Tuner

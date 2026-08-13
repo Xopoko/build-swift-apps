@@ -1,6 +1,6 @@
 ---
 name: appstore-signing-setup
-description: Set up App Store Connect bundle IDs, capabilities, certificates, provisioning profiles, local profile install, and encrypted signing sync with `asc`.
+description: App Store signing asset setup with `asc` for bundle IDs, capabilities, certificates, profiles, local install, rotation, and encrypted team sync.
 ---
 
 # App Store Signing Setup

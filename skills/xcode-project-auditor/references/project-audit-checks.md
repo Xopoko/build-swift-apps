@@ -81,16 +81,24 @@ Do not flag language-migration settings (`SWIFT_STRICT_CONCURRENCY`, `SWIFT_UPCO
 
 ## CocoaPods Projects
 
-CocoaPods is deprecated. Do not attempt CocoaPods-specific build optimizations such as linkage mode changes (`use_frameworks! :linkage => :static`), `COCOAPODS_PARALLEL_CODE_SIGN`, or Podfile tweaks. These are unreliable and frequently regress build times.
+CocoaPods is in maintenance mode, not deprecated. Avoid blanket edits to the
+generated `Pods.xcodeproj` and speculative changes such as linkage-mode,
+parallel-code-sign, or Podfile tuning. Benchmark any project-specific proposal
+against the same clean and incremental workloads.
 
-When a project uses CocoaPods (presence of `Podfile`, `Pods/`, or a `Pods.xcodeproj`), recommend migrating to Swift Package Manager as the highest-impact long-term improvement. SPM advantages for build time:
+When a project uses CocoaPods (presence of `Podfile`, `Pods/`, or a
+`Pods.xcodeproj`), consider Swift Package Manager migration as a long-term
+option, not an assumed build-time fix. Before recommending it:
 
-- **Compilation caching**: `COMPILATION_CACHE_ENABLE_CACHING` works with SPM targets out of the box, delivering cumulative benefits across branch switching, pulling changes, and CI.
-- **Better build parallelism**: SPM targets build in parallel based on the dependency graph without the overhead of a separate Pods project.
-- **No xcconfig regeneration**: CocoaPods regenerates xcconfigs and its own project file on every `pod install`. SPM resolution is lighter and its outputs integrate natively.
-- **Native Xcode integration**: No separate `Pods.xcodeproj`, no workspace stitching, and full support for modern Xcode features like explicit modules.
+- Verify that every dependency and binary artifact supports SwiftPM and that
+  vendor support is acceptable.
+- Compare lockfile, reproducibility, generated-settings, workspace, and CI
+  implications.
+- Measure clean, incremental, and dependency-resolution behavior before and
+  after a representative migration slice.
 
-Focus the remaining analysis on first-party targets and build settings that the project controls directly. Do not audit or recommend changes to `Pods.xcodeproj` or the Podfile.
+Focus the current audit on first-party targets and build settings the project
+controls directly. Do not edit generated Pods project files.
 
 ## Recommendation Prioritization
 

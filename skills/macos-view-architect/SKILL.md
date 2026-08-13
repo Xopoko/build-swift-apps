@@ -1,6 +1,6 @@
 ---
 name: macos-view-architect
-description: Refactor macOS SwiftUI views/scenes into small stable subviews, explicit scene roots, command/toolbar ownership, scene-aware state, and narrow AppKit bridges.
+description: "macOS SwiftUI view structure: refactor oversized scenes into subviews, explicit roots, scoped state, command/toolbar ownership, and narrow AppKit bridges."
 ---
 
 # macOS View Architect

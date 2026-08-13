@@ -35,7 +35,7 @@ asc metadata validate --dir "./metadata" --output table
 asc metadata push --app "APP_ID" --version "1.2.3" --platform IOS --dir "./metadata" --dry-run --output table
 
 asc screenshots list --version-localization "LOC_ID" --output table
-asc screenshots validate --path "./screenshots" --device-type "IPHONE_65" --output table
+asc screenshots validate --path "./screenshots" --device-type "IPHONE_69" --output table
 asc validate iap --app "APP_ID" --output table
 asc validate subscriptions --app "APP_ID" --output table
 ```

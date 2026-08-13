@@ -1,6 +1,6 @@
 ---
 name: apple-dev-research
-description: Search Apple Dev Search for Swift, SwiftUI, Xcode, iOS, macOS, and Apple-platform community articles, tutorials, blogs, and write-ups.
+description: "Apple developer articles: search Swift, SwiftUI, Xcode, iOS, and macOS community blogs, tutorials, and write-ups, not official docs."
 ---
 
 # Apple Developer Research

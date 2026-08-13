@@ -8,8 +8,7 @@
       }
     },
     "apple-docs": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "https://sosumi.ai/mcp"]
+      "url": "https://sosumi.ai/mcp"
     },
     "xcode": {
       "command": "xcrun",

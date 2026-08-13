@@ -1,6 +1,6 @@
 ---
 name: swiftui-performance-inspector
-description: Audit SwiftUI runtime performance from code and profiling evidence for slow rendering, janky scrolling, high CPU or memory, excessive updates, hangs, and layout thrash.
+description: Diagnose SwiftUI rendering and update costs from code or profiles when scrolling janks, CPU or memory spikes, views update excessively, layouts thrash, or apps hang.
 ---
 
 # SwiftUI Performance Inspector

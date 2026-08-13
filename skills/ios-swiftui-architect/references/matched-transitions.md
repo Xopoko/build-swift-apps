@@ -7,11 +7,11 @@ Use matched transitions to create smooth continuity between a source view (thumb
 ## Core patterns
 
 - Use a shared `Namespace` and a stable ID for the source.
-- Use `matchedTransitionSource` + `navigationTransition(.zoom(...))` on iOS 26+.
+- Use `matchedTransitionSource` + `navigationTransition(.zoom(...))` on iOS 18+.
 - Use `matchedGeometryEffect` for in-place transitions within a view hierarchy.
 - Keep IDs stable across view updates (avoid random UUIDs).
 
-## Example: media preview to full-screen viewer (iOS 26+)
+## Example: media preview to full-screen viewer (iOS 18+)
 
 ```swift
 struct MediaPreview: View {

@@ -150,10 +150,17 @@ These settings optimize for production builds.
 
 ### Explicit Module Builds
 
-- **Key:** `SWIFT_ENABLE_EXPLICIT_MODULES` (C/ObjC enabled by default in Xcode 16+; for Swift use `_EXPERIMENTAL_SWIFT_EXPLICIT_MODULES`)
-- **Recommended:** Evaluate per-project
-- **Why:** Makes module compilation visible to the build system as discrete tasks, improving parallelism and scheduling. Reduces redundant module rebuilds by making dependency edges explicit. Some projects see regressions due to the overhead of dependency scanning, so benchmark before and after enabling.
-- **Risk:** Medium -- test thoroughly; currently experimental for Swift targets.
+- **Key:** `SWIFT_ENABLE_EXPLICIT_MODULES` (the default for modern Swift targets
+  in Xcode 26; C/Objective-C explicit modules have been enabled by default
+  since Xcode 16)
+- **Recommended:** Leave the current toolchain default enabled. Override it only
+  for a demonstrated regression or an older-toolchain compatibility need.
+- **Why:** Makes module compilation visible to the build system as discrete
+  tasks, improving parallelism and scheduling. Reduces redundant module
+  rebuilds by making dependency edges explicit. Benchmark before and after any
+  override because dependency-scanning costs are project-specific.
+- **Risk:** Medium when overriding the toolchain default; test the affected
+  targets and configurations.
 
 ## Cross-Target Consistency
 

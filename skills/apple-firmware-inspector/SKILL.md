@@ -1,6 +1,6 @@
 ---
 name: apple-firmware-inspector
-description: "Apple firmware and binary reverse engineering with the `ipsw` CLI: IPSW/kernelcache download/extraction, dyld_shared_cache disassembly, private headers, entitlements, Mach-O analysis, Apple internals, KEXTs, and security research."
+description: "Apple firmware: inspect and reverse-engineer IPSWs, kernelcaches, dyld shared caches, private headers, entitlements, Mach-O binaries, KEXTs, and security internals with `ipsw`."
 ---
 
 # Apple Firmware Inspector

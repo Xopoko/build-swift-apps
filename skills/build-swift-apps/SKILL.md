@@ -1,6 +1,6 @@
 ---
 name: build-swift-apps
-description: Route broad or ambiguous Swift and Apple-platform work across the Build Swift Apps skill pack. Use before choosing among adjacent iOS, macOS, SwiftUI, Xcode, simulator, App Store Connect, Tuist, SwiftPM, signing, profiling, or Apple research skills.
+description: Route broad or ambiguous Swift and Apple-platform work to a focused skill; this router does not implement domain work. Covers iOS, macOS, SwiftUI, Xcode, Simulator, App Store Connect, Tuist, SwiftPM, signing, profiling, and Apple research.
 ---
 
 # Build Swift Apps Router

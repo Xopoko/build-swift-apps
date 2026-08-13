@@ -20,6 +20,17 @@ Produce a benchmark artifact that another skill can trust without rerunning the 
 - Incremental builds: 3 measured runs
 - Warm-up: 0 to 1 validation run, excluded from the summary unless the user explicitly wants it included
 
+## Toolchain Pinning
+
+- Verify the active Xcode before measuring: `xcode-select -p`.
+- When multiple Xcode versions are installed, select the intended one before
+  the first measured run: `sudo xcode-select -s /Applications/Xcode.app/Contents/Developer`.
+- `env DEVELOPER_DIR=/Applications/Xcode.app xcodebuild ...` selects a
+  toolchain per command without `sudo`; if used, apply it identically to every
+  measured run.
+- Never switch toolchains mid-series. A switch invalidates every prior run in
+  the artifact; start a new benchmark instead.
+
 ## Clean Build Rules
 
 - Clear build products with `xcodebuild clean` or an equivalent clean-build-folder step before each measured clean run.
@@ -39,7 +50,7 @@ At minimum, keep:
 
 - timestamp
 - host machine info if available
-- Xcode version if available
+- Xcode version and active developer directory (`xcode-select -p`)
 - workspace or project path
 - scheme, configuration, destination
 - exact `xcodebuild` command

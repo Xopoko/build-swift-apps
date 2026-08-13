@@ -1,6 +1,6 @@
 ---
 name: appstore-metadata-sync
-description: Use when App Store listing metadata in canonical `./metadata` JSON needs field edits, validation, push, keyword sync, or legacy fastlane migration. Not for translation-first localization, release-note drafting, or subscription/IAP display-name localizations.
+description: "App Store metadata JSON: edit, validate, push, or sync canonical `./metadata`, plus legacy fastlane migration via `asc migrate`. Excludes translation-first work, standalone release notes, and IAP/subscription names."
 ---
 
 # App Store Metadata Sync

@@ -1,6 +1,6 @@
 ---
 name: appstore-screenshot-pipeline
-description: Orchestrate iOS screenshot automation with xcodebuild/simctl, AXe plans, Koubou framing, review artifacts, and `asc screenshots` upload.
+description: iOS App Store screenshot automation with xcodebuild/simctl capture, AXe plans, Koubou framing, review artifacts, and `asc` upload.
 ---
 
 # App Store Screenshot Pipeline
@@ -62,7 +62,7 @@ Defaults: settings `.asc/screenshot.settings.json`, plan `.asc/screenshots.json`
    Direct upload:
 
    ```bash
-   asc screenshots upload --version-localization "LOC_ID" --path "./screenshots/framed" --device-type "IPHONE_65" --output json
+   asc screenshots upload --version-localization "LOC_ID" --path "./screenshots/framed" --device-type "IPHONE_69" --output json
    ```
 
 ## Locale Capture

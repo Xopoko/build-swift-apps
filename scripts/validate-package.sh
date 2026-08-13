@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# This script is pinned to LF by .gitattributes for portable POSIX execution.
 set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
@@ -9,7 +10,6 @@ json_files=(
   ".codex-plugin/plugin.json"
   ".mcp.json"
   ".claude-plugin/plugin.json"
-  ".claude-plugin/marketplace.json"
   ".cursor-plugin/plugin.json"
   "package.json"
 )

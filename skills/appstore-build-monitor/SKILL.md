@@ -1,6 +1,6 @@
 ---
 name: appstore-build-monitor
-description: Track build processing, find latest builds, and clean up old builds with asc. Use when managing build retention or waiting on processing.
+description: "App Store builds: track processing, find latest builds and next numbers, wait on uploads, or safely expire old builds with `asc`."
 ---
 
 # App Store Build Monitor

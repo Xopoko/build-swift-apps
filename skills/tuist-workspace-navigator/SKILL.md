@@ -1,6 +1,6 @@
 ---
 name: tuist-workspace-navigator
-description: Work productively in Tuist-generated Xcode workspaces. Use for `tuist generate`, generated workspace builds, focused generation, tags, buildable folders, and Xcode build/test commands after generation.
+description: Operate Tuist-generated Xcode workspaces with `tuist generate`, focused generation, tags, buildable folders, and post-generation build or test commands.
 ---
 
 # Tuist Workspace Navigator

@@ -1,6 +1,6 @@
 ---
 name: appstore-revenuecat-sync
-description: Reconcile App Store Connect subscriptions/IAPs with RevenueCat products, entitlements, offerings, and packages using `asc` plus RevenueCat MCP. Use for catalog bootstrap, drift audits, and deterministic product mapping.
+description: App Store Connect and RevenueCat subscription/IAP reconciliation with `asc` and RevenueCat MCP for catalog bootstrap, drift audits, deterministic product/entitlement/offering/package mapping, and no deletions.
 ---
 
 # App Store RevenueCat Sync

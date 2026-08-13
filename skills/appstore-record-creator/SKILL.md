@@ -1,6 +1,6 @@
 ---
 name: appstore-record-creator
-description: Create a new App Store Connect app record through visible browser automation when no public API exists. Use for the New App web form after the bundle ID is registered.
+description: App Store Connect New App creation via visible browser automation after bundle-ID registration for the API-less web form; never store cookies or auto-retry Create.
 ---
 
 # App Store Record Creator

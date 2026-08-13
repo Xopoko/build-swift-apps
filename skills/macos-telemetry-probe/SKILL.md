@@ -1,6 +1,6 @@
 ---
 name: macos-telemetry-probe
-description: Add and verify lightweight macOS runtime telemetry with `Logger`/`os.Logger`, `log stream`, Console filters, signposts, and build-run checks.
+description: "macOS runtime telemetry: add and verify privacy-safe Logger/OSLog events, log stream filters, and signposts; not crash diagnosis."
 ---
 
 # macOS Telemetry Probe

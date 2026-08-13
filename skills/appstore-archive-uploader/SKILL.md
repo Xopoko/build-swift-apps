@@ -1,6 +1,6 @@
 ---
 name: appstore-archive-uploader
-description: Manage Xcode version/build numbers, archive, export, upload, and publish IPA/PKG artifacts with `asc xcode` helpers before TestFlight or App Store submission.
+description: "App Store IPA/PKG archives: set version/build numbers, archive, export, upload, or publish with `asc xcode` before TestFlight/App Store submission."
 ---
 
 # App Store Archive Uploader

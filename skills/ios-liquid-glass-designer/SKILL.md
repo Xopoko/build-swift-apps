@@ -1,6 +1,6 @@
 ---
 name: ios-liquid-glass-designer
-description: Implement, refactor, or review iOS 26+ SwiftUI Liquid Glass features using native `glassEffect`, `GlassEffectContainer`, glass button styles, availability gates, and fallbacks.
+description: Implement, refactor, or review iOS 26+ SwiftUI Liquid Glass with native `glassEffect`, `GlassEffectContainer`, button styles, availability gates, and non-glass fallbacks.
 ---
 
 # iOS Liquid Glass Designer

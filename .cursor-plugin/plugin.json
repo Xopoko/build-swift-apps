@@ -1,8 +1,8 @@
 {
   "name": "build-swift-apps",
   "displayName": "Build Swift Apps",
-  "version": "0.3.5",
-  "description": "Agent skills for building, debugging, profiling, testing, refactoring, and shipping Swift apps across Apple platforms.",
+  "version": "0.3.9",
+  "description": "Build, debug, profile, test, refactor, and release Swift apps across iOS, macOS, Xcode, SwiftUI, SwiftPM, Tuist, and App Store Connect.",
   "author": {
     "name": "Build Swift Apps Maintainers",
     "email": "xopoko@users.noreply.github.com",

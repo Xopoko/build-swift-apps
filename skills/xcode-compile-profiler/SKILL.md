@@ -1,6 +1,6 @@
 ---
 name: xcode-compile-profiler
-description: Analyze Swift and mixed-language compile hotspots from timing summaries, Swift frontend diagnostics, type-checking warnings, CompileSwiftSources, SwiftEmitModule, and related build evidence.
+description: Profile Swift and mixed-language compile bottlenecks from timing summaries, frontend diagnostics, type-check warnings, CompileSwiftSources, and SwiftEmitModule; recommend changes only.
 ---
 
 # Xcode Compile Profiler

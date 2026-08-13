@@ -1,6 +1,6 @@
 ---
 name: appstore-release-director
-description: End-to-end iOS App Store publishing from local repo to App Store Connect readiness, upload, TestFlight, App Review submission/resubmission, or review issue triage, including signing, metadata, privacy, icons, screenshots, subscriptions, and release evidence.
+description: iOS App Store release orchestration from a local repo through signing, metadata, privacy, screenshots, upload, TestFlight, review submission/resubmission, blocker triage, and release evidence.
 ---
 
 # App Store Release Director

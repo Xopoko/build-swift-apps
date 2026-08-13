@@ -1,6 +1,6 @@
 ---
 name: tuist-migration-planner
-description: Migrate existing Xcode projects toward Tuist-generated workspaces. Use when converting hand-maintained Xcode projects, mapping targets/settings/dependencies, or validating generated builds and launches.
+description: Plan Xcode-to-Tuist migrations for hand-maintained projects, including target, setting, and dependency mapping plus generated build, test, signing, and launch parity.
 ---
 
 # Tuist Migration Planner

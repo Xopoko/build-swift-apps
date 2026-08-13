@@ -1,6 +1,6 @@
 ---
 name: ios-intents-architect
-description: Design and implement App Intents, AppEntity, EntityQuery, and App Shortcuts for iOS system surfaces such as Shortcuts, Siri, Spotlight, widgets, controls, and app handoff routes.
+description: Design and implement iOS App Intents, AppEntity, EntityQuery, and App Shortcuts for Siri, Spotlight, widgets, controls, Shortcuts, and app handoff routes.
 ---
 
 # iOS Intents Architect
@@ -46,7 +46,7 @@ Read only what is needed:
 
 Use current Apple Developer docs when APIs or platform behavior may have changed:
 
-- `https://developer.apple.com/documentation/appintents/making-actions-and-content-discoverable-and-widely-available`
+- `https://developer.apple.com/documentation/appintents`
 - `https://developer.apple.com/documentation/appintents/creating-your-first-app-intent`
 - `https://developer.apple.com/documentation/appintents/adopting-app-intents-to-support-system-experiences`
 

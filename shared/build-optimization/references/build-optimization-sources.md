@@ -34,9 +34,10 @@ Key takeaways:
 
 ## Apple: Building your project with explicit module dependencies
 
-Source:
+Sources:
 
 - <https://developer.apple.com/documentation/xcode/building-your-project-with-explicit-module-dependencies>
+- <https://developer.apple.com/documentation/xcode-release-notes/xcode-26-release-notes>
 
 Key takeaways:
 
@@ -44,6 +45,10 @@ Key takeaways:
 - Repeated builds of the same module often point to avoidable module variants.
 - Inconsistent build options across targets can force duplicate module builds.
 - Timing summaries can reveal option drift that prevents module reuse.
+- Starting in Xcode 26, Swift explicit modules are the default for modern Swift
+  targets. Severe compatibility issues can be isolated with
+  `SWIFT_ENABLE_EXPLICIT_MODULES=NO`; Swift language modes earlier than Swift 5
+  and Swift/C++ interoperability targets retain documented exceptions.
 
 ## SwiftLee: Build performance analysis for speeding up Xcode builds
 
@@ -63,7 +68,8 @@ Key takeaways:
 
 Source:
 
-- Xcode Release Notes (149700201)
+- <https://developer.apple.com/documentation/xcode-release-notes/xcode-26-release-notes>
+  (149700201)
 
 Key takeaways:
 
@@ -105,7 +111,9 @@ Source:
 Key takeaways:
 
 - Explicit module builds give `xcodebuild` visibility into smaller compilation tasks for better parallelism.
-- Enabled by default for C/Objective-C in Xcode 16+; experimental for Swift.
+- The article predates Xcode 26's change that makes Swift explicit modules the
+  default for modern Swift targets; use Apple's current release notes for
+  availability and build-setting guidance.
 - Minimizing module variants by aligning build options is the primary optimization lever.
 - Some projects see regressions from dependency scanning overhead -- benchmark before and after.
 
@@ -119,7 +127,9 @@ Key takeaways:
 
 - Granular caching is controlled by `SWIFT_ENABLE_COMPILE_CACHE` and `CLANG_ENABLE_COMPILE_CACHE`, under the umbrella `COMPILATION_CACHE_ENABLE_CACHING` setting.
 - Non-cacheable tasks include `CompileStoryboard`, `CompileXIB`, `CompileAssetCatalogVariant`, `PhaseScriptExecution`, `DataModelCompile`, `CopyPNGFile`, `GenerateDSYMFile`, and `Ld`.
-- SPM dependencies are not yet cacheable as of Xcode 26 beta.
+- Cacheability is task-, toolchain-, and cache-implementation-dependent. Verify
+  current cache hits instead of treating package dependencies as categorically
+  cacheable or non-cacheable.
 
 ## RocketSim Docs: Build Insights
 

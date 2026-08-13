@@ -1,6 +1,6 @@
 ---
 name: app-icon-studio
-description: Create, generate, evaluate, export, install, or debug iOS and macOS app icons, including AppIcon.appiconset assets and macOS .icns bundle icons.
+description: "Apple app icons: create, generate, evaluate, export, install, or debug iOS AppIcon.appiconset and macOS .icns assets for small-size clarity."
 ---
 
 # App Icon Studio

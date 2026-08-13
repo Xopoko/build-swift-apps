@@ -1,6 +1,6 @@
 ---
 name: appstore-crash-insights
-description: Triage TestFlight crashes, beta feedback, hangs, disk writes, launches, and performance diagnostics with `asc` crash/feedback/diagnostics commands.
+description: "TestFlight crash reports: triage crashes, beta feedback, hangs, disk writes, launches, and performance diagnostics with `asc`."
 ---
 
 # App Store Crash Insights
@@ -51,4 +51,9 @@ Resolve IDs with `asc apps list --name "AppName"`, `asc apps list --bundle-id "c
 
 ## Summary
 
-Report total count, top crash signatures, affected builds, device/OS breakdown, timeline/spikes, and highest-weight performance signatures. Default output is JSON; use table/markdown for quick human review, `--paginate` for full analysis, and `--pretty` for JSON debugging. ASC crash data can lag 24-48h.
+Report total count, top crash signatures, affected builds, device/OS breakdown,
+timeline/spikes, and highest-weight performance signatures. Output defaults are
+TTY-aware: interactive terminals use tables, while pipes, files, and CI use
+JSON. Pass `--output json` explicitly for automation, use table/markdown for
+quick human review, `--paginate` for full analysis, and `--pretty` for JSON
+debugging. ASC crash data can lag 24-48h.

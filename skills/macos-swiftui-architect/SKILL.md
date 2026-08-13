@@ -1,6 +1,6 @@
 ---
 name: macos-swiftui-architect
-description: "Build or refactor native macOS SwiftUI scenes and components: windows, commands, toolbars, settings, split views, inspectors, menu bar extras, keyboard workflows, and desktop layouts."
+description: "macOS SwiftUI scenes: build or refactor windows, commands, toolbars, settings, split views, inspectors, menu bar extras, keyboard flows, and desktop layouts; not AppKit-only behavior."
 ---
 
 # macOS SwiftUI Architect

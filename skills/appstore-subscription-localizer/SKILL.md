@@ -1,6 +1,6 @@
 ---
 name: appstore-subscription-localizer
-description: Use when App Store subscription groups, subscriptions, or in-app purchases need localized display names or descriptions created or updated with `asc`. Not for app listing metadata, What's New release notes, keywords, screenshots, or pricing.
+description: "App Store subscription localization: create or update localized display names and descriptions for groups, subscriptions, and IAPs with `asc`; exclude app listing metadata, release notes, keywords, screenshots, and pricing."
 ---
 
 # App Store Subscription Localizer

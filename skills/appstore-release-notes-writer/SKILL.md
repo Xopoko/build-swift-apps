@@ -1,6 +1,6 @@
 ---
 name: appstore-release-notes-writer
-description: Use when the requested App Store artifact is What's New release notes or promotional text, drafted from git history, bullets, or free text and optionally localized. Not for full listing translation, canonical metadata field sync, or subscription/IAP display names.
+description: App Store What's New notes and promotional text from git history, bullets, or prose, with optional localization. Excludes full-listing translation, metadata sync, and subscription/IAP names.
 ---
 
 # App Store Release Notes Writer

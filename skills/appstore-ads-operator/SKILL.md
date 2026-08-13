@@ -1,6 +1,6 @@
 ---
 name: appstore-ads-operator
-description: "Manage Apple Ads with `asc ads`: separate auth, org lookup, campaigns, ad groups, ads, keywords, reports, raw API requests, and safe live testing."
+description: "Apple Ads campaigns: inspect and manage separate auth, orgs, ad groups, creatives, keywords, reports, and API calls; approve live mutations first."
 ---
 
 # App Store Ads Operator

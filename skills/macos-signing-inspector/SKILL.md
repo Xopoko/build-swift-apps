@@ -1,6 +1,6 @@
 ---
 name: macos-signing-inspector
-description: Use when an existing macOS app or binary needs code-signing, entitlement, hardened runtime, sandbox, Gatekeeper, or trust-policy diagnosis. Not for full distribution packaging or running notarization submissions.
+description: "macOS app signing artifacts: inspect code signatures, entitlements, hardened runtime, sandbox, Gatekeeper, and trust failures; exclude distribution packaging and notarization submission."
 ---
 
 # macOS Signing Inspector
@@ -58,3 +58,7 @@ Provide:
 - what signing state it is in
 - the exact failure class
 - the minimum fix or validation sequence
+
+## Resources
+
+- `references/binary-tools.md` — Mach-O inspection (`nm`, `otool`, `llvm-objdump`, `dsymutil`), `.pkg` packaging (`pkgbuild`, `productbuild`), and raw `notarytool` command forms.

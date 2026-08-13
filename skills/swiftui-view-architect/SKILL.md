@@ -1,6 +1,6 @@
 ---
 name: swiftui-view-architect
-description: Refactor SwiftUI view files toward small dedicated subviews, MV-first data flow, stable view trees, explicit dependencies, extracted actions, and correct Observation usage.
+description: Refactor oversized SwiftUI view files into stable, dedicated subviews with MV-first data flow, explicit dependencies, extracted actions, and correct Observation usage.
 ---
 
 # SwiftUI View Architect

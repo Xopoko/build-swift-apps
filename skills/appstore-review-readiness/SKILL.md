@@ -1,6 +1,6 @@
 ---
 name: appstore-review-readiness
-description: Validate App Store submission readiness and execute prepared review actions with current `asc` commands. Use after appstore-release-planner chooses the review path, or when the user directly asks to validate, stage, submit, monitor, cancel, or repair ASC review blockers.
+description: App Store review-readiness execution with current `asc` commands to validate, stage, submit, monitor, cancel, or repair blockers after go/no-go planning. Excludes release strategy; appstore-release-planner owns it.
 ---
 
 # App Store Review Readiness

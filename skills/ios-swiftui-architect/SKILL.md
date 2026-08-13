@@ -1,6 +1,6 @@
 ---
 name: ios-swiftui-architect
-description: "Build or refactor iOS SwiftUI views/components: navigation, TabView, sheets, async state, responsive stacks/grids, state ownership, environment injection, previews, and performance-aware declarative UI."
+description: "iOS SwiftUI views and components: build or refactor navigation, state ownership, async UI, sheets, previews, and responsive layouts; exclude UIKit-only and macOS work."
 ---
 
 # iOS SwiftUI Architect

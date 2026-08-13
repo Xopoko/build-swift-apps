@@ -6,9 +6,15 @@ or IAP display-name/description localization.
 
 ## Supported Locales
 
-`ar-SA, ca, cs, da, de-DE, el, en-AU, en-CA, en-GB, en-US, es-ES, es-MX, fi,
-fr-CA, fr-FR, he, hi, hr, hu, id, it, ja, ko, ms, nl-NL, no, pl, pt-BR, pt-PT,
-ro, ru, sk, sv, th, tr, uk, vi, zh-Hans, zh-Hant`.
+Apple's current App Store localization reference is authoritative. When an App
+Store version ID is available, also check the live CLI catalog with
+`asc localizations supported-locales --version "VERSION_ID" --output table`.
+The 2026-08-11 reference snapshot is:
+
+`ar-SA, bn-BD, ca, cs, da, de-DE, el, en-AU, en-CA, en-GB, en-US, es-ES,
+es-MX, fi, fr-CA, fr-FR, gu-IN, he, hi, hr, hu, id, it, ja, kn-IN, ko, ml-IN,
+mr-IN, ms, nl-NL, no, or-IN, pa-IN, pl, pt-BR, pt-PT, ro, ru, sk, sl-SI, sv,
+ta-IN, te-IN, th, tr, uk, ur-PK, vi, zh-Hans, zh-Hant`.
 
 ## Resolve IDs
 

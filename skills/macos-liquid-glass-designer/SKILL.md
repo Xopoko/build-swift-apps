@@ -1,6 +1,6 @@
 ---
 name: macos-liquid-glass-designer
-description: "Implement, refactor, or review modern macOS SwiftUI Liquid Glass UI: NavigationSplitView, toolbars, search, sheets, controls, system materials, `glassEffect`, `GlassEffectContainer`, and `glassEffectID`."
+description: "macOS SwiftUI Liquid Glass UI: modernize or review system materials, toolbars, search, controls, and custom glass; prefer native structure over hand-built chrome."
 ---
 
 # macOS Liquid Glass Designer

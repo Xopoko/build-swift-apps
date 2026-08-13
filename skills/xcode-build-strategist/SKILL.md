@@ -1,6 +1,6 @@
 ---
 name: xcode-build-strategist
-description: "Recommend-first Xcode build optimization: benchmark, run specialist analyses, prioritize wall-clock findings, request approval, delegate fixes, and re-benchmark. Use for speeding up Xcode builds or full build audits."
+description: "Coordinate end-to-end Xcode build optimization audits with recommend-first, approval-gated fixes, specialist analysis, wall-clock priorities, and re-benchmark proof."
 ---
 
 # Xcode Build Strategist

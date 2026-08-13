@@ -1,6 +1,6 @@
 ---
 name: ios-rocketsim-operator
-description: Use RocketSim for iOS Simulator UI inspection and interaction, including visible accessibility state, taps, long-presses, swipes, typing, hardware buttons, and RocketSim CLI automation.
+description: "RocketSim iOS Simulator UI: inspect and control accessibility state, gestures, typing, hardware buttons, and CLI automation."
 ---
 
 # iOS RocketSim Operator

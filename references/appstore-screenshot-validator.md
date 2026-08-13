@@ -12,13 +12,16 @@ asc screenshots sizes --output table
 asc screenshots sizes --all --output table
 ```
 
-Common anchors: `IPHONE_65` and `IPAD_PRO_3GEN_129`. Use `--all` for other
-iPhone sizes, Apple TV, Mac, Vision Pro, iMessage, or Watch.
+For apps that run on each device family, the current required anchors are the
+iPhone 6.9-inch slot (`IPHONE_69`) and iPad 13-inch slot
+(`IPAD_PRO_3GEN_129`). Apple accepts the iPhone 6.5-inch slot when 6.9-inch
+screenshots are not provided. Use `--all` to resolve every accepted iPhone
+size, Apple TV, Mac, Vision Pro, iMessage, or Watch slot before resizing.
 
 ## ASC Validation
 
 ```bash
-asc screenshots validate --path "./screenshots/iphone" --device-type "IPHONE_65" --output table
+asc screenshots validate --path "./screenshots/iphone" --device-type "IPHONE_69" --output table
 asc screenshots validate --path "./screenshots/ipad" --device-type "IPAD_PRO_3GEN_129" --output table
 ```
 
@@ -57,7 +60,7 @@ Resize only after choosing a target from `asc screenshots sizes --all`; `sips
 ```bash
 mkdir -p resized
 for f in *.png; do
-  sips -z 2778 1284 "$f" --out "resized/$f"
+  sips -z 2796 1290 "$f" --out "resized/$f"
 done
 ```
 
@@ -73,9 +76,9 @@ Validate and upload with dry-run first:
 
 ```bash
 sips -g pixelWidth -g pixelHeight -g hasAlpha resized/*.png
-asc screenshots validate --path "./resized" --device-type "IPHONE_65" --output table
-asc screenshots upload --version-localization "LOC_ID" --path "./resized" --device-type "IPHONE_65" --dry-run --output table
-asc screenshots upload --version-localization "LOC_ID" --path "./resized" --device-type "IPHONE_65"
+asc screenshots validate --path "./resized" --device-type "IPHONE_69" --output table
+asc screenshots upload --version-localization "LOC_ID" --path "./resized" --device-type "IPHONE_69" --dry-run --output table
+asc screenshots upload --version-localization "LOC_ID" --path "./resized" --device-type "IPHONE_69"
 ```
 
 ## Guardrails

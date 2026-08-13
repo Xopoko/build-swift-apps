@@ -1,6 +1,6 @@
 ---
 name: appstore-screenshot-studio
-description: Create, revise, translate, scrape, crop, validate, and prepare App Store marketing screenshots and `.appstore-screenshots` workspaces. Not for general image generation.
+description: App Store marketing screenshot creation and revision to translate, scrape, crop, and validate `.appstore-screenshots` workspaces. Excludes general image generation.
 ---
 
 # App Store Screenshot Studio
@@ -45,7 +45,7 @@ Pair simulator capture/upload work with `appstore-screenshot-pipeline`, `appstor
 
 | Device | Composite | Panel | Key |
 | --- | --- | --- | --- |
-| iPhone | `3456x2400` | `1284x2778` | `iphone` |
+| iPhone | `3456x2400` | `1290x2796` | `iphone` |
 | iPad | `6144x2732` | `2048x2732` | `ipad` |
 
 The crop helper treats a composite as three horizontal panels. For other layouts, crop manually with `sharp`, `sips`, or the app's asset pipeline.

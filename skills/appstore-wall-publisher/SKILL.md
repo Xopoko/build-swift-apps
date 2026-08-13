@@ -1,6 +1,6 @@
 ---
 name: appstore-wall-publisher
-description: Submit or update a Wall of Apps entry in the App-Store-Connect-CLI repository using `asc apps wall submit`. Use when the user says "submit to wall of apps", "add my app to the wall", or "wall-of-apps".
+description: Submit or update Wall of Apps entries in the App-Store-Connect-CLI repository with `asc apps wall submit`; match wall submission, addition, or update requests.
 ---
 
 # App Store Wall Publisher

@@ -15,7 +15,14 @@ translation rules.
 
 - Version fields: `description`, `keywords`, `whatsNew`, `supportUrl`, `marketingUrl`, `promotionalText`.
 - App-info fields: `name`, `subtitle`, `privacyPolicyUrl`, `privacyChoicesUrl`, `privacyPolicyText`.
-- App Store locales: `ar-SA, ca, cs, da, de-DE, el, en-AU, en-CA, en-GB, en-US, es-ES, es-MX, fi, fr-CA, fr-FR, he, hi, hr, hu, id, it, ja, ko, ms, nl-NL, no, pl, pt-BR, pt-PT, ro, ru, sk, sv, th, tr, uk, vi, zh-Hans, zh-Hant`.
+- Before planning coverage, query the current version-specific set with
+  `asc localizations supported-locales --version "VERSION_ID" --output table`.
+  Treat that live response as authoritative.
+- App Store locales (2026-08-11 reference snapshot): `ar-SA, bn-BD, ca, cs,
+  da, de-DE, el, en-AU, en-CA, en-GB, en-US, es-ES, es-MX, fi, fr-CA, fr-FR,
+  gu-IN, he, hi, hr, hu, id, it, ja, kn-IN, ko, ml-IN, mr-IN, ms, nl-NL, no,
+  or-IN, pa-IN, pl, pt-BR, pt-PT, ro, ru, sk, sl-SI, sv, ta-IN, te-IN, th, tr,
+  uk, ur-PK, vi, zh-Hans, zh-Hant`.
 
 ## Resolve IDs
 

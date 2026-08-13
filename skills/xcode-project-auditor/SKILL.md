@@ -1,6 +1,6 @@
 ---
 name: xcode-project-auditor
-description: Audit Xcode project configuration, schemes, build settings, target dependencies, run scripts, module maps, explicit modules, and fixed build overhead with approval gates.
+description: Audit Xcode project and target overhead across schemes, settings, dependencies, run scripts, module maps, and explicit modules; require approval before changes.
 ---
 
 # Xcode Project Auditor
@@ -15,7 +15,8 @@ Use for project- and target-level build inefficiencies. Recommend first and requ
 - DerivedData churn, custom steps, fixed no-op rebuild overhead, codesign, validation, CopySwiftLibs
 - parallelization opportunities, explicit module settings, module maps, `DEFINES_MODULE`, and self-contained headers
 - `Planning Swift module`, asset catalog compilation, and `ExtractAppIntentsMetadata` timing
-- CocoaPods presence: if `Podfile` or `Pods.xcodeproj` exists, recommend SPM migration and avoid CocoaPods-specific optimization
+- CocoaPods presence: note maintenance mode, assess SPM migration feasibility,
+  and avoid speculative Podfile or generated Pods-project tuning
 - Xcode 16.4+ Task Backtraces for tasks that rerun unexpectedly
 
 ## Required Checklist

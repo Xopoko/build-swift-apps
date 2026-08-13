@@ -1,6 +1,6 @@
 ---
 name: ios-ettrace-profiler
-description: Capture and interpret symbolicated ETTrace profiles for iOS simulator startup, scrolling, navigation, rendering, runtime flows, before/after comparisons, and CPU hotspots.
+description: "iOS ETTrace Simulator profiles: capture and interpret symbolicated startup, scrolling, navigation, rendering, CPU hotspots, and before/after evidence."
 ---
 
 # iOS ETTrace Profiler
@@ -25,7 +25,9 @@ mkdir -p "$RUN_DIR"
 brew install emergetools/homebrew-tap/ettrace
 ```
 
-The host runner is `ettrace`; the app must link an iOS Simulator `ETTrace.xcframework`. Expect ETTrace v1.1.0-style processed JSON with top-level `nodes`.
+The host runner is `ettrace`; the app must link an iOS Simulator
+`ETTrace.xcframework`. Expect the current ETTrace v1.1.x processed JSON shape
+with top-level `nodes`.
 
 Prefer a repo-vendored simulator xcframework. Otherwise build one into `RUN_DIR` from `EmergeTools/ETTrace` using the runner-matching tag. Link the app target, not tests/resources/launcher targets. Confirm launch logs include `Starting ETTrace`. Profile one instrumented simulator app at a time because simulator mode uses a fixed localhost port.
 

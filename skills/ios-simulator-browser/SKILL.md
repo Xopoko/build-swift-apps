@@ -1,6 +1,6 @@
 ---
 name: ios-simulator-browser
-description: Prefer this over plain simulator-only workflows when the user should watch, interact with, or receive browser-visible proof of an iOS Simulator run. Use to mirror an iOS Simulator into the Codex in-app browser and render SwiftUI previews from importable Swift packages with hot reload.
+description: Mirror iOS Simulator runs in the Codex browser for interaction, visible proof, and hot-reloaded SwiftUI previews from importable Swift packages; exclude headless or log-only debugging.
 ---
 
 # iOS Simulator Browser

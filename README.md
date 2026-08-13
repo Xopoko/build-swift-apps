@@ -5,18 +5,12 @@
 <h1 align="center">Build Swift Apps</h1>
 
 <p align="center">
-  Agent skills for building, debugging, profiling, testing, refactoring, and shipping Swift apps across Apple platforms.
+  Build, debug, profile, test, refactor, and release Swift apps across iOS and macOS.
 </p>
 
 <p align="center">
   <b>Codex</b> · <b>Claude Code</b> · <b>Cursor</b> · <b>pi</b> · <b>Manual skill installs</b>
 </p>
-
-> Build Swift Apps is the Swift-focused plugin from
-> [Plug'n Skills](https://github.com/Xopoko/plug-n-skills). Use this
-> repository when you want only the Swift, iOS, macOS, Xcode, simulator, and
-> App Store workflows. Use Plug'n Skills when you want the full multi-plugin
-> collection.
 
 Build Swift Apps is a multi-agent skill pack for practical Apple-platform
 development. It focuses on the workflows that usually decide whether an AI
@@ -30,20 +24,6 @@ Apple-platform Swift work in general. They are intentionally generic: no
 private project names, no private workflows, and no assumptions about
 one app architecture.
 
-## Repository Role
-
-This repository is intentionally still active. It is the focused public
-entrypoint and install surface for Swift developers. The broader hub is
-[Xopoko/plug-n-skills](https://github.com/Xopoko/plug-n-skills), where this
-same plugin lives under `plugins/build-swift-apps` alongside other focused
-agent skill packs.
-
-For users, both install paths are valid:
-
-- install this repository when you only want Build Swift Apps;
-- install Plug'n Skills when you want the full curated plugin collection;
-- link to this repository from Swift-specific posts, docs, and examples.
-
 ## Quick Start
 
 ### Easiest: Ask Your Agent
@@ -54,9 +34,6 @@ coding agent they already use:
 ```text
 Install the Build Swift Apps plugin from https://github.com/Xopoko/build-swift-apps on this computer. Follow the repository installation instructions for the agent you are running in, install required dependencies, ask before installing optional tools, run the doctor checks, and report what was installed.
 ```
-
-If you want the whole plugin collection instead, ask your agent to install
-Plug'n Skills from <https://github.com/Xopoko/plug-n-skills>.
 
 ### Codex
 
@@ -137,72 +114,72 @@ metadata, larger instructions on demand.
 
 | Metric | Tokens | Notes |
 | --- | ---: | --- |
-| Startup metadata | 4,194 | Name, description, and file pointer for all 61 skills. |
-| On-demand skill bodies | 35,699 | Full body text loaded only when a skill is selected. |
+| Startup metadata | 3,914 | Name, description, and file pointer for all 61 skills. |
+| On-demand skill bodies | 36,239 | Full body text loaded only when a skill is selected. |
 
 | Skill | Startup metadata | On-demand body |
 | --- | ---: | ---: |
 | `app-icon-studio` | 61 | 984 |
 | `apple-dev-research` | 58 | 503 |
-| `apple-firmware-inspector` | 78 | 676 |
-| `appstore-ads-operator` | 63 | 843 |
+| `apple-firmware-inspector` | 71 | 676 |
+| `appstore-ads-operator` | 61 | 843 |
 | `appstore-archive-uploader` | 64 | 800 |
-| `appstore-aso-auditor` | 71 | 687 |
-| `appstore-build-monitor` | 51 | 334 |
+| `appstore-aso-auditor` | 64 | 687 |
+| `appstore-build-monitor` | 53 | 334 |
 | `appstore-connect-cli` | 56 | 521 |
-| `appstore-crash-insights` | 60 | 494 |
-| `appstore-id-resolver` | 56 | 318 |
-| `appstore-metadata-localizer` | 87 | 425 |
-| `appstore-metadata-sync` | 76 | 436 |
-| `appstore-notary-runner` | 73 | 485 |
+| `appstore-crash-insights` | 56 | 525 |
+| `appstore-id-resolver` | 57 | 356 |
+| `appstore-metadata-localizer` | 75 | 425 |
+| `appstore-metadata-sync` | 73 | 436 |
+| `appstore-notary-runner` | 67 | 485 |
 | `appstore-pricing-planner` | 66 | 402 |
-| `appstore-record-creator` | 59 | 570 |
-| `appstore-release-director` | 79 | 726 |
-| `appstore-release-notes-writer` | 79 | 688 |
-| `appstore-release-planner` | 84 | 722 |
-| `appstore-revenuecat-sync` | 72 | 784 |
-| `appstore-review-readiness` | 79 | 440 |
+| `appstore-record-creator` | 58 | 570 |
+| `appstore-release-director` | 67 | 726 |
+| `appstore-release-notes-writer` | 69 | 688 |
+| `appstore-release-planner` | 68 | 722 |
+| `appstore-revenuecat-sync` | 70 | 784 |
+| `appstore-review-readiness` | 73 | 440 |
 | `appstore-screenshot-pipeline` | 63 | 1,013 |
-| `appstore-screenshot-studio` | 64 | 653 |
-| `appstore-screenshot-validator` | 58 | 420 |
-| `appstore-signing-setup` | 56 | 646 |
-| `appstore-subscription-localizer` | 73 | 402 |
-| `appstore-testflight-coordinator` | 55 | 346 |
-| `appstore-wall-publisher` | 79 | 373 |
+| `appstore-screenshot-studio` | 62 | 653 |
+| `appstore-screenshot-validator` | 60 | 475 |
+| `appstore-signing-setup` | 59 | 646 |
+| `appstore-subscription-localizer` | 71 | 402 |
+| `appstore-testflight-coordinator` | 54 | 346 |
+| `appstore-wall-publisher` | 62 | 373 |
 | `appstore-workflow-runner` | 65 | 793 |
-| `build-swift-apps` | 82 | 758 |
-| `ios-ettrace-profiler` | 60 | 1,034 |
-| `ios-intents-architect` | 69 | 556 |
-| `ios-liquid-glass-designer` | 69 | 452 |
-| `ios-memgraph-inspector` | 62 | 581 |
-| `ios-rocketsim-operator` | 68 | 486 |
-| `ios-simulator-browser` | 82 | 805 |
-| `ios-simulator-debugger` | 83 | 532 |
-| `ios-swiftui-architect` | 71 | 708 |
-| `macos-appkit-bridge` | 87 | 566 |
-| `macos-liquid-glass-designer` | 78 | 593 |
-| `macos-notarization-packager` | 80 | 305 |
-| `macos-runtime-debugger` | 75 | 770 |
-| `macos-signing-inspector` | 69 | 428 |
-| `macos-swiftpm-runner` | 76 | 280 |
-| `macos-swiftui-architect` | 69 | 821 |
-| `macos-telemetry-probe` | 63 | 412 |
-| `macos-test-diagnoser` | 74 | 323 |
-| `macos-view-architect` | 61 | 500 |
-| `macos-window-architect` | 67 | 799 |
-| `swiftpm-build-inspector` | 62 | 536 |
+| `build-swift-apps` | 83 | 758 |
+| `ios-ettrace-profiler` | 57 | 1,037 |
+| `ios-intents-architect` | 65 | 542 |
+| `ios-liquid-glass-designer` | 70 | 452 |
+| `ios-memgraph-inspector` | 65 | 581 |
+| `ios-rocketsim-operator` | 54 | 486 |
+| `ios-simulator-browser` | 63 | 805 |
+| `ios-simulator-debugger` | 71 | 545 |
+| `ios-swiftui-architect` | 66 | 708 |
+| `macos-appkit-bridge` | 70 | 566 |
+| `macos-liquid-glass-designer` | 66 | 593 |
+| `macos-notarization-packager` | 70 | 341 |
+| `macos-runtime-debugger` | 73 | 770 |
+| `macos-signing-inspector` | 63 | 485 |
+| `macos-swiftpm-runner` | 72 | 280 |
+| `macos-swiftui-architect` | 73 | 821 |
+| `macos-telemetry-probe` | 60 | 412 |
+| `macos-test-diagnoser` | 70 | 574 |
+| `macos-view-architect` | 60 | 500 |
+| `macos-window-architect` | 68 | 799 |
+| `swiftpm-build-inspector` | 58 | 536 |
 | `swiftui-performance-inspector` | 61 | 543 |
-| `swiftui-view-architect` | 60 | 481 |
-| `tuist-flaky-test-stabilizer` | 74 | 554 |
-| `tuist-generation-doctor` | 68 | 629 |
-| `tuist-migration-planner` | 66 | 577 |
-| `tuist-workspace-navigator` | 71 | 500 |
-| `xcode-build-baseline` | 57 | 550 |
-| `xcode-build-strategist` | 69 | 959 |
-| `xcode-build-tuner` | 68 | 749 |
+| `swiftui-view-architect` | 58 | 481 |
+| `tuist-flaky-test-stabilizer` | 63 | 554 |
+| `tuist-generation-doctor` | 61 | 629 |
+| `tuist-migration-planner` | 64 | 577 |
+| `tuist-workspace-navigator` | 62 | 500 |
+| `xcode-build-baseline` | 56 | 623 |
+| `xcode-build-strategist` | 59 | 959 |
+| `xcode-build-tuner` | 59 | 749 |
 | `xcode-compile-profiler` | 61 | 494 |
-| `xcode-project-auditor` | 59 | 483 |
-| `xcode-ui-test-stabilizer` | 88 | 451 |
+| `xcode-project-auditor` | 57 | 480 |
+| `xcode-ui-test-stabilizer` | 73 | 451 |
 
 Measured with `exact` token counting and the `o200k_base` encoding.
 Regenerate the report after skill edits:

@@ -1,6 +1,6 @@
 ---
 name: appstore-notary-runner
-description: Use for the concrete macOS Developer ID notarization command path with xcodebuild export plus `asc notarization` submit, status, log, and stapling. Not for broad packaging readiness review or signing-only diagnosis.
+description: macOS Developer ID notarization commands for xcodebuild export, `asc notarization` submit/status/log, and stapling. Excludes packaging-readiness reviews and signing-only diagnosis.
 ---
 
 # App Store Notary Runner

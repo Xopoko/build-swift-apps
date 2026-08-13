@@ -1,6 +1,6 @@
 ---
 name: macos-test-diagnoser
-description: Triage failing macOS tests across Xcode and SwiftPM workflows. Use when asked to run macOS tests, narrow failing scopes, explain assertion or crash failures, or separate real test regressions from setup and environment problems.
+description: "macOS Xcode and SwiftPM tests: run focused scopes and diagnose build, assertion, crash, async-flake, fixture, entitlement, and host-app failures; separate regressions from setup issues."
 ---
 
 # macOS Test Diagnoser
@@ -38,6 +38,21 @@ failures precisely, and avoid treating every test failure like a product bug.
    - What kind of failure it was
    - The best next proof step or fix path
 
+## Result Bundle Inspection
+
+When console output alone is not enough, read the `.xcresult` bundle instead
+of rerunning:
+
+- Pass `-resultBundlePath ./Tests.xcresult` to `xcodebuild test` so evidence lands at a known path.
+- Run summary: `xcrun xcresulttool get test-results summary --path Tests.xcresult`
+- Per-test outcomes: `xcrun xcresulttool get test-results tests --path Tests.xcresult`
+- One failure in depth: `xcrun xcresulttool get test-results test-details --test-id <id> --path Tests.xcresult`
+- Attachments such as screenshots and logs: `xcrun xcresulttool export attachments --path Tests.xcresult --output-path ./attachments`
+- Older bundles or full object graph: `xcrun xcresulttool get --legacy --format json --path Tests.xcresult` (drop `--legacy` on pre-Xcode 16 toolchains).
+
+`swift test` produces no `.xcresult`; use console output, `--filter` reruns,
+and `--xunit-output` when a machine-readable report is needed.
+
 ## Guardrails
 
 - Distinguish compilation failures from test execution failures.
@@ -49,6 +64,7 @@ failures precisely, and avoid treating every test failure like a product bug.
 Provide:
 - the command used
 - the smallest failing scope
+- the `.xcresult` path when one was produced
 - the top failure category
 - a concise explanation of the likely cause
 - the next rerun or fix step

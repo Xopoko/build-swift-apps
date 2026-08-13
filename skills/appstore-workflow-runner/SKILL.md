@@ -1,6 +1,6 @@
 ---
 name: appstore-workflow-runner
-description: Define, validate, run, resume, and audit repo-local `.asc/workflow.json` automations with current `asc workflow`, including safe release/TestFlight flows and step outputs.
+description: Manage `.asc/workflow.json` automations; define, validate, run, resume, and audit trusted repo-local release/TestFlight flows and step outputs with `asc workflow`.
 ---
 
 # App Store Workflow Runner

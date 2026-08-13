@@ -1,6 +1,6 @@
 ---
 name: appstore-connect-cli
-description: Use `asc` CLI for App Store Connect command discovery, auth, output formats, pagination, schemas, canonical verbs, Apple Ads, and timeout behavior.
+description: "App Store Connect commands: discover and run `asc` CLI auth, schemas, canonical verbs, pagination, output, Apple Ads, and timeouts."
 ---
 
 # App Store Connect CLI

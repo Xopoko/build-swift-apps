@@ -1,6 +1,6 @@
 ---
 name: xcode-ui-test-stabilizer
-description: Create, stabilize, and run UI end-to-end tests with Xcode (XCUIApplication/xcodebuild), including environment setup, focus/input stabilization, logging/attachments, and flakiness triage. Use when adding or debugging UI automation, writing new UI tests, or making them reliable.
+description: Build and stabilize Xcode UI end-to-end tests with XCUIApplication/xcodebuild for new or unreliable automation, covering environment setup, focus/input reliability, waits, logs, attachments, and flakiness triage.
 ---
 
 # Xcode UI Test Stabilizer

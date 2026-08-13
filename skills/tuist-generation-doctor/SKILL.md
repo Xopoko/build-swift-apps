@@ -1,6 +1,6 @@
 ---
 name: tuist-generation-doctor
-description: Debug Tuist-generated project failures across generation, build, and runtime. Use when `tuist generate`, generated Xcode workspaces, or generated app launches fail or behave differently from the source project.
+description: Diagnose Tuist generation, build, and launch failures when `tuist generate`, generated Xcode workspaces, or apps fail or diverge from the source project.
 ---
 
 # Tuist Generation Doctor
