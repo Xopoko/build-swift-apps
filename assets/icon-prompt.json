@@ -1,0 +1,54 @@
+{
+  "schema": "capability_workbench.plugin_icon_prompt.v2",
+  "plugin_name": "build-swift-apps",
+  "catalog": {
+    "source": "user-override",
+    "key": "build-swift-apps"
+  },
+  "semantic_hero": {
+    "object": "an original swift bird in flight",
+    "meaning": "fast, expressive Swift application development",
+    "silhouette": "one luminous long-winged bird sweeping upward across the foreground"
+  },
+  "support_cue": {
+    "object": "one orange code editor with braces",
+    "meaning": "hands-on application building, debugging, and release work"
+  },
+  "avoid": [
+    "exact Apple Swift logo geometry",
+    "Apple logo",
+    "Xcode application icon",
+    "Xcode hammer",
+    "device collage",
+    "vendor-specific toolbar or UI replica"
+  ],
+  "collision_avoid": [
+    "exact Apple Swift logo silhouette",
+    "generic code editor logo",
+    "bird-only social or messaging product icon"
+  ],
+  "brand_source": {
+    "type": "brand-adjacent",
+    "source": "Apple platforms and Swift",
+    "trademark_status": "the original in-flight bird and editor artwork communicates the Swift development domain without reproducing exact Apple Swift logo geometry, the Apple logo, the Xcode icon, or the Xcode hammer",
+    "license": "original-generated-artwork",
+    "authorization": "not-required-no-brand-mark"
+  },
+  "brandColor": "#202028",
+  "recommended_asset_path": "assets/icon.png",
+  "imagegen_mode": "built-in",
+  "size_gates": [
+    16,
+    24,
+    32,
+    64
+  ],
+  "prompt": "Use case: logo-brand\nAsset type: 1024x1024 marketplace plugin icon\nPurpose: building, debugging, profiling, testing, refactoring, and releasing Swift apps across Apple platforms.\nLiteral semantic hero: an original swift bird in flight. It communicates fast, expressive Swift application development.\nSilhouette: one luminous long-winged bird sweeping upward across the foreground. Use exactly one subordinate support cue: one orange code editor with braces, meaning hands-on application building, debugging, and release work.\nComposition: one centered dominant silhouette, full-bleed opaque background, meaningful content inside the central 72 percent, no more than one support cue.\nSmall-size requirement: the bird-and-editor relationship must remain recognizable at 64, 32, 24, and 16 pixels; preserve the bird's long wing sweep and editor frame at 24 pixels.\nStyle: polished modern bitmap app icon, bold filled shapes, crisp edges, restrained dimensional polish, consistent portfolio weight.\nBackground: deep charcoal field anchored on #202028 with a restrained ember glow.\nForeground palette: luminous warm ivory bird, vivid ember orange editor, warm ivory braces, and restrained cyan highlights; meaningful adjacent colors meet at least 3:1 contrast.\nBrand-source rule: brand-adjacent to Apple platforms and Swift only by domain; use original generated bird geometry and do not reproduce exact Apple Swift logo geometry, the Apple logo, Xcode application icon, Xcode hammer, or distinctive vendor trade dress.\nAvoid: exact Apple Swift logo geometry; Apple logo; Xcode application icon; Xcode hammer; device collage; vendor-specific toolbar or UI replica.\nCollision avoid: exact Apple Swift logo silhouette; generic code editor logo; bird-only social or messaging product icon.\nText: none. No letters, words, numbers, watermark, screenshot, photo, UI replica, tiny badge, thin-line detail, mascot, or private identifier.\n",
+  "checks": [
+    "save the selected image as a 1024x1024 opaque RGB PNG at assets/icon.png",
+    "inspect semantic recognition and the monochrome silhouette at 16, 24, 32, and 64 px",
+    "reject a competing second cue, closed critical gap, portfolio collision, text, screenshot, photo, watermark, or low contrast",
+    "verify brand-source, trademark, license, and authorization provenance manually",
+    "wire identical interface.composerIcon and interface.logo paths plus interface.brandColor"
+  ]
+}
