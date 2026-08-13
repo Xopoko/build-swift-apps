@@ -77,5 +77,8 @@ missing required tools as blockers; document optional gaps clearly.
 - Cursor packaging uses `.cursor-plugin/plugin.json` and the root `skills/`
   directory.
 - Codex packaging uses `.codex-plugin/plugin.json`; do not remove it.
+- Keep Codex `interface.websiteURL` pointed at
+  `https://github.com/Xopoko/plug-n-skills` as the catalog landing page;
+  keep `homepage` and `repository` pointed at this standalone source.
 - Generic coding agents should be able to understand the repository through
   this `AGENTS.md` file and the README without reading every skill.

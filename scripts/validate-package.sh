@@ -56,10 +56,33 @@ cursor_skills = sorted(Path(path).name for path in cursor.get("skills", []))
 if cursor_skills != skill_names:
     raise SystemExit(".cursor-plugin/plugin.json skills are out of sync with skills/.")
 
+codex = json.loads(Path(".codex-plugin/plugin.json").read_text(encoding="utf-8"))
+if codex.get("interface", {}).get("websiteURL") != "https://github.com/Xopoko/plug-n-skills":
+    raise SystemExit(
+        ".codex-plugin/plugin.json website must point to the Plug'n Skills catalog."
+    )
+
 package = json.loads(Path("package.json").read_text(encoding="utf-8"))
 pi_skills = sorted(Path(path).name for path in package.get("pi", {}).get("skills", []))
 if pi_skills != skill_names:
     raise SystemExit("package.json pi.skills are out of sync with skills/.")
+
+claude = json.loads(Path(".claude-plugin/plugin.json").read_text(encoding="utf-8"))
+marketplace = json.loads(Path(".claude-plugin/marketplace.json").read_text(encoding="utf-8"))
+versions = {
+    ".codex-plugin/plugin.json": codex.get("version"),
+    ".claude-plugin/plugin.json": claude.get("version"),
+    ".claude-plugin/marketplace.json": marketplace.get("version"),
+    ".claude-plugin/marketplace.json plugins[0]": marketplace.get("plugins", [{}])[0].get("version"),
+    ".cursor-plugin/plugin.json": cursor.get("version"),
+    "package.json": package.get("version"),
+}
+expected_version = codex.get("version")
+for surface, version in versions.items():
+    if version != expected_version:
+        raise SystemExit(
+            f"{surface} version {version!r} differs from Codex version {expected_version!r}."
+        )
 
 readme = Path("README.md").read_text(encoding="utf-8")
 missing_from_readme = [name for name in skill_names if f"`{name}`" not in readme]
