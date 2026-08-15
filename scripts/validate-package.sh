@@ -214,7 +214,10 @@ if missing_from_readme:
 PY
 
 echo "Checking for private or work-specific terms"
-private_pattern="$(python3 - <<'PY'
+python3 - <<'PY'
+from pathlib import Path
+import sys
+
 terms = [
     "7765626c617465",
     "776c63746c",
@@ -231,12 +234,30 @@ terms = [
     "50726f6a656374732f576f726b",
     "2f55736572732f",
 ]
-print("|".join(bytes.fromhex(term).decode("utf-8") for term in terms))
+restricted = [bytes.fromhex(term).lower() for term in terms]
+violations = []
+for path in sorted(Path(".").rglob("*")):
+    if not path.is_file() or {".git", "node_modules"}.intersection(path.parts):
+        continue
+    try:
+        data = path.read_bytes()
+    except OSError as error:
+        raise SystemExit(
+            f"{path}: private/work-specific scan could not read file "
+            f"({type(error).__name__})"
+        ) from error
+    if b"\0" in data:
+        continue
+    folded = data.lower()
+    offsets = [offset for term in restricted if (offset := folded.find(term)) >= 0]
+    if offsets:
+        line_number = data.count(b"\n", 0, min(offsets)) + 1
+        violations.append(f"{path}:{line_number}")
+
+if violations:
+    for location in violations:
+        print(f"{location}: restricted private/work-specific term", file=sys.stderr)
+    raise SystemExit("Private/work-specific term check failed.")
 PY
-)"
-if rg -uu -n -i --glob '!**/.git/**' --glob '!**/node_modules/**' "$private_pattern" .; then
-  echo "Private/work-specific term check failed." >&2
-  exit 1
-fi
 
 echo "Package validation passed"
