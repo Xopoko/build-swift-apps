@@ -102,36 +102,36 @@ dependency profiles, and manual setup notes.
 
 ## Token Efficiency
 
-Build Swift Apps is designed to keep startup context small. In Codex-style skill
-loading, the agent starts with lightweight skill metadata: the skill name,
-description, and file pointer. The full `SKILL.md` body is loaded only when that
-skill is selected for the current task.
+Build Swift Apps keeps full skill instructions on demand and exposes concise
+routing metadata for skill selection. The static estimates below serialize each
+skill name, description, and source-relative file pointer with
+`scripts/token-report.py`, using `tiktoken` and the `o200k_base` encoding.
 
-These estimates are generated with `scripts/token-report.py` using `tiktoken`
-and the `o200k_base` encoding. Different agents may format metadata slightly
-differently, but the split is the important part: small always-visible routing
-metadata, larger instructions on demand.
+This is a source comparison, not proof of runtime- or model-visible context.
+Hosts may add namespaces or origin URLs, omit fields, or pack the catalog in a
+different shape. Measure the active runtime separately when that distinction
+changes a decision.
 
 | Metric | Tokens | Notes |
 | --- | ---: | --- |
-| Startup metadata | 3,914 | Name, description, and file pointer for all 61 skills. |
-| On-demand skill bodies | 36,239 | Full body text loaded only when a skill is selected. |
+| Source routing estimate | 3,922 | Name, description, and source-relative file pointer for all 61 skills. |
+| On-demand skill bodies | 37,791 | Full body text loaded only when a skill is selected. |
 
-| Skill | Startup metadata | On-demand body |
+| Skill | Source routing estimate | On-demand body |
 | --- | ---: | ---: |
 | `app-icon-studio` | 61 | 984 |
 | `apple-dev-research` | 58 | 503 |
 | `apple-firmware-inspector` | 71 | 676 |
 | `appstore-ads-operator` | 61 | 843 |
-| `appstore-archive-uploader` | 64 | 800 |
+| `appstore-archive-uploader` | 64 | 843 |
 | `appstore-aso-auditor` | 64 | 687 |
 | `appstore-build-monitor` | 53 | 334 |
-| `appstore-connect-cli` | 56 | 521 |
+| `appstore-connect-cli` | 64 | 531 |
 | `appstore-crash-insights` | 56 | 525 |
 | `appstore-id-resolver` | 57 | 356 |
 | `appstore-metadata-localizer` | 75 | 425 |
 | `appstore-metadata-sync` | 73 | 436 |
-| `appstore-notary-runner` | 67 | 485 |
+| `appstore-notary-runner` | 67 | 528 |
 | `appstore-pricing-planner` | 66 | 402 |
 | `appstore-record-creator` | 58 | 570 |
 | `appstore-release-director` | 67 | 726 |
@@ -139,47 +139,47 @@ metadata, larger instructions on demand.
 | `appstore-release-planner` | 68 | 722 |
 | `appstore-revenuecat-sync` | 70 | 784 |
 | `appstore-review-readiness` | 73 | 440 |
-| `appstore-screenshot-pipeline` | 63 | 1,013 |
-| `appstore-screenshot-studio` | 62 | 653 |
-| `appstore-screenshot-validator` | 60 | 475 |
+| `appstore-screenshot-pipeline` | 63 | 1,056 |
+| `appstore-screenshot-studio` | 62 | 696 |
+| `appstore-screenshot-validator` | 60 | 518 |
 | `appstore-signing-setup` | 59 | 646 |
 | `appstore-subscription-localizer` | 71 | 402 |
 | `appstore-testflight-coordinator` | 54 | 346 |
 | `appstore-wall-publisher` | 62 | 373 |
 | `appstore-workflow-runner` | 65 | 793 |
-| `build-swift-apps` | 83 | 758 |
-| `ios-ettrace-profiler` | 57 | 1,037 |
+| `build-swift-apps` | 83 | 981 |
+| `ios-ettrace-profiler` | 57 | 1,080 |
 | `ios-intents-architect` | 65 | 542 |
 | `ios-liquid-glass-designer` | 70 | 452 |
-| `ios-memgraph-inspector` | 65 | 581 |
-| `ios-rocketsim-operator` | 54 | 486 |
-| `ios-simulator-browser` | 63 | 805 |
-| `ios-simulator-debugger` | 71 | 545 |
-| `ios-swiftui-architect` | 66 | 708 |
+| `ios-memgraph-inspector` | 65 | 624 |
+| `ios-rocketsim-operator` | 54 | 529 |
+| `ios-simulator-browser` | 63 | 848 |
+| `ios-simulator-debugger` | 71 | 507 |
+| `ios-swiftui-architect` | 66 | 691 |
 | `macos-appkit-bridge` | 70 | 566 |
 | `macos-liquid-glass-designer` | 66 | 593 |
-| `macos-notarization-packager` | 70 | 341 |
-| `macos-runtime-debugger` | 73 | 770 |
-| `macos-signing-inspector` | 63 | 485 |
-| `macos-swiftpm-runner` | 72 | 280 |
+| `macos-notarization-packager` | 70 | 384 |
+| `macos-runtime-debugger` | 73 | 974 |
+| `macos-signing-inspector` | 63 | 528 |
+| `macos-swiftpm-runner` | 72 | 323 |
 | `macos-swiftui-architect` | 73 | 821 |
-| `macos-telemetry-probe` | 60 | 412 |
-| `macos-test-diagnoser` | 70 | 574 |
+| `macos-telemetry-probe` | 60 | 455 |
+| `macos-test-diagnoser` | 70 | 617 |
 | `macos-view-architect` | 60 | 500 |
 | `macos-window-architect` | 68 | 799 |
 | `swiftpm-build-inspector` | 58 | 536 |
 | `swiftui-performance-inspector` | 61 | 543 |
 | `swiftui-view-architect` | 58 | 481 |
-| `tuist-flaky-test-stabilizer` | 63 | 554 |
-| `tuist-generation-doctor` | 61 | 629 |
-| `tuist-migration-planner` | 64 | 577 |
-| `tuist-workspace-navigator` | 62 | 500 |
-| `xcode-build-baseline` | 56 | 623 |
-| `xcode-build-strategist` | 59 | 959 |
-| `xcode-build-tuner` | 59 | 749 |
-| `xcode-compile-profiler` | 61 | 494 |
-| `xcode-project-auditor` | 57 | 480 |
-| `xcode-ui-test-stabilizer` | 73 | 451 |
+| `tuist-flaky-test-stabilizer` | 63 | 597 |
+| `tuist-generation-doctor` | 61 | 672 |
+| `tuist-migration-planner` | 64 | 620 |
+| `tuist-workspace-navigator` | 62 | 543 |
+| `xcode-build-baseline` | 56 | 711 |
+| `xcode-build-strategist` | 59 | 1,005 |
+| `xcode-build-tuner` | 59 | 837 |
+| `xcode-compile-profiler` | 61 | 582 |
+| `xcode-project-auditor` | 57 | 523 |
+| `xcode-ui-test-stabilizer` | 73 | 494 |
 
 Measured with `exact` token counting and the `o200k_base` encoding.
 Regenerate the report after skill edits:
@@ -303,8 +303,9 @@ The same repository is packaged for several agent ecosystems:
 
 ## Host Dependencies
 
-The plugin does not hide host requirements. Skills that need external tools
-preflight them and fail clearly when missing. Dependency profiles are:
+The plugin exposes host requirements through the doctor profiles below.
+Tool-dependent skills name their primary dependencies; run the relevant profile
+before relying on them. Dependency profiles are:
 
 | Profile | Main tools |
 | --- | --- |

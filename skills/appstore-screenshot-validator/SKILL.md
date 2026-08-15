@@ -5,6 +5,8 @@ description: App Store screenshot validation and upload with live `asc` size dat
 
 # App Store Screenshot Validator
 
+Before invoking Apple-only binaries, confirm the execution context is macOS. From Windows or Linux, run those steps in a Mac SSH project or through an already configured remote transport; do not retry missing Apple binaries locally.
+
 Prepare screenshots for App Store Connect. Do not hard-code Apple size tables here; `asc screenshots sizes` is the source of truth.
 
 ## Source Of Truth

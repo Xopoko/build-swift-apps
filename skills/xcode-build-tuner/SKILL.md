@@ -5,6 +5,10 @@ description: Implement approved Xcode build-speed fixes after strategist approva
 
 # Xcode Build Tuner
 
+Before invoking Apple-only binaries, confirm the execution context is macOS. From Windows or Linux, run those steps in a Mac SSH project or through an already configured remote transport; do not retry missing Apple binaries locally.
+
+Bundled commands use `$PLUGIN_ROOT` for the plugin root. Use the host's plugin-root variable when defined; otherwise set it to the absolute path of this plugin before running a helper from the app repository.
+
 Implement only approved build optimization changes, verify compilation, and prove the result with the same benchmark contract.
 
 ## Rules
@@ -30,7 +34,7 @@ Implement only approved build optimization changes, verify compilation, and prov
 4. Run a quick build to catch compiler/linker errors.
 5. Re-run the original baseline command, usually:
    ```bash
-   python3 ../../shared/build-optimization/scripts/benchmark_builds.py \
+   python3 "$PLUGIN_ROOT/shared/build-optimization/scripts/benchmark_builds.py" \
      --project App.xcodeproj --scheme MyApp --configuration Debug \
      --destination "platform=iOS Simulator,name=<latest available iPhone simulator>,OS=latest" \
      --output-dir .build-benchmark

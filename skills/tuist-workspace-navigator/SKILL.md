@@ -5,6 +5,8 @@ description: Operate Tuist-generated Xcode workspaces with `tuist generate`, foc
 
 # Tuist Workspace Navigator
 
+Before invoking Apple-only binaries, confirm the execution context is macOS. From Windows or Linux, run those steps in a Mac SSH project or through an already configured remote transport; do not retry missing Apple binaries locally.
+
 Use this skill for day-to-day development in projects where Tuist owns the
 Xcode workspace.
 

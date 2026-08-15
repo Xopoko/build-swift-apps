@@ -3,15 +3,19 @@
 This is the canonical bootstrap contract for the macOS Build plugin's local run
 loop.
 
-When a project does not already have an established macOS run entrypoint:
+Use this bootstrap only when the user explicitly requests a reusable run loop,
+or when a project lacks an adequate macOS run entrypoint and repeated use makes
+one clearly worthwhile. Do not bootstrap durable files for a one-shot build,
+launch, log, or debug task.
 
-1. Create one project-local `script/build_and_run.sh`.
-2. Make it executable.
-3. Use it as the single kill + build + run entrypoint.
+1. Inspect existing repository scripts, Xcode schemes, package products, and
+   host actions; reuse them when they already provide the requested loop.
+2. Create or refresh one project-local `script/build_and_run.sh` only when the
+   explicit bootstrap remains useful.
+3. Make it executable and use it as the single kill + build + run entrypoint.
 4. Support optional `--debug`, `--logs`, `--telemetry`, and `--verify` flags.
-5. When running inside the Codex app, write `.codex/environments/environment.toml`
-   so the app exposes a `Run` action wired to that script. Skip this step in
-   hosts that do not use Codex environment actions.
+5. Write `.codex/environments/environment.toml` only when the user explicitly
+   asks for a Codex Run action. Preserve unrelated existing actions.
 
 ## `script/build_and_run.sh`
 
@@ -158,9 +162,10 @@ Adapt the build step for Xcode projects by replacing `swift build` with
 `.app` binary from DerivedData or a deterministic project-local build path. Keep
 the one-script interface and mode flags the same.
 
-## `.codex/environments/environment.toml`
+## Optional `.codex/environments/environment.toml`
 
-Write the environment file at this exact path:
+Only when the user asks for a Codex Run action, write or update the environment
+file at this exact path:
 
 `.codex/environments/environment.toml`
 
@@ -180,5 +185,6 @@ icon = "run"
 command = "./script/build_and_run.sh"
 ```
 
-If the project already has an environment file, update the existing `Run`
-action to point at `./script/build_and_run.sh` instead of adding a duplicate.
+If the project already has an environment file, preserve unrelated setup and
+actions. Update an existing `Run` action to point at
+`./script/build_and_run.sh` instead of adding a duplicate.

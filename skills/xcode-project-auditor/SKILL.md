@@ -5,6 +5,8 @@ description: Audit Xcode project and target overhead across schemes, settings, d
 
 # Xcode Project Auditor
 
+Before invoking Apple-only binaries, confirm the execution context is macOS. From Windows or Linux, run those steps in a Mac SSH project or through an already configured remote transport; do not retry missing Apple binaries locally.
+
 Use for project- and target-level build inefficiencies. Recommend first and require explicit approval before changing projects, schemes, or build settings.
 
 ## Review

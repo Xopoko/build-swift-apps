@@ -5,6 +5,8 @@ description: Build and stabilize Xcode UI end-to-end tests with XCUIApplication/
 
 # Xcode UI Test Stabilizer
 
+Before invoking Apple-only binaries, confirm the execution context is macOS. From Windows or Linux, run those steps in a Mac SSH project or through an already configured remote transport; do not retry missing Apple binaries locally.
+
 ## Overview
 
 Build deterministic UI end-to-end tests and debug flaky runs. Prefer stable accessibility identifiers, environment-driven setup, and explicit wait conditions. Always attach logs and screenshots on failure.

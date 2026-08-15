@@ -6,6 +6,23 @@ developer machine. The installer and dependency scripts keep those tools
 optional, check what is already installed, and let you install only the groups
 you need.
 
+## Execution Host
+
+Xcode, Apple Simulator, Apple-target SwiftPM builds, Tuist, signing,
+notarization, and other Apple-toolchain commands must run on macOS. If the
+agent UI runs on Windows or Linux, open the Apple project as a Mac SSH project
+or use an already configured remote XcodeBuildMCP transport; keep the local
+machine as the control plane and run the Apple work in that Mac context. The
+bundled MCP definition is the local-Mac default and should not replace a
+host-specific remote transport.
+
+Source-only review, deterministic offline helpers, and network/API workflows
+may run on another host when their own dependencies support it. The repository
+installer, doctor, and dependency installer are POSIX scripts; run their Apple
+development profiles on the Mac. On another host, use its native plugin install
+flow and enable only supported workflows rather than treating a missing Apple
+binary as an install failure to repair locally.
+
 ## Quick Install
 
 The local installer itself needs `git` and `python3`. On a fresh Mac, install

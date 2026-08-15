@@ -1,7 +1,7 @@
 {
   "name": "build-swift-apps",
   "displayName": "Build Swift Apps",
-  "version": "0.3.11",
+  "version": "0.3.12",
   "description": "Build, debug, profile, test, refactor, and release Swift apps across iOS, macOS, Xcode, SwiftUI, SwiftPM, Tuist, and App Store Connect.",
   "author": {
     "name": "Build Swift Apps Maintainers",

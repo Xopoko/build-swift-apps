@@ -5,6 +5,8 @@ description: Stabilize flaky Tuist tests identified by test-insights URLs, test 
 
 # Tuist Flaky Test Stabilizer
 
+Before invoking Apple-only binaries, confirm the execution context is macOS. From Windows or Linux, run those steps in a Mac SSH project or through an already configured remote transport; do not retry missing Apple binaries locally.
+
 Use this skill to move from flaky-test evidence to a small code or test fix.
 
 ## Inputs

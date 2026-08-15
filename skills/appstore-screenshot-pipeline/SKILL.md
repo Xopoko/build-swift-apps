@@ -5,6 +5,8 @@ description: iOS App Store screenshot automation with xcodebuild/simctl capture,
 
 # App Store Screenshot Pipeline
 
+Before invoking Apple-only binaries, confirm the execution context is macOS. From Windows or Linux, run those steps in a Mac SSH project or through an already configured remote transport; do not retry missing Apple binaries locally.
+
 Build/run the app, capture deterministic screenshots, frame them, review them, then upload through `asc`.
 
 Defaults: settings `.asc/screenshot.settings.json`, plan `.asc/screenshots.json`, raw `./screenshots/raw`, framed `./screenshots/framed`, frame device `iphone-air`, Koubou `0.18.1`.

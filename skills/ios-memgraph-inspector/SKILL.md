@@ -5,6 +5,8 @@ description: "iOS memgraph leak analysis: capture, inspect, compare, and prove m
 
 # iOS Memgraph Inspector
 
+Before invoking Apple-only binaries, confirm the execution context is macOS. From Windows or Linux, run those steps in a Mac SSH project or through an already configured remote transport; do not retry missing Apple binaries locally.
+
 Use for leaks from a live simulator process or existing `.memgraph`. Pair with `../ios-simulator-debugger/SKILL.md` when build, launch, UI driving, logs, or screenshots are needed.
 
 ## Workflow

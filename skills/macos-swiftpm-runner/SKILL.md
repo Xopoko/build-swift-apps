@@ -5,6 +5,8 @@ description: "macOS SwiftPM packages: build, run, and test package-first reposit
 
 # macOS SwiftPM Runner
 
+Before invoking Apple-only binaries, confirm the execution context is macOS. From Windows or Linux, run those steps in a Mac SSH project or through an already configured remote transport; do not retry missing Apple binaries locally.
+
 ## Quick Start
 
 Use this skill when `Package.swift` is the primary entrypoint or when SwiftPM is
