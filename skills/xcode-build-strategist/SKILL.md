@@ -5,6 +5,8 @@ description: "Coordinate end-to-end Xcode build optimization audits with recomme
 
 # Xcode Build Strategist
 
+Before invoking Apple-only binaries, confirm the execution context is macOS. From Windows or Linux, run those steps in a Mac SSH project or through an already configured remote transport; do not retry missing Apple binaries locally.
+
 Bundled commands use `$PLUGIN_ROOT` (`$env:PLUGIN_ROOT` in PowerShell; same path suffix) for the plugin root. Set it once: use the host's plugin-root variable when defined (Claude Code: `PLUGIN_ROOT="$CLAUDE_PLUGIN_ROOT"`), otherwise the absolute path of this plugin's root directory.
 
 Entry point for end-to-end Xcode build optimization. Phase 1 recommends only; Phase 2 executes only after explicit approval.
@@ -22,7 +24,7 @@ Entry point for end-to-end Xcode build optimization. Phase 1 recommends only; Ph
 1. Resolve project/workspace, scheme, configuration, destination, and pain point. If both workspace and project exist, prefer the project unless the workspace is required.
 2. Run or reuse a fresh baseline:
    ```bash
-   python3 ../../shared/build-optimization/scripts/benchmark_builds.py \
+   python3 "$PLUGIN_ROOT/shared/build-optimization/scripts/benchmark_builds.py" \
      --project App.xcodeproj --scheme MyApp --configuration Debug \
      --destination "platform=iOS Simulator,name=<latest available iPhone simulator>,OS=latest" \
      --output-dir .build-benchmark

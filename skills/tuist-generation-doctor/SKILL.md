@@ -5,6 +5,8 @@ description: Diagnose Tuist generation, build, and launch failures when `tuist g
 
 # Tuist Generation Doctor
 
+Before invoking Apple-only binaries, confirm the execution context is macOS. From Windows or Linux, run those steps in a Mac SSH project or through an already configured remote transport; do not retry missing Apple binaries locally.
+
 Use this skill to determine whether a Tuist-generated workspace problem is a
 project configuration issue, a dependency wiring issue, or a Tuist bug.
 

@@ -5,6 +5,10 @@ description: Benchmark Xcode clean, cached-clean, zero-change, and incremental b
 
 # Xcode Build Baseline
 
+Before invoking Apple-only binaries, confirm the execution context is macOS. From Windows or Linux, run those steps in a Mac SSH project or through an already configured remote transport; do not retry missing Apple binaries locally.
+
+Bundled commands use `$PLUGIN_ROOT` for the plugin root. Use the host's plugin-root variable when defined; otherwise set it to the absolute path of this plugin before running a helper from the app repository.
+
 Measure before recommending build-time changes. Do not edit project files while benchmarking.
 
 ## Rules
@@ -34,7 +38,7 @@ Infer or ask for workspace/project, scheme, configuration, destination, simulato
 Preferred helper:
 
 ```bash
-python3 ../../shared/build-optimization/scripts/benchmark_builds.py \
+python3 "$PLUGIN_ROOT/shared/build-optimization/scripts/benchmark_builds.py" \
   --workspace App.xcworkspace \
   --scheme MyApp \
   --configuration Debug \

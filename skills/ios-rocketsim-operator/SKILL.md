@@ -5,6 +5,8 @@ description: "RocketSim iOS Simulator UI: inspect and control accessibility stat
 
 # iOS RocketSim Operator
 
+Before invoking Apple-only binaries, confirm the execution context is macOS. From Windows or Linux, run those steps in a Mac SSH project or through an already configured remote transport; do not retry missing Apple binaries locally.
+
 Use the installed RocketSim app as the versioned Simulator automation layer. Always resolve the matching app bundle, bundled skill, and CLI before interacting with a simulator.
 
 ## Discovery

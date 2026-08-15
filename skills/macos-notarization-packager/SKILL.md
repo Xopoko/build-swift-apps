@@ -5,6 +5,8 @@ description: "macOS distribution artifacts: inspect Developer ID archives, app b
 
 # macOS Notarization Packager
 
+Before invoking Apple-only binaries, confirm the execution context is macOS. From Windows or Linux, run those steps in a Mac SSH project or through an already configured remote transport; do not retry missing Apple binaries locally.
+
 ## Quick Start
 
 Use this skill when the work is about shipping the app rather than merely

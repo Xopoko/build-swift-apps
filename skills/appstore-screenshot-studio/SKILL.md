@@ -5,6 +5,8 @@ description: App Store marketing screenshot creation and revision to translate, 
 
 # App Store Screenshot Studio
 
+Before invoking Apple-only binaries, confirm the execution context is macOS. From Windows or Linux, run those steps in a Mac SSH project or through an already configured remote transport; do not retry missing Apple binaries locally.
+
 Build App Store screenshots from product reality: inspect the app, choose install promises, write concise panel copy, assemble visuals, crop panels, and prepare App Store Connect assets.
 
 Pair simulator capture/upload work with `appstore-screenshot-pipeline`, `appstore-screenshot-validator`, and `appstore-review-readiness`.

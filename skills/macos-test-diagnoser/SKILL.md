@@ -5,6 +5,8 @@ description: "macOS Xcode and SwiftPM tests: run focused scopes and diagnose bui
 
 # macOS Test Diagnoser
 
+Before invoking Apple-only binaries, confirm the execution context is macOS. From Windows or Linux, run those steps in a Mac SSH project or through an already configured remote transport; do not retry missing Apple binaries locally.
+
 ## Quick Start
 
 Use this skill to run the smallest meaningful test scope first, classify

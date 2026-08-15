@@ -5,6 +5,10 @@ description: Profile Swift and mixed-language compile bottlenecks from timing su
 
 # Xcode Compile Profiler
 
+Before invoking Apple-only binaries, confirm the execution context is macOS. From Windows or Linux, run those steps in a Mac SSH project or through an already configured remote transport; do not retry missing Apple binaries locally.
+
+Bundled commands use `$PLUGIN_ROOT` for the plugin root. Use the host's plugin-root variable when defined; otherwise set it to the absolute path of this plugin before running a helper from the app repository.
+
 Use when compile time, type checking, or mixed-language compilation is the bottleneck. Recommend first; do not edit source or build settings without explicit approval.
 
 ## Rules
@@ -31,7 +35,7 @@ Use when compile time, type checking, or mixed-language compilation is the bottl
 Preferred script:
 
 ```bash
-python3 ../../shared/build-optimization/scripts/diagnose_compilation.py \
+python3 "$PLUGIN_ROOT/shared/build-optimization/scripts/diagnose_compilation.py" \
   --project App.xcodeproj \
   --scheme MyApp \
   --configuration Debug \

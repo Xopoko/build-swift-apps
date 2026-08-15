@@ -1,11 +1,13 @@
 ---
 name: appstore-connect-cli
-description: "App Store Connect commands: discover and run `asc` CLI auth, schemas, canonical verbs, pagination, output, Apple Ads, and timeouts."
+description: "App Store Connect commands: discover and run generic `asc` CLI auth, schemas, canonical verbs, pagination, output, records, API requests, and timeouts; exclude Apple Ads campaigns."
 ---
 
 # App Store Connect CLI
 
-Use when running or designing `asc` commands.
+Use when running or designing generic App Store Connect `asc` commands. Hand
+Apple Ads auth, org, campaign, ad-group, creative, keyword, reporting, and Ads
+API work to `appstore-ads-operator`.
 
 ## Discovery
 
@@ -42,9 +44,13 @@ asc xcode version edit --build-number "42"
 
 Prefer `asc auth login`. Env fallback: `ASC_KEY_ID`, `ASC_ISSUER_ID`, `ASC_PRIVATE_KEY_PATH`, `ASC_PRIVATE_KEY`, `ASC_PRIVATE_KEY_B64`. `ASC_APP_ID` can provide the default app. For unclear key permissions, inspect `asc web auth capabilities` or `--key-id`.
 
-## Apple Ads
+## Ownership Boundary
 
-Apple Ads uses `asc ads auth`, `--ads-profile`, and `ASC_ADS_*`, not ASC API credentials. Run `asc ads --help`, resolve orgs with `asc ads acls --output json`, pass `--org` or `ASC_ADS_ORG_ID`, and use `--file` JSON payloads for body commands. Destructive/bulk deletes require `--confirm`. For live mutation tests, create paused resources with clear test names and delete the parent campaign.
+Keep generic CLI discovery, App Store Connect auth, schema inspection, record
+operations, pagination, output formatting, raw ASC API requests, and timeout
+handling here. Do not plan or execute Apple Ads campaign operations from this
+skill; select `appstore-ads-operator`, which owns the separate Ads credentials,
+organization context, safety gates, and campaign lifecycle.
 
 ## Timeouts
 

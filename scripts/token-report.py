@@ -98,10 +98,10 @@ def markdown(mode: str, rows: list[SkillBudget]) -> str:
     lines = [
         "| Metric | Tokens | Notes |",
         "| --- | ---: | --- |",
-        f"| Startup metadata | {startup_total:,} | Name, description, and file pointer for all {len(rows)} skills. |",
+        f"| Source routing estimate | {startup_total:,} | Name, description, and source-relative file pointer for all {len(rows)} skills. |",
         f"| On-demand skill bodies | {body_total:,} | Full body text loaded only when a skill is selected. |",
         "",
-        "| Skill | Startup metadata | On-demand body |",
+        "| Skill | Source routing estimate | On-demand body |",
         "| --- | ---: | ---: |",
     ]
     for row in rows:

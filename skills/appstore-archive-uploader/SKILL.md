@@ -5,6 +5,8 @@ description: "App Store IPA/PKG archives: set version/build numbers, archive, ex
 
 # App Store Archive Uploader
 
+Before invoking Apple-only binaries, confirm the execution context is macOS. From Windows or Linux, run those steps in a Mac SSH project or through an already configured remote transport; do not retry missing Apple binaries locally.
+
 Prefer `asc xcode archive` and `asc xcode export` over raw `xcodebuild` when they fit.
 
 ## Preconditions

@@ -2,9 +2,9 @@
   "mcpServers": {
     "xcodebuildmcp": {
       "command": "npx",
-      "args": ["-y", "xcodebuildmcp@latest", "mcp"],
+      "args": ["-y", "xcodebuildmcp@2.7.0", "mcp"],
       "env": {
-        "XCODEBUILDMCP_ENABLED_WORKFLOWS": "simulator,ui-automation,debugging,logging"
+        "XCODEBUILDMCP_ENABLED_WORKFLOWS": "simulator,ui-automation,debugging"
       }
     },
     "apple-docs": {

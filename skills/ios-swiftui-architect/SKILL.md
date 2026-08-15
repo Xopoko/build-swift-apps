@@ -66,4 +66,4 @@ Choose ownership first; do not introduce a reference model when value state is e
 - `references/previews.md`
 - `references/performance.md`
 
-Use current Apple docs when API availability or platform guidance may have changed. New component refs should be short, actionable, and listed in `components-index.md`.
+Use current Apple docs when API availability or platform guidance may have changed.

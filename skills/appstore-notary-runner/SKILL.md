@@ -5,6 +5,8 @@ description: macOS Developer ID notarization commands for xcodebuild export, `as
 
 # App Store Notary Runner
 
+Before invoking Apple-only binaries, confirm the execution context is macOS. From Windows or Linux, run those steps in a Mac SSH project or through an already configured remote transport; do not retry missing Apple binaries locally.
+
 Use for macOS apps distributed outside the App Store with Developer ID signing and Apple notarization.
 
 Use `macos-notarization-packager` first when the artifact is not clearly distribution-ready. Use `macos-signing-inspector` for local code-signing, entitlement, Gatekeeper, or trust-policy diagnosis.

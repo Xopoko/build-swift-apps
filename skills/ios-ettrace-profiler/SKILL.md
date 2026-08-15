@@ -5,6 +5,8 @@ description: "iOS ETTrace Simulator profiles: capture and interpret symbolicated
 
 # iOS ETTrace Profiler
 
+Before invoking Apple-only binaries, confirm the execution context is macOS. From Windows or Linux, run those steps in a Mac SSH project or through an already configured remote transport; do not retry missing Apple binaries locally.
+
 Capture one focused, symbolicated ETTrace profile from an iOS simulator app. Pair with `ios-simulator-debugger` for build/install/launch/UI/log work.
 
 ## Workflow

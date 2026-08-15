@@ -5,6 +5,8 @@ description: "macOS runtime telemetry: add and verify privacy-safe Logger/OSLog 
 
 # macOS Telemetry Probe
 
+Before invoking Apple-only binaries, confirm the execution context is macOS. From Windows or Linux, run those steps in a Mac SSH project or through an already configured remote transport; do not retry missing Apple binaries locally.
+
 Add high-signal app instrumentation without leaving noisy permanent logs. Prefer Apple's unified logging and verify events after build/run.
 
 ## Rules
