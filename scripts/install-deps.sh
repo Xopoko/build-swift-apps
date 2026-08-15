@@ -78,7 +78,7 @@ add_profile() {
       ;;
   esac
 
-  if ! contains "$profile" "${selected_profiles[@]}"; then
+  if [[ ${#selected_profiles[@]} -eq 0 ]] || ! contains "$profile" "${selected_profiles[@]}"; then
     selected_profiles+=("$profile")
   fi
 }
@@ -90,7 +90,7 @@ skip_tool() {
 
 is_skipped() {
   local tool="$1"
-  contains "$tool" "${skipped_tools[@]}"
+  [[ ${#skipped_tools[@]} -gt 0 ]] && contains "$tool" "${skipped_tools[@]}"
 }
 
 request_tool() {
@@ -98,7 +98,7 @@ request_tool() {
   if is_skipped "$tool"; then
     return
   fi
-  if ! contains "$tool" "${requested_tools[@]}"; then
+  if [[ ${#requested_tools[@]} -eq 0 ]] || ! contains "$tool" "${requested_tools[@]}"; then
     requested_tools+=("$tool")
   fi
 }
@@ -471,10 +471,12 @@ if [[ ${#skipped_tools[@]} -gt 0 ]]; then
   echo "Skipped tools: ${skipped_tools[*]}"
 fi
 
-for tool in "${requested_tools[@]}"; do
-  printf '\n== %s ==\n' "$tool"
-  install_tool "$tool"
-done
+if [[ ${#requested_tools[@]} -gt 0 ]]; then
+  for tool in "${requested_tools[@]}"; do
+    printf '\n== %s ==\n' "$tool"
+    install_tool "$tool"
+  done
+fi
 
 printf '\nDone. Run ./scripts/doctor.sh'
 for profile in "${selected_profiles[@]}"; do

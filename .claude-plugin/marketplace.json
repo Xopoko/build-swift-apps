@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "build-swift-apps",
-  "version": "0.3.13",
+  "version": "0.3.14",
   "owner": {
     "name": "Build Swift Apps Maintainers",
     "email": "xopoko@users.noreply.github.com"
@@ -14,7 +14,7 @@
       "name": "build-swift-apps",
       "description": "Build, debug, profile, test, refactor, and release Swift apps across iOS, macOS, Xcode, SwiftUI, SwiftPM, Tuist, and App Store Connect.",
       "repository": "https://github.com/Xopoko/build-swift-apps",
-      "version": "0.3.13",
+      "version": "0.3.14",
       "author": {
         "name": "Build Swift Apps Maintainers",
         "email": "xopoko@users.noreply.github.com",

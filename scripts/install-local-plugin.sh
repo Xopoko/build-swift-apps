@@ -132,11 +132,11 @@ elif [[ -e "$plugin_dir" ]]; then
   exit 1
 else
   echo "Cloning $repo_url into $plugin_dir"
-  clone_args=()
   if [[ -n "$branch" ]]; then
-    clone_args+=(--branch "$branch")
+    git clone --branch "$branch" "$repo_url" "$plugin_dir"
+  else
+    git clone "$repo_url" "$plugin_dir"
   fi
-  git clone "${clone_args[@]}" "$repo_url" "$plugin_dir"
 fi
 
 codex_marketplace_root="$(cd "$(dirname "$marketplace_file")/../.." && pwd -P)"
@@ -219,16 +219,21 @@ marketplace_file.write_text(json.dumps(data, indent=2) + "\n")
 print(f"{plugin_name}@{marketplace_name} -> {source_path}")
 PY
 
+plugin_id="$plugin_name@$marketplace_name"
 if [[ "$skip_codex" == true ]]; then
   echo "Skipped Codex registration."
 elif command -v codex >/dev/null 2>&1; then
   echo "Registering marketplace in Codex"
   codex plugin marketplace add "$codex_marketplace_root"
 
-  echo "Enabling $plugin_name@$marketplace_name in Codex config"
-  CODEX_CONFIG_FILE="$HOME/.codex/config.toml" \
-  PLUGIN_ID="$plugin_name@$marketplace_name" \
-  python3 - <<'PY'
+  if codex plugin add --help >/dev/null 2>&1; then
+    echo "Installing $plugin_id with Codex CLI"
+    codex plugin add "$plugin_id" --json
+  else
+    echo "Codex CLI has no 'plugin add' command; enabling $plugin_id in config as a legacy fallback"
+    CODEX_CONFIG_FILE="$HOME/.codex/config.toml" \
+    PLUGIN_ID="$plugin_id" \
+    python3 - <<'PY'
 from __future__ import annotations
 
 import os
@@ -258,10 +263,12 @@ else:
 config_file.write_text(text)
 print(f"{plugin_id} enabled in {config_file}")
 PY
+  fi
 else
   echo "Codex CLI not found. Run this after installing Codex CLI:"
-  echo "  codex plugin marketplace add $HOME"
-  echo "Then enable [plugins.\"$plugin_name@$marketplace_name\"] in ~/.codex/config.toml."
+  echo "  codex plugin marketplace add $codex_marketplace_root"
+  echo "  codex plugin add $plugin_id"
+  echo "For a legacy Codex CLI without 'plugin add', enable [plugins.\"$plugin_id\"] in ~/.codex/config.toml."
 fi
 
 if [[ "$skip_deps" == false ]]; then
