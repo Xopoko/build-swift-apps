@@ -3,7 +3,7 @@ set -euo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 installer="$script_dir/../install-local-plugin.sh"
-real_python3="$(command -v python3)"
+real_python3="$(python3 -c 'import sys; print(sys.executable)')"
 
 run_case() {
   local mode="$1"
