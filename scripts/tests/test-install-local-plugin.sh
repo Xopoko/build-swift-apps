@@ -14,6 +14,8 @@ run_case() {
   local plugin_dir="$test_home/.agents/plugins/plugins/build-swift-apps"
   local call_log="$fixture_root/codex-calls.log"
   local git_call_log="$fixture_root/git-calls.log"
+  local output="$fixture_root/install.out"
+  local run_path="$fake_bin:/usr/bin:/bin"
 
   mkdir -p "$fake_bin"
   if [[ "$checkout_state" == "existing" ]]; then
@@ -32,7 +34,8 @@ if [[ "${1:-}" == "clone" ]]; then
 fi
 SH
 
-  cat >"$fake_bin/codex" <<'SH'
+  if [[ "$mode" != "no-codex" ]]; then
+    cat >"$fake_bin/codex" <<'SH'
 #!/usr/bin/env bash
 set -eu
 printf '%s\n' "$*" >>"$CODEX_TEST_CALL_LOG"
@@ -46,30 +49,50 @@ if [[ "$*" == plugin\ add\ *@*\ --json ]]; then
   printf '{"installed":true}\n'
 fi
 SH
+  fi
 
   cat >"$fake_bin/python3" <<SH
 #!/usr/bin/env bash
 exec "$real_python3" "\$@"
 SH
 
-  chmod +x "$fake_bin/git" "$fake_bin/codex" "$fake_bin/python3"
+  chmod +x "$fake_bin/git" "$fake_bin/python3"
+  if [[ "$mode" != "no-codex" ]]; then
+    chmod +x "$fake_bin/codex"
+  else
+    local tool
+    for tool in bash dirname ln mkdir readlink; do
+      ln -s "$(command -v "$tool")" "$fake_bin/$tool"
+    done
+    run_path="$fake_bin"
+  fi
 
   if HOME="$test_home" \
-    PATH="$fake_bin:$PATH" \
+    PATH="$run_path" \
     CODEX_TEST_CALL_LOG="$call_log" \
     CODEX_TEST_MODE="$mode" \
     GIT_TEST_CALL_LOG="$git_call_log" \
-      "$installer" --marketplace-name fixture --skip-deps >/dev/null; then
+      "$installer" --marketplace-name fixture --skip-deps >"$output"; then
     install_status=0
   else
     install_status=$?
   fi
 
-  grep -Fx "plugin marketplace add $test_home" "$call_log" >/dev/null
-  grep -Fx "plugin add --help" "$call_log" >/dev/null
   if [[ "$checkout_state" == "clean" ]]; then
     grep -Fx "clone https://github.com/Xopoko/build-swift-apps.git $plugin_dir" "$git_call_log" >/dev/null
   fi
+
+  if [[ "$mode" == "no-codex" ]]; then
+    [[ "$install_status" -eq 0 ]]
+    grep -Fx "  codex plugin marketplace add $test_home" "$output" >/dev/null
+    grep -Fx "  codex plugin add build-swift-apps@fixture" "$output" >/dev/null
+    grep -F '[plugins."build-swift-apps@fixture"]' "$output" >/dev/null
+    [[ ! -e "$test_home/.codex/config.toml" ]]
+    return
+  fi
+
+  grep -Fx "plugin marketplace add $test_home" "$call_log" >/dev/null
+  grep -Fx "plugin add --help" "$call_log" >/dev/null
 
   if [[ "$mode" == "install-failure" ]]; then
     [[ "$install_status" -eq 9 ]]
@@ -97,5 +120,6 @@ run_case current "$fixture_root/current"
 run_case current "$fixture_root/clean" clean
 run_case legacy "$fixture_root/legacy"
 run_case install-failure "$fixture_root/install-failure"
+run_case no-codex "$fixture_root/no-codex"
 
 echo "install-local-plugin tests passed"

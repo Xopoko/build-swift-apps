@@ -219,13 +219,13 @@ marketplace_file.write_text(json.dumps(data, indent=2) + "\n")
 print(f"{plugin_name}@{marketplace_name} -> {source_path}")
 PY
 
+plugin_id="$plugin_name@$marketplace_name"
 if [[ "$skip_codex" == true ]]; then
   echo "Skipped Codex registration."
 elif command -v codex >/dev/null 2>&1; then
   echo "Registering marketplace in Codex"
   codex plugin marketplace add "$codex_marketplace_root"
 
-  plugin_id="$plugin_name@$marketplace_name"
   if codex plugin add --help >/dev/null 2>&1; then
     echo "Installing $plugin_id with Codex CLI"
     codex plugin add "$plugin_id" --json
@@ -266,8 +266,9 @@ PY
   fi
 else
   echo "Codex CLI not found. Run this after installing Codex CLI:"
-  echo "  codex plugin marketplace add $HOME"
-  echo "Then enable [plugins.\"$plugin_name@$marketplace_name\"] in ~/.codex/config.toml."
+  echo "  codex plugin marketplace add $codex_marketplace_root"
+  echo "  codex plugin add $plugin_id"
+  echo "For a legacy Codex CLI without 'plugin add', enable [plugins.\"$plugin_id\"] in ~/.codex/config.toml."
 fi
 
 if [[ "$skip_deps" == false ]]; then
