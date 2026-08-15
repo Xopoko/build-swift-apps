@@ -36,6 +36,9 @@ USAGE
 contains_profile() {
   local needle="$1"
   local item
+  if [[ ${#selected_profiles[@]} -eq 0 ]]; then
+    return 1
+  fi
   for item in "${selected_profiles[@]}"; do
     [[ "$item" == "$needle" ]] && return 0
   done
