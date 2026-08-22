@@ -145,9 +145,9 @@ if cursor_skills != skill_names:
     raise SystemExit(".cursor-plugin/plugin.json skills are out of sync with skills/.")
 
 codex = json.loads(Path(".codex-plugin/plugin.json").read_text(encoding="utf-8"))
-if codex.get("interface", {}).get("websiteURL") != "https://github.com/Xopoko/plug-n-skills":
+if codex.get("interface", {}).get("websiteURL") != "https://github.com/Xopoko/build-swift-apps":
     raise SystemExit(
-        ".codex-plugin/plugin.json website must point to the Plug'n Skills catalog."
+        ".codex-plugin/plugin.json website must point to this standalone source."
     )
 
 package = json.loads(Path("package.json").read_text(encoding="utf-8"))

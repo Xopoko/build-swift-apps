@@ -30,7 +30,7 @@
     "longDescription": "Build, debug, profile, test, refactor, and release Swift apps across iOS and macOS. The bundle covers SwiftUI, AppKit, Xcode, SwiftPM, simulators, build-performance analysis, App Store Connect, signing, notarization, firmware inspection, RocketSim, UI testing, Apple developer research, Tuist, and Apple-platform release workflows.",
     "developerName": "Build Swift Apps Maintainers",
     "category": "Coding",
-    "websiteURL": "https://github.com/Xopoko/plug-n-skills",
+    "websiteURL": "https://github.com/Xopoko/build-swift-apps",
     "capabilities": [
       "Interactive",
       "Read",
