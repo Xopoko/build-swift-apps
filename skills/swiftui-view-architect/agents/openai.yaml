@@ -2,3 +2,5 @@ interface:
   display_name: "SwiftUI View Architect"
   short_description: "Refactor oversized SwiftUI views"
   default_prompt: "Use $swiftui-view-architect to clean up and split this SwiftUI view without changing its behavior."
+policy:
+  allow_implicit_invocation: false

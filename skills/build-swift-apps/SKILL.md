@@ -27,6 +27,15 @@ Use this as the first hop when a request could match more than one Build Swift A
 - For package graph or SwiftPM overhead, use `swiftpm-build-inspector`; for package-first macOS build/run/test work, use `macos-swiftpm-runner`.
 - For official Apple documentation, use Apple Developer Documentation or Xcode documentation search directly. Use `apple-dev-research` only for community articles, tutorials, and write-ups; for firmware, dyld, Mach-O, entitlements, or private API research, use `apple-firmware-inspector`.
 
+## Complete Focused Route Map
+
+- For app identity and store assets, use `app-icon-studio`, `appstore-screenshot-pipeline`, or `appstore-screenshot-studio`; validate screenshot sets with `appstore-screenshot-validator`.
+- For archive and delivery state, use `appstore-archive-uploader`, `appstore-build-monitor`, `appstore-testflight-coordinator`, or `appstore-wall-publisher`; use `appstore-workflow-runner` only for a composed, reviewable workflow.
+- For App Store record and commercial state, use `appstore-id-resolver`, `appstore-record-creator`, `appstore-pricing-planner`, `appstore-revenuecat-sync`, or `appstore-signing-setup`; use `appstore-aso-auditor` for listing optimization evidence and `appstore-crash-insights` for crash feedback.
+- For iOS product integration, use `ios-intents-architect` for App Intents and `ios-liquid-glass-designer` for Liquid Glass design and implementation.
+- For macOS UI architecture, use `macos-appkit-bridge`, `macos-view-architect`, `macos-window-architect`, or `macos-liquid-glass-designer` according to the owning layer.
+- For macOS runtime evidence, use `macos-runtime-debugger`, `macos-telemetry-probe`, or `macos-test-diagnoser`; use `xcode-ui-test-stabilizer` for flaky or unstable Xcode UI tests.
+
 ## Portfolio Boundary
 
 Do not merge skills just because they share a platform word. Keep separate skills when triggers, tools, proof artifacts, or safety boundaries differ. Prefer this router plus focused skills until a decision ledger proves a merge preserves trigger coverage and validation.

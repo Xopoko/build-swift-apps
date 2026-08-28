@@ -78,6 +78,23 @@ for skill_dir in skill_dirs:
     if not desc_match or len(desc_match.group(1).strip().strip('"')) < 24:
         raise SystemExit(f"{skill_file} needs a useful description.")
 
+    agent_manifest = skill_dir / "agents" / "openai.yaml"
+    if not agent_manifest.is_file():
+        raise SystemExit(f"{agent_manifest} is required for Codex invocation policy.")
+    agent_lines = agent_manifest.read_text(encoding="utf-8").splitlines()
+    expected_policy = (
+        "  allow_implicit_invocation: true"
+        if skill_dir.name == "build-swift-apps"
+        else "  allow_implicit_invocation: false"
+    )
+    policy_lines = [
+        line for line in agent_lines if "allow_implicit_invocation:" in line
+    ]
+    if "policy:" not in agent_lines or policy_lines != [expected_policy]:
+        raise SystemExit(
+            f"{agent_manifest} must keep only the router implicit in Codex."
+        )
+
     has_execution_locus = (
         execution_locus_guard in text or "## Execution Locus" in text
     )

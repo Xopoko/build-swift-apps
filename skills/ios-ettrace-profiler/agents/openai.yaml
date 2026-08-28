@@ -2,3 +2,5 @@ interface:
   display_name: "iOS ETTrace Profiler"
   short_description: "Capture and interpret iOS ETTrace profiles"
   default_prompt: "Use $ios-ettrace-profiler to capture a focused iOS simulator ETTrace profile and identify time-heavy stacks."
+policy:
+  allow_implicit_invocation: false

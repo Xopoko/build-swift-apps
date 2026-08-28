@@ -1,6 +1,6 @@
 {
   "name": "build-swift-apps",
-  "version": "0.3.14",
+  "version": "0.3.15",
   "description": "Build, debug, profile, test, refactor, and release Swift apps across iOS, macOS, Xcode, SwiftUI, SwiftPM, Tuist, and App Store Connect.",
   "license": "MIT",
   "repository": {

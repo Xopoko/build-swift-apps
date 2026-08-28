@@ -2,3 +2,5 @@ interface:
   display_name: "SwiftUI Performance Inspector"
   short_description: "Diagnose SwiftUI runtime costs"
   default_prompt: "Use $swiftui-performance-inspector to review this SwiftUI code for performance issues and suggest concrete fixes."
+policy:
+  allow_implicit_invocation: false

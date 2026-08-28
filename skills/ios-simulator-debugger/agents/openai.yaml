@@ -2,3 +2,5 @@ interface:
   display_name: "iOS Simulator Debugger"
   short_description: "Debug iOS Simulator apps with XcodeBuildMCP"
   default_prompt: "Use $ios-simulator-debugger to build, launch, and inspect the current iOS app on the booted simulator."
+policy:
+  allow_implicit_invocation: false

@@ -2,3 +2,5 @@ interface:
   display_name: "macOS Signing Inspector"
   short_description: "Inspect macOS signing and Gatekeeper"
   default_prompt: "Use $macos-signing-inspector to inspect a macOS app or binary, classify the signing or entitlement problem, and explain the minimum fix path."
+policy:
+  allow_implicit_invocation: false

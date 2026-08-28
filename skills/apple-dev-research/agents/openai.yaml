@@ -2,3 +2,5 @@ interface:
   display_name: "Apple Developer Research"
   short_description: "Search community Apple developer articles"
   default_prompt: "Use $apple-dev-research to find strong community blog posts and tutorials from Apple Dev Search."
+policy:
+  allow_implicit_invocation: false

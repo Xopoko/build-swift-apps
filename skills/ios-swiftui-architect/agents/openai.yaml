@@ -2,3 +2,5 @@ interface:
   display_name: "iOS SwiftUI Architect"
   short_description: "Build iOS SwiftUI views and state"
   default_prompt: "Use $ios-swiftui-architect to design or refactor this SwiftUI UI with strong default patterns."
+policy:
+  allow_implicit_invocation: false
