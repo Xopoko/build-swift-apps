@@ -1,2 +1,5 @@
+interface:
+  display_name: "Appstore Subscription Localizer"
+  short_description: "Appstore Subscription Localizer: run focused tasks"
 policy:
   allow_implicit_invocation: false

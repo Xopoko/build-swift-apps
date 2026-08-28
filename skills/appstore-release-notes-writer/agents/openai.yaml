@@ -1,2 +1,5 @@
+interface:
+  display_name: "Appstore Release Notes Writer"
+  short_description: "Appstore Release Notes Writer: run focused tasks"
 policy:
   allow_implicit_invocation: false

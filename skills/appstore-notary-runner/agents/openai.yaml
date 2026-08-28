@@ -1,2 +1,5 @@
+interface:
+  display_name: "Appstore Notary Runner"
+  short_description: "Appstore Notary Runner: run focused tasks"
 policy:
   allow_implicit_invocation: false

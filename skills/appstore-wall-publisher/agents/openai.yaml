@@ -1,2 +1,5 @@
+interface:
+  display_name: "Appstore Wall Publisher"
+  short_description: "Appstore Wall Publisher: run focused tasks"
 policy:
   allow_implicit_invocation: false

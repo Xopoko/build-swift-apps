@@ -1,2 +1,5 @@
+interface:
+  display_name: "Appstore Build Monitor"
+  short_description: "Appstore Build Monitor: run focused tasks"
 policy:
   allow_implicit_invocation: false

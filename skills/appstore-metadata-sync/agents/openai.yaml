@@ -1,2 +1,5 @@
+interface:
+  display_name: "Appstore Metadata Sync"
+  short_description: "Appstore Metadata Sync: run focused tasks"
 policy:
   allow_implicit_invocation: false

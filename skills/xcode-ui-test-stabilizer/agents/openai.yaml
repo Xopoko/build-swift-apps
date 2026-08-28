@@ -1,2 +1,5 @@
+interface:
+  display_name: "Xcode UI Test Stabilizer"
+  short_description: "Xcode UI Test Stabilizer: run focused tasks"
 policy:
   allow_implicit_invocation: false

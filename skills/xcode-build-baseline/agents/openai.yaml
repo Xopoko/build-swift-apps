@@ -1,2 +1,5 @@
+interface:
+  display_name: "Xcode Build Baseline"
+  short_description: "Xcode Build Baseline: run focused tasks"
 policy:
   allow_implicit_invocation: false

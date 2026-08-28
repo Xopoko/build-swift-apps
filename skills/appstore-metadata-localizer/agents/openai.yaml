@@ -1,2 +1,5 @@
+interface:
+  display_name: "Appstore Metadata Localizer"
+  short_description: "Appstore Metadata Localizer: run focused tasks"
 policy:
   allow_implicit_invocation: false

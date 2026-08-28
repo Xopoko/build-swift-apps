@@ -1,2 +1,5 @@
+interface:
+  display_name: "Appstore Testflight Coordinator"
+  short_description: "Appstore Testflight Coordinator: run focused tasks"
 policy:
   allow_implicit_invocation: false

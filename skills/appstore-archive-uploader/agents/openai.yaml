@@ -1,2 +1,5 @@
+interface:
+  display_name: "Appstore Archive Uploader"
+  short_description: "Appstore Archive Uploader: run focused tasks"
 policy:
   allow_implicit_invocation: false

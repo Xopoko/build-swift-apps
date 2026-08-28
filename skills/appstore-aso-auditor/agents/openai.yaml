@@ -1,2 +1,5 @@
+interface:
+  display_name: "Appstore Aso Auditor"
+  short_description: "Appstore Aso Auditor: run focused tasks"
 policy:
   allow_implicit_invocation: false

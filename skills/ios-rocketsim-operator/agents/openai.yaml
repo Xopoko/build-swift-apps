@@ -1,2 +1,5 @@
+interface:
+  display_name: "Ios Rocketsim Operator"
+  short_description: "Ios Rocketsim Operator: run focused tasks"
 policy:
   allow_implicit_invocation: false

@@ -1,2 +1,5 @@
+interface:
+  display_name: "Appstore Pricing Planner"
+  short_description: "Appstore Pricing Planner: run focused tasks"
 policy:
   allow_implicit_invocation: false

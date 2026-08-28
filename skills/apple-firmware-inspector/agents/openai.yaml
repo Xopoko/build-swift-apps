@@ -1,2 +1,5 @@
+interface:
+  display_name: "Apple Firmware Inspector"
+  short_description: "Apple Firmware Inspector: run focused tasks"
 policy:
   allow_implicit_invocation: false

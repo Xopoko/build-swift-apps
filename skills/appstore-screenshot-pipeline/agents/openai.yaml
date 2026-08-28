@@ -1,2 +1,5 @@
+interface:
+  display_name: "Appstore Screenshot Pipeline"
+  short_description: "Appstore Screenshot Pipeline: run focused tasks"
 policy:
   allow_implicit_invocation: false

@@ -1,2 +1,5 @@
+interface:
+  display_name: "Xcode Project Auditor"
+  short_description: "Xcode Project Auditor: run focused tasks"
 policy:
   allow_implicit_invocation: false

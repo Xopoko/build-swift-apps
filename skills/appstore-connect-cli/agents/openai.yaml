@@ -1,2 +1,5 @@
+interface:
+  display_name: "Appstore Connect CLI"
+  short_description: "Appstore Connect CLI: run focused tasks"
 policy:
   allow_implicit_invocation: false

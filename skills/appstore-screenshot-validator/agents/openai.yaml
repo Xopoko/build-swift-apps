@@ -1,2 +1,5 @@
+interface:
+  display_name: "Appstore Screenshot Validator"
+  short_description: "Appstore Screenshot Validator: run focused tasks"
 policy:
   allow_implicit_invocation: false

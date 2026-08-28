@@ -1,2 +1,5 @@
+interface:
+  display_name: "Tuist Generation Doctor"
+  short_description: "Tuist Generation Doctor: run focused tasks"
 policy:
   allow_implicit_invocation: false

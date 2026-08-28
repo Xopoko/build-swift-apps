@@ -1,2 +1,5 @@
+interface:
+  display_name: "Appstore Signing Setup"
+  short_description: "Appstore Signing Setup: run focused tasks"
 policy:
   allow_implicit_invocation: false

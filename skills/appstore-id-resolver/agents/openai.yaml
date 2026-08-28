@@ -1,2 +1,5 @@
+interface:
+  display_name: "Appstore Id Resolver"
+  short_description: "Appstore Id Resolver: run focused tasks"
 policy:
   allow_implicit_invocation: false

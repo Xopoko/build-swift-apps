@@ -1,2 +1,5 @@
+interface:
+  display_name: "Appstore Ads Operator"
+  short_description: "Appstore Ads Operator: run focused tasks"
 policy:
   allow_implicit_invocation: false

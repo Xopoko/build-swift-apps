@@ -1,2 +1,5 @@
+interface:
+  display_name: "Tuist Migration Planner"
+  short_description: "Tuist Migration Planner: run focused tasks"
 policy:
   allow_implicit_invocation: false

@@ -1,2 +1,5 @@
+interface:
+  display_name: "Xcode Compile Profiler"
+  short_description: "Xcode Compile Profiler: run focused tasks"
 policy:
   allow_implicit_invocation: false

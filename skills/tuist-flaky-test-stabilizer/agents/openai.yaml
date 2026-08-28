@@ -1,2 +1,5 @@
+interface:
+  display_name: "Tuist Flaky Test Stabilizer"
+  short_description: "Tuist Flaky Test Stabilizer: run focused tasks"
 policy:
   allow_implicit_invocation: false

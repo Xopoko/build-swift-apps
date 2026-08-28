@@ -1,2 +1,5 @@
+interface:
+  display_name: "Appstore Revenuecat Sync"
+  short_description: "Appstore Revenuecat Sync: run focused tasks"
 policy:
   allow_implicit_invocation: false
