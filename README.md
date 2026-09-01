@@ -1,3 +1,5 @@
+
+
 <p align="center">
   <img src="assets/icon.png" width="128" alt="Build Swift Apps logo">
 </p>
@@ -326,6 +328,7 @@ before relying on them. Dependency profiles are:
 ├── .codex-plugin/        # Codex plugin manifest
 ├── .claude-plugin/       # Claude Code plugin and marketplace manifests
 ├── .cursor-plugin/       # Cursor plugin manifest
+├── .mcp.json             # Bundled MCP server definitions
 ├── agents/               # OpenAI/Codex agent metadata
 ├── assets/               # Plugin icon assets
 ├── commands/             # Short command entrypoints
