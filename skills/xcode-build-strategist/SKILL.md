@@ -30,26 +30,16 @@ Entry point for end-to-end Xcode build optimization. Phase 1 recommends only; Ph
      --output-dir .build-benchmark
    ```
    Add `--touch-file path/to/File.swift` for real incremental rebuilds.
-3. Verify artifact quality: non-empty `timing_summary_categories`; `cached_clean` runs when `COMPILATION_CACHE_ENABLE_CACHING=YES`; variance noted when max-min exceeds 20% of median.
-4. If incremental builds are the pain and Xcode 16.4+ is available, recommend Task Backtraces and include any evidence.
-5. Decide whether compile work is on the critical path. If category totals are 2x+ wall-clock median, many fixes reduce CPU work but not wait time.
-6. Run relevant specialists:
+3. Check the exit status, run counts, and spread before comparing medians. If build categories are missing, inspect the raw logs. Use the build timeline to distinguish work that delays completion from concurrent work.
+4. Use the specialists that match the evidence:
    - `xcode-compile-profiler`
    - `xcode-project-auditor`
    - `swiftpm-build-inspector`
-7. Generate `.build-benchmark/optimization-plan.md`:
-   ```bash
-   python3 "$PLUGIN_ROOT/skills/xcode-build-strategist/scripts/generate_optimization_report.py" \
-     --benchmark .build-benchmark/<artifact>.json \
-     --project-path App.xcodeproj \
-     --diagnostics .build-benchmark/<diagnostics>.json \
-     --output .build-benchmark/optimization-plan.md
-   ```
-8. Stop and ask the developer to approve checklist items.
+5. Present the baseline command, artifact, and prioritized findings for approval. Include the specific change, evidence, risk, and measurement that would verify each finding. If a bottleneck is uncertain, describe the missing evidence.
 
 ## Phase 2: Execute
 
-After approval, read checked items from `.build-benchmark/optimization-plan.md`, delegate to `xcode-build-tuner`, append verification medians/deltas to the plan, and report before/after results.
+Apply approved changes with `xcode-build-tuner` and compare the same measurements before and after.
 
 ## Prioritization
 
@@ -57,14 +47,6 @@ After approval, read checked items from `.build-benchmark/optimization-plan.md`,
 - Serial bottlenecks such as `PhaseScriptExecution`, `CompileAssetCatalog`, `CodeSign`, planning, or emit-module work can outrank individual Swift file hotspots.
 - Source-level compile fixes should not outrank project/graph/config fixes unless evidence says they block wall-clock.
 - Every recommendation must include expected wait-time impact, evidence, affected files/settings, and risk.
-
-Use these impact phrases:
-
-- "Expected to reduce your [clean/incremental] build by approximately X seconds."
-- "Reduces parallel compile work but is unlikely to reduce build wait time because other tasks take equally long."
-- "Impact on wait time is uncertain; re-benchmark after applying."
-- "No wait-time improvement expected. The benefit is [deterministic builds/faster branch switching/reduced CI cost]."
-- For `COMPILATION_CACHE_ENABLE_CACHING`: "Measured 5-14% faster clean builds across tested projects; benefits compound with persistent DerivedData."
 
 ## Destination Notes
 
@@ -74,4 +56,7 @@ For iOS simulator benchmarks, resolve an installed iPhone/iOS pair first and pre
 
 Lead with wall-clock before/after. Include baseline/post medians, absolute and percentage deltas, changes made or intentionally skipped, confidence/noise notes, and a plain warning when workload improved but wait time did not.
 
-References: `references/orchestration-report-template.md`, `../../shared/build-optimization/references/benchmark-artifacts.md`, `recommendation-format.md`, and `build-settings-best-practices.md`.
+References:
+
+- [Benchmark artifacts](../../shared/build-optimization/references/benchmark-artifacts.md)
+- [Recommendations](../../shared/build-optimization/references/recommendation-format.md)

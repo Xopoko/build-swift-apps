@@ -28,8 +28,8 @@ private let logger = Logger(
 
 @MainActor
 func selectItem(_ item: SidebarItem) {
-  logger.info("Selected sidebar item: \(item.id, privacy: .public)")
   selection = item.id
+  logger.info("Sidebar selection changed")
 }
 ```
 
@@ -44,8 +44,7 @@ Use feature categories like `Windowing`, `Commands`, `MenuBar`, `Sidebar`, `Sync
 5. Verify through Console or:
 
    ```bash
-   log stream --style compact --predicate 'process == "AppName"'
-   log stream --style compact --predicate 'subsystem == "com.example.app" && category == "Sidebar"'
+   log stream --level info --style compact --predicate 'subsystem == "com.example.app" && category == "Sidebar"'
    ```
 
 6. Keep useful logs; remove or demote temporary noise.

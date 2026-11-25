@@ -1,19 +1,14 @@
 # App Store Review Readiness Command Reference
 
-Use this reference only after `appstore-review-readiness` is selected and the
-agent needs concrete `asc` commands for repair, submission, monitoring, or
-retry work.
-
 ## Readiness Checks
 
 ```bash
 asc builds info --build-id "BUILD_ID"
-asc validate --app "APP_ID" --version "1.2.3" --platform IOS --output table
 asc validate --app "APP_ID" --version "1.2.3" --platform IOS --strict --output table
-asc validate --app "APP_ID" --version-id "VERSION_ID" --platform IOS --output table
 ```
 
-Check `processingState=VALID`, encryption, content rights, localizations,
+Use `--version-id "VERSION_ID"` in place of `--version` when the exact ID is
+known. Check `processingState=VALID`, encryption, content rights, localizations,
 screenshots, app-info/privacy URL, digital goods, IAP/subscriptions, and App
 Privacy.
 
@@ -52,6 +47,9 @@ asc web privacy publish --app "APP_ID" --confirm
 
 ## Submit
 
+Choose the path that matches the artifact you have. Inspect the dry run before
+running the corresponding confirmed command.
+
 ```bash
 asc review submit --app "APP_ID" --version "1.2.3" --build "BUILD_ID" --dry-run --output table
 asc review submit --app "APP_ID" --version "1.2.3" --build "BUILD_ID" --confirm
@@ -85,9 +83,11 @@ asc status --app "APP_ID"
 asc submit status --id "SUBMISSION_ID"
 asc submit status --version-id "VERSION_ID"
 asc review submissions-list --app "APP_ID" --paginate
-asc submit cancel --id "SUBMISSION_ID" --confirm
-asc review submissions-cancel --id "SUBMISSION_ID" --confirm
 ```
+
+After identifying the active submission, use one cancellation command. For the
+review submission resolved with `asc review submissions-list`, use
+`asc review submissions-cancel --id "SUBMISSION_ID" --confirm`.
 
 For state errors, re-check valid build attachment, export compliance, content
 rights, localizations/screenshots, review details, pricing/availability, and

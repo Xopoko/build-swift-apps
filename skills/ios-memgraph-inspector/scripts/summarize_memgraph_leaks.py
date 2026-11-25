@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import re
+import shlex
 import subprocess
 import sys
 from collections import Counter
@@ -46,29 +47,23 @@ def parse_leaks(output: str) -> tuple[str | None, list[dict[str, str]]]:
     return total, leaks
 
 
-def trace_excerpt(memgraph: Path, address: str, max_lines: int) -> str:
-    result = run_leaks([f"--traceTree={address}", str(memgraph)])
-    text = result.stdout or result.stderr
+def leaks_excerpt(memgraph: Path, option: str, max_lines: int) -> str:
+    result = run_leaks([option, str(memgraph)])
+    text = result.stdout
+    if result.returncode not in (0, 1):
+        text = f"leaks {option} failed (exit {result.returncode})\n{result.stderr or text}"
     lines = [line.rstrip() for line in text.splitlines() if line.strip()]
     return "\n".join(lines[:max_lines])
 
 
-def group_by_type_excerpt(memgraph: Path, max_lines: int) -> str:
-    result = run_leaks(["--groupByType", str(memgraph)])
-    text = result.stdout or result.stderr
-    lines = [line.rstrip() for line in text.splitlines() if line.strip()]
-    return "\n".join(lines[:max_lines])
-
-
-def render(memgraph: Path, trace_limit: int, trace_lines: int, raw_output: str) -> str:
-    total, leaks = parse_leaks(raw_output)
+def render(memgraph: Path, trace_limit: int, trace_lines: int, total: str, leaks: list[dict[str, str]]) -> str:
     by_type = Counter(leak["type"] for leak in leaks)
     by_image = Counter(leak["image"] for leak in leaks)
 
     lines: list[str] = []
     lines.append(f"# Leak Summary: {memgraph}")
     lines.append("")
-    lines.append(f"- Total: {total or 'not found'}")
+    lines.append(f"- Total: {total}")
     lines.append(f"- Parsed leak entries: {len(leaks)}")
     lines.append("")
 
@@ -99,7 +94,7 @@ def render(memgraph: Path, trace_limit: int, trace_lines: int, raw_output: str) 
         lines.append("## TraceTree Excerpts")
         for leak in leaks[:trace_limit]:
             lines.append(f"### {leak['address']} {leak['type']}")
-            excerpt = trace_excerpt(memgraph, leak["address"], trace_lines)
+            excerpt = leaks_excerpt(memgraph, f"--traceTree={leak['address']}", trace_lines)
             lines.append("~~~text")
             lines.append(excerpt or "<no trace output>")
             lines.append("~~~")
@@ -109,17 +104,17 @@ def render(memgraph: Path, trace_limit: int, trace_lines: int, raw_output: str) 
         lines.append("## Grouped Leak Tree")
         lines.append("Use this when `traceTree` has no roots, which is common for unreachable retain cycles.")
         lines.append("~~~text")
-        lines.append(group_by_type_excerpt(memgraph, trace_lines) or "<no grouped leak output>")
+        lines.append(leaks_excerpt(memgraph, "--groupByType", trace_lines) or "<no grouped leak output>")
         lines.append("~~~")
         lines.append("")
 
     lines.append("## Raw Commands")
     lines.append("~~~bash")
-    lines.append(f"leaks --list {memgraph}")
+    graph_arg = shlex.quote(str(memgraph))
+    lines.append(f"leaks --list {graph_arg}")
     if leaks:
-        lines.append(f"leaks --groupByType {memgraph}")
-    if leaks:
-        lines.append(f"leaks --traceTree={leaks[0]['address']} {memgraph}")
+        lines.append(f"leaks --groupByType {graph_arg}")
+        lines.append(f"leaks --traceTree={leaks[0]['address']} {graph_arg}")
     lines.append("~~~")
     lines.append("")
 
@@ -134,18 +129,18 @@ def main() -> int:
     parser.add_argument("--out", type=Path, help="Write markdown summary to this file")
     args = parser.parse_args()
 
-    if not args.memgraph.exists():
+    if not args.memgraph.is_file():
         print(f"memgraph not found: {args.memgraph}", file=sys.stderr)
         return 2
 
     result = run_leaks(["--list", str(args.memgraph)])
-    raw = result.stdout or result.stderr
-    total, leaks = parse_leaks(raw)
-    if result.returncode != 0 and total is None and not leaks:
-        print(raw, file=sys.stderr, end="" if raw.endswith("\n") else "\n")
-        return result.returncode or 1
+    total, leaks = parse_leaks(result.stdout)
+    if result.returncode not in (0, 1) or total is None:
+        print(f"Could not read leak totals (leaks exit {result.returncode}).", file=sys.stderr)
+        print((result.stderr or result.stdout).rstrip(), file=sys.stderr)
+        return 1
 
-    summary = render(args.memgraph, args.trace_limit, args.trace_lines, raw)
+    summary = render(args.memgraph, args.trace_limit, args.trace_lines, total, leaks)
     if args.out:
         args.out.parent.mkdir(parents=True, exist_ok=True)
         args.out.write_text(summary)

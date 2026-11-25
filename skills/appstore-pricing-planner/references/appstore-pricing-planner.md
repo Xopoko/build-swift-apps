@@ -1,8 +1,5 @@
 # App Store Pricing Planner Command Reference
 
-Use this reference only after `appstore-pricing-planner` is selected and the
-agent needs concrete `asc` commands for subscription or IAP pricing.
-
 ## Subscriptions
 
 New product setup:

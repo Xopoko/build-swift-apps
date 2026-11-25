@@ -21,14 +21,14 @@ test, signing, or runtime behavior.
 
 ## Baseline First
 
-Capture a known-good command before writing manifests:
+Capture a known-good command before writing manifests. For an iOS example, select one available simulator UDID and use it for both builds:
 
 ```bash
 xcodebuild build \
   -project App.xcodeproj \
   -scheme App \
   -configuration Debug \
-  -destination "platform=iOS Simulator,name=<available iPhone simulator>,OS=latest" \
+  -destination "platform=iOS Simulator,id=$UDID" \
   -derivedDataPath DerivedDataBaseline
 ```
 
@@ -55,20 +55,21 @@ xcodebuild build \
   -workspace App.xcworkspace \
   -scheme App \
   -configuration Debug \
-  -destination "platform=iOS Simulator,name=<available iPhone simulator>,OS=latest" \
+  -destination "platform=iOS Simulator,id=$UDID" \
   -derivedDataPath DerivedDataTuist
 ```
 
 ## Validate Runtime
 
 ```bash
-xcrun simctl boot "<available simulator name or UDID>" 2>/dev/null || true
-xcrun simctl install booted DerivedDataTuist/Build/Products/Debug-iphonesimulator/App.app
-xcrun simctl launch --console-pty booted com.example.app
+xcrun simctl bootstatus "$UDID" -b &&
+  xcrun simctl install "$UDID" DerivedDataTuist/Build/Products/Debug-iphonesimulator/App.app &&
+  xcrun simctl launch --console-pty "$UDID" com.example.app
 ```
 
-Build success is not enough; launch catches missing resources, entitlements,
-bundle identifiers, embedded frameworks, and ObjC category issues.
+Run the same test plans or selectors on the original and generated projects. Compare which tests actually ran and their results.
+
+Launch both builds and exercise the features that depend on resources or embedded frameworks. For signed distribution, compare the effective signing settings and entitlements, and run the project's existing archive/export workflow if in scope. Report which parity checks ran.
 
 ## Common Fixes
 

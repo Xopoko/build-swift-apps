@@ -11,13 +11,11 @@ Use Apple Dev Search for Apple-platform community content when the user wants ar
 
 ## Workflow
 
-1. Start with one focused query using the user's wording.
-2. Hard cap ordinary requests at 3 commands total: initial search plus 2 retries. Stop once 3 useful candidates are found.
-3. If broad/noisy, retry with `--title-only` and tighter terms.
-4. Use syntax when helpful: quotes, `|`, `-`, `*`, `~1`, parentheses.
-5. For fresh reading lists, inspect `--recent`.
-6. Verify selected article URLs with Crawl4AI only when snippets are insufficient or candidates are close. Avoid generic web search/Tavily/Firecrawl unless Crawl4AI fails.
-7. Return 3-8 links with title, blog, date, URL, and one-line relevance.
+1. Start with a focused query using the user's wording. Narrow broad results
+   with `--title-only` and use `--recent` for a recent-articles feed.
+2. Open promising articles when the search snippet cannot establish relevance.
+3. Give the direct article links with a short reason for each selection. If the
+   service request fails, report the error and use another available search source.
 
 ## Commands
 

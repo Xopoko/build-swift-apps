@@ -5,6 +5,7 @@ import json
 import os
 import platform
 import re
+import shlex
 import shutil
 import statistics
 import subprocess
@@ -44,10 +45,15 @@ def parse_args() -> argparse.Namespace:
         default=[],
         help="Additional xcodebuild argument to append. Can be passed multiple times.",
     )
-    return parser.parse_args()
+    args = parser.parse_args()
+    if args.repeats < 1:
+        parser.error("--repeats must be at least 1")
+    if args.touch_file and not Path(args.touch_file).is_file():
+        parser.error(f"--touch-file must name an existing file: {args.touch_file}")
+    return args
 
 
-def command_base(args: argparse.Namespace) -> List[str]:
+def command_base(args: argparse.Namespace, derived_data_path: Optional[str]) -> List[str]:
     command = ["xcodebuild"]
     if args.workspace:
         command.extend(["-workspace", args.workspace])
@@ -56,102 +62,57 @@ def command_base(args: argparse.Namespace) -> List[str]:
     command.extend(["-scheme", args.scheme, "-configuration", args.configuration])
     if args.destination:
         command.extend(["-destination", args.destination])
-    if args.derived_data_path:
-        command.extend(["-derivedDataPath", args.derived_data_path])
+    if derived_data_path:
+        command.extend(["-derivedDataPath", derived_data_path])
     command.extend(args.extra_arg)
     return command
 
 
-def shell_join(parts: List[str]) -> str:
-    return " ".join(subprocess.list2cmdline([part]) for part in parts)
-
-
-_TASK_COUNT_RE = re.compile(r"^(.+?)\s*\((\d+)\s+tasks?\)$")
-
-
-def _extract_task_count(name: str) -> tuple[str, Optional[int]]:
-    """Split 'Category (N tasks)' into ('Category', N)."""
-    match = _TASK_COUNT_RE.match(name)
-    if match:
-        return match.group(1).strip(), int(match.group(2))
-    return name, None
+_TIMING_ROW = re.compile(
+    r"(?P<name>.+?)\s*(?:\((?P<tasks>\d+) tasks?\))?\s*"
+    r"\|\s*(?P<seconds>\d+(?:\.\d+)?) seconds?"
+)
 
 
 def parse_timing_summary(output: str) -> List[Dict]:
-    categories: Dict[str, float] = {}
-    task_counts: Dict[str, Optional[int]] = {}
+    categories: Dict[str, Dict] = {}
+    in_summary = False
     for raw_line in output.splitlines():
         line = raw_line.strip()
-        if not line:
+        if line == "Build Timing Summary":
+            in_summary = True
+        elif line.startswith("** BUILD"):
+            in_summary = False
+        elif not in_summary:
             continue
-        for suffix in (" seconds", " second", " sec"):
-            if not line.endswith(suffix):
-                continue
-            trimmed = line[: -len(suffix)]
-            if "|" in trimmed:
-                name_part, _, seconds_text = trimmed.rpartition("|")
-            else:
-                name_part, _, seconds_text = trimmed.rpartition(" ")
-            try:
-                seconds = float(seconds_text.strip())
-            except ValueError:
-                continue
-            cleaned_name = name_part.replace("  ", " ").strip(" -:")
-            if len(cleaned_name) < 3:
-                continue
-            base_name, count = _extract_task_count(cleaned_name)
-            categories[base_name] = categories.get(base_name, 0.0) + seconds
-            if count is not None:
-                task_counts[base_name] = (task_counts.get(base_name) or 0) + count
-            break
-    result: List[Dict] = []
-    for name, seconds in sorted(categories.items(), key=lambda item: item[1], reverse=True):
-        entry: Dict = {"name": name, "seconds": round(seconds, 3)}
-        if name in task_counts:
-            entry["task_count"] = task_counts[name]
-        result.append(entry)
-    return result
+        match = _TIMING_ROW.fullmatch(line)
+        if match:
+            name = match["name"].strip()
+            category = categories.setdefault(name, {"name": name, "seconds": 0.0})
+            category["seconds"] = round(category["seconds"] + float(match["seconds"]), 3)
+            if match["tasks"]:
+                category["task_count"] = category.get("task_count", 0) + int(match["tasks"])
+    return sorted(categories.values(), key=lambda category: category["seconds"], reverse=True)
 
 
 def run_command(command: List[str]) -> subprocess.CompletedProcess:
     return subprocess.run(command, capture_output=True, text=True)
 
 
-def stats_for(runs: List[Dict[str, object]]) -> Dict[str, float]:
+def stats_for(runs: List[Dict[str, object]]) -> Dict[str, Optional[float]]:
     durations = [run["duration_seconds"] for run in runs if run.get("success")]
-    if not durations:
-        return {
-            "count": 0,
-            "min_seconds": 0.0,
-            "max_seconds": 0.0,
-            "median_seconds": 0.0,
-            "average_seconds": 0.0,
-        }
     return {
         "count": len(durations),
-        "min_seconds": round(min(durations), 3),
-        "max_seconds": round(max(durations), 3),
-        "median_seconds": round(statistics.median(durations), 3),
-        "average_seconds": round(statistics.fmean(durations), 3),
+        "min_seconds": round(min(durations), 3) if durations else None,
+        "max_seconds": round(max(durations), 3) if durations else None,
+        "median_seconds": round(statistics.median(durations), 3) if durations else None,
+        "average_seconds": round(statistics.fmean(durations), 3) if durations else None,
     }
 
 
 def xcode_version() -> str:
     result = run_command(["xcodebuild", "-version"])
     return result.stdout.strip() if result.returncode == 0 else "unknown"
-
-
-def detect_compilation_caching(base_command: List[str]) -> bool:
-    """Check whether COMPILATION_CACHE_ENABLE_CACHING is enabled in the resolved build settings."""
-    result = run_command([*base_command, "-showBuildSettings"])
-    if result.returncode != 0:
-        return False
-    for line in result.stdout.splitlines():
-        stripped = line.strip()
-        if stripped.startswith("COMPILATION_CACHE_ENABLE_CACHING") and "=" in stripped:
-            value = stripped.split("=", 1)[1].strip()
-            return value == "YES"
-    return False
 
 
 def measure_build(
@@ -173,7 +134,7 @@ def measure_build(
         "duration_seconds": elapsed,
         "success": result.returncode == 0,
         "exit_code": result.returncode,
-        "command": shell_join(build_command),
+        "command": shlex.join(build_command),
         "raw_log_path": str(log_path),
         "timing_summary_categories": parse_timing_summary(result.stdout + result.stderr),
     }
@@ -186,92 +147,77 @@ def main() -> int:
 
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     artifact_stem = f"{timestamp}-{args.scheme.replace(' ', '-').lower()}"
-    base_command = command_base(args)
+    base_command = command_base(args, args.derived_data_path)
 
     if not args.skip_warmup:
         warmup = run_command([*base_command, "build"])
         if warmup.returncode != 0:
-          sys.stderr.write(warmup.stdout + warmup.stderr)
-          return warmup.returncode
-        warmup_clean = run_command([*base_command, "clean"])
-        if warmup_clean.returncode != 0:
-            sys.stderr.write(warmup_clean.stdout + warmup_clean.stderr)
-            return warmup_clean.returncode
-        warmup_rebuild = run_command([*base_command, "build"])
-        if warmup_rebuild.returncode != 0:
-            sys.stderr.write(warmup_rebuild.stdout + warmup_rebuild.stderr)
-            return warmup_rebuild.returncode
+            sys.stderr.write(warmup.stdout + warmup.stderr)
+            return warmup.returncode
 
     runs: Dict[str, list] = {"clean": [], "incremental": []}
+    exit_code = 0
 
     for index in range(1, args.repeats + 1):
         clean_result = run_command([*base_command, "clean"])
         clean_log_path = output_dir / f"{artifact_stem}-clean-prep-{index}.log"
         clean_log_path.write_text(clean_result.stdout + clean_result.stderr)
         if clean_result.returncode != 0:
-            sys.stderr.write(clean_result.stdout + clean_result.stderr)
-            return clean_result.returncode
-        runs["clean"].append(measure_build(base_command, artifact_stem, output_dir, "clean", index))
+            sys.stderr.write(f"Clean failed. See {clean_log_path}\n")
+            exit_code = clean_result.returncode
+            break
+        run = measure_build(base_command, artifact_stem, output_dir, "clean", index)
+        runs["clean"].append(run)
+        if not run["success"]:
+            exit_code = run["exit_code"]
+            break
 
-    # --- Cached clean builds ---------------------------------------------------
-    # When COMPILATION_CACHE_ENABLE_CACHING is enabled, the compilation cache lives outside
-    # DerivedData and survives product deletion.  We measure "cached clean"
-    # builds by pointing DerivedData at a temp directory, warming the cache with
-    # one build, then deleting the DerivedData directory (but not the cache)
-    # before each measured rebuild.  This captures the realistic scenario:
-    # branch switching, pulling changes, or Clean Build Folder.
-    should_cached_clean = not args.no_cached_clean and detect_compilation_caching(base_command)
-    if should_cached_clean:
-        dd_path = Path(args.derived_data_path) if args.derived_data_path else Path(
-            tempfile.mkdtemp(prefix="xcode-bench-dd-")
-        )
-        cached_cmd = list(base_command)
-        if not args.derived_data_path:
-            cached_cmd.extend(["-derivedDataPath", str(dd_path)])
-
-        cache_warmup = run_command([*cached_cmd, "build"])
-        if cache_warmup.returncode != 0:
-            sys.stderr.write("Warning: cached clean warmup build failed, skipping cached clean benchmarks.\n")
-            sys.stderr.write(cache_warmup.stdout + cache_warmup.stderr)
-            should_cached_clean = False
-
-    if should_cached_clean:
-        runs["cached_clean"] = []
+    incremental_label = "incremental" if args.touch_file else "zero-change"
+    if not exit_code:
         for index in range(1, args.repeats + 1):
-            shutil.rmtree(dd_path, ignore_errors=True)
-            runs["cached_clean"].append(
-                measure_build(cached_cmd, artifact_stem, output_dir, "cached-clean", index)
-            )
-        shutil.rmtree(dd_path, ignore_errors=True)
+            if args.touch_file:
+                Path(args.touch_file).touch()
+            run = measure_build(base_command, artifact_stem, output_dir, incremental_label, index)
+            runs["incremental"].append(run)
+            if not run["success"]:
+                exit_code = run["exit_code"]
+                break
 
-    # --- Incremental / zero-change builds --------------------------------------
-    incremental_label = "incremental"
-    if args.touch_file:
-        touch_path = Path(args.touch_file)
-        if not touch_path.exists():
-            sys.stderr.write(f"--touch-file path does not exist: {touch_path}\n")
-            return 1
-        incremental_label = "incremental"
-    else:
-        incremental_label = "zero-change"
+    if not exit_code and not args.no_cached_clean:
+        settings = run_command([*base_command, "-showBuildSettings"])
+        if settings.returncode != 0:
+            sys.stderr.write("Could not determine whether compilation caching is enabled.\n")
+            sys.stderr.write(settings.stdout + settings.stderr)
+            exit_code = settings.returncode
+        elif re.search(r"^\s*COMPILATION_CACHE_ENABLE_CACHING\s*=\s*YES\s*$", settings.stdout, re.MULTILINE):
+            runs["cached_clean"] = []
+            with tempfile.TemporaryDirectory(prefix="xcode-bench-") as temp_dir:
+                derived_data = Path(temp_dir) / "DerivedData"
+                cache_path = Path(temp_dir) / "CompilationCache.noindex"
+                cached_command = [
+                    *command_base(args, str(derived_data)),
+                    f"COMPILATION_CACHE_CAS_PATH={cache_path}",
+                ]
+                warmup = run_command([*cached_command, "build"])
+                if warmup.returncode != 0:
+                    sys.stderr.write("Cached-clean warm-up failed.\n")
+                    sys.stderr.write(warmup.stdout + warmup.stderr)
+                    exit_code = warmup.returncode
+                else:
+                    for index in range(1, args.repeats + 1):
+                        if derived_data.exists():
+                            shutil.rmtree(derived_data)
+                        run = measure_build(cached_command, artifact_stem, output_dir, "cached-clean", index)
+                        runs["cached_clean"].append(run)
+                        if not run["success"]:
+                            exit_code = run["exit_code"]
+                            break
 
-    for index in range(1, args.repeats + 1):
-        if args.touch_file:
-            touch_path.touch()
-        runs["incremental"].append(
-            measure_build(base_command, artifact_stem, output_dir, incremental_label, index)
-        )
-
-    summary: Dict[str, object] = {
-        "clean": stats_for(runs["clean"]),
-        "incremental": stats_for(runs["incremental"]),
-    }
-    if "cached_clean" in runs:
-        summary["cached_clean"] = stats_for(runs["cached_clean"])
-
+    summary = {phase: stats_for(phase_runs) for phase, phase_runs in runs.items()}
     artifact = {
         "schema_version": "1.2.0" if "cached_clean" in runs else "1.1.0",
         "created_at": datetime.now(timezone.utc).isoformat(),
+        "exit_code": exit_code,
         "build": {
             "entrypoint": "workspace" if args.workspace else "project",
             "path": args.workspace or args.project,
@@ -279,7 +225,7 @@ def main() -> int:
             "configuration": args.configuration,
             "destination": args.destination or "",
             "derived_data_path": args.derived_data_path or "",
-            "command": shell_join(base_command),
+            "command": shlex.join(base_command),
         },
         "environment": {
             "host": platform.node(),
@@ -296,11 +242,16 @@ def main() -> int:
     artifact_path.write_text(json.dumps(artifact, indent=2) + "\n")
 
     print(f"Saved benchmark artifact: {artifact_path}")
-    print(f"Clean median: {artifact['summary']['clean']['median_seconds']}s")
-    if "cached_clean" in artifact["summary"]:
-        print(f"Cached clean median: {artifact['summary']['cached_clean']['median_seconds']}s")
-    inc_label = "Incremental" if args.touch_file else "Zero-change"
-    print(f"{inc_label} median: {artifact['summary']['incremental']['median_seconds']}s")
+    if exit_code:
+        for phase_runs in runs.values():
+            for run in phase_runs:
+                if not run["success"]:
+                    sys.stderr.write(f"{run['id']} failed. See {run['raw_log_path']}\n")
+        return exit_code
+
+    labels = {"clean": "Clean", "incremental": incremental_label.capitalize(), "cached_clean": "Cached clean"}
+    for phase, stats in summary.items():
+        print(f"{labels[phase]} median: {stats['median_seconds']}s")
     return 0
 
 

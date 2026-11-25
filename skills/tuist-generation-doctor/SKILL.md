@@ -25,27 +25,28 @@ project configuration issue, a dependency wiring issue, or a Tuist bug.
 ## Commands
 
 ```bash
+cd "$PROJECT_DIR"
 tuist version
-mise exec tuist@latest -- tuist install --path "$PROJECT_DIR"
-mise exec tuist@latest -- tuist generate --no-open --path "$PROJECT_DIR"
+tuist install
+tuist generate --no-open
 ```
 
-For build-stage failures:
+For build-stage failures, use the exact generated workspace. For an iOS simulator build:
 
 ```bash
 xcodebuild build \
-  -workspace "$PROJECT_DIR"/*.xcworkspace \
+  -workspace "$WORKSPACE" \
   -scheme "$SCHEME" \
-  -destination "platform=iOS Simulator,name=<available iPhone simulator>,OS=latest" \
+  -destination "platform=iOS Simulator,id=$UDID" \
   -derivedDataPath "$PROJECT_DIR/DerivedData"
 ```
 
-For runtime-stage failures, launch the generated app:
+For runtime-stage failures, use the same simulator UDID for the build destination, install, and launch:
 
 ```bash
-xcrun simctl boot "<available simulator name or UDID>" 2>/dev/null || true
-xcrun simctl install booted "$APP_PATH"
-xcrun simctl launch --console-pty booted "$BUNDLE_ID"
+xcrun simctl bootstatus "$UDID" -b &&
+  xcrun simctl install "$UDID" "$APP_PATH" &&
+  xcrun simctl launch --console-pty "$UDID" "$BUNDLE_ID"
 ```
 
 ## Common Causes
@@ -60,17 +61,7 @@ xcrun simctl launch --console-pty booted "$BUNDLE_ID"
 
 ## When It Looks Like A Tuist Bug
 
-Clone Tuist only after you have a small reproduction:
-
-```bash
-TUIST_SRC="$(mktemp -d)"
-git clone --depth 1 https://github.com/tuist/tuist.git "$TUIST_SRC"
-cd "$TUIST_SRC"
-swift build --product tuist --product ProjectDescription --replace-scm-with-registry
-"$TUIST_SRC/.build/debug/tuist" generate --no-open --path "$REPRO_DIR"
-```
-
-If the reproduction fails on Tuist `main`, report:
+Recheck the minimal reproduction against a newer release without changing the project's pinned version. If it persists, report:
 
 - minimal reproduction archive
 - failing command and output

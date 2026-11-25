@@ -18,31 +18,13 @@ Use `macos-notarization-packager` first when the artifact is not clearly distrib
 - Developer ID Application certificate in keychain.
 - App builds for macOS.
 
-## Command Plan Helper
-
-For a deterministic command plan, run the helper from the plugin root:
-
-```bash
-python3 "$PLUGIN_ROOT/skills/appstore-notary-runner/scripts/notary_plan.py" \
-  --app-name "YourApp" --scheme "YourMacScheme" \
-  --archive-path "/tmp/YourApp.xcarchive" \
-  --export-path "/tmp/YourAppExport" \
-  --app-path "/tmp/YourAppExport/YourApp.app" \
-  --zip-path "/tmp/YourAppExport/YourApp.zip" \
-  --file "/tmp/YourAppExport/YourApp.zip" \
-  --include-archive --include-export --include-zip --include-submit \
-  --wait --confirming-actions
-```
-
-The helper prints commands only; it does not build, export, upload, staple, or change trust settings. Commands that write local files or submit to Apple require `--confirming-actions`. Pass `--json` for machine-readable output.
-
 ## Workflow
 
-1. Run read-only preflight first: signing identities, trust settings, recent notarization submissions, and existing submission status/log when an ID is known.
+1. Check the signing identity. If a submission ID already exists for this artifact, inspect its status and log before submitting again.
 2. If the artifact is not clearly Developer ID ready, route to `macos-notarization-packager` before exporting or submitting.
-3. Archive, export with Developer ID options, verify code-signing authority/timestamp, package as zip/DMG/PKG, then submit.
-4. Fetch status/log output and repair signed nested binaries, hardened runtime, timestamp, or trust issues before retrying.
-5. Staple only after Apple accepts the notarization submission.
+3. Verify signing and the timestamp, package as ZIP, DMG, or PKG, then submit the artifact intended for distribution.
+4. Check the submission status and log. Repair rejected artifacts before retrying.
+5. After `Accepted`, staple and validate the ticket on the submitted DMG or PKG. For ZIP distribution, staple its app bundle and regenerate the ZIP.
 
 ## References
 

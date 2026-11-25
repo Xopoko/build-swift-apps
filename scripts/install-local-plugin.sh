@@ -21,10 +21,10 @@ Installs the Build Swift Apps plugin into the default personal Codex plugin
 marketplace and optionally installs/checks host dependencies.
 
 Options:
-  --repo-url URL          Git repository URL to clone or update.
+  --repo-url URL          Git repository URL to clone.
   --plugin-dir DIR        Local plugin checkout path under marketplace root.
   --branch NAME           Clone or update a specific branch.
-  --marketplace-file FILE Marketplace JSON path.
+  --marketplace-file FILE Path ending in .agents/plugins/marketplace.json.
   --marketplace-name NAME Marketplace name used in Codex config.
   --deps-profile NAME     Dependency profile to install. Can be repeated.
   --skip-deps             Do not run install-deps.sh.
@@ -110,27 +110,44 @@ if ! command -v python3 >/dev/null 2>&1; then
   exit 1
 fi
 
-mkdir -p "$(dirname "$plugin_dir")" "$(dirname "$marketplace_file")"
+resolve_path() {
+  python3 -c 'from pathlib import Path; import sys; print(Path(sys.argv[1]).expanduser().resolve())' "$1"
+}
 
-if [[ -d "$plugin_dir/.git" ]]; then
-  current_checkout="$(cd "$script_dir/.." && pwd -P)"
-  selected_checkout="$(cd "$plugin_dir" && pwd -P)"
-  if [[ "$selected_checkout" == "$current_checkout" && -z "$branch" ]]; then
+marketplace_file="$(resolve_path "$marketplace_file")"
+plugin_dir="$(resolve_path "$plugin_dir")"
+case "$marketplace_file" in
+  */.agents/plugins/marketplace.json) ;;
+  *)
+    echo "Marketplace file must be at <marketplace root>/.agents/plugins/marketplace.json: $marketplace_file" >&2
+    exit 2
+    ;;
+esac
+
+marketplace_root="${marketplace_file%/.agents/plugins/marketplace.json}"
+marketplace_root="${marketplace_root:-/}"
+marketplace_prefix="${marketplace_root%/}/"
+if [[ "$plugin_dir" != "$marketplace_prefix"* || "$plugin_dir" == "$marketplace_root" ]]; then
+  echo "Plugin checkout must be inside the marketplace root: $marketplace_root" >&2
+  exit 2
+fi
+
+if [[ -e "$plugin_dir/.git" ]]; then
+  if [[ "$plugin_dir" == "$(dirname "$script_dir")" && -z "$branch" ]]; then
     echo "Using current plugin checkout at $plugin_dir"
   else
     echo "Updating plugin checkout at $plugin_dir"
-  fi
-  if [[ -n "$branch" ]]; then
-    git -C "$plugin_dir" fetch origin "$branch"
-    git -C "$plugin_dir" checkout "$branch"
-  fi
-  if [[ "$selected_checkout" != "$current_checkout" || -n "$branch" ]]; then
+    if [[ -n "$branch" ]]; then
+      git -C "$plugin_dir" fetch origin "$branch"
+      git -C "$plugin_dir" checkout "$branch"
+    fi
     git -C "$plugin_dir" pull --ff-only
   fi
 elif [[ -e "$plugin_dir" ]]; then
   echo "Plugin path exists but is not a git checkout: $plugin_dir" >&2
   exit 1
 else
+  mkdir -p "$(dirname "$plugin_dir")"
   echo "Cloning $repo_url into $plugin_dir"
   if [[ -n "$branch" ]]; then
     git clone --branch "$branch" "$repo_url" "$plugin_dir"
@@ -139,28 +156,10 @@ else
   fi
 fi
 
-codex_marketplace_root="$(cd "$(dirname "$marketplace_file")/../.." && pwd -P)"
-codex_plugin_link="$codex_marketplace_root/plugins/$plugin_name"
-if [[ "$(cd "$(dirname "$plugin_dir")" && pwd -P)" != "$codex_marketplace_root/plugins" ]]; then
-  mkdir -p "$(dirname "$codex_plugin_link")"
-  if [[ -L "$codex_plugin_link" ]]; then
-    current_link="$(readlink "$codex_plugin_link")"
-    if [[ "$current_link" != "$plugin_dir" ]]; then
-      ln -sfn "$plugin_dir" "$codex_plugin_link"
-    fi
-  elif [[ -e "$codex_plugin_link" ]]; then
-    echo "Codex plugin path exists and is not a symlink: $codex_plugin_link" >&2
-    echo "Move it aside or pass --plugin-dir inside $codex_marketplace_root/plugins." >&2
-    exit 1
-  else
-    ln -s "$plugin_dir" "$codex_plugin_link"
-  fi
-fi
-
 echo "Updating marketplace entry in $marketplace_file"
 MARKETPLACE_FILE="$marketplace_file" \
 MARKETPLACE_NAME="$marketplace_name" \
-PLUGIN_DIR="$plugin_dir" \
+SOURCE_PATH="./${plugin_dir#"$marketplace_prefix"}" \
 PLUGIN_NAME="$plugin_name" \
 python3 - <<'PY'
 from __future__ import annotations
@@ -169,26 +168,15 @@ import json
 import os
 from pathlib import Path
 
-marketplace_file = Path(os.environ["MARKETPLACE_FILE"]).expanduser().resolve()
+marketplace_file = Path(os.environ["MARKETPLACE_FILE"])
 marketplace_name = os.environ["MARKETPLACE_NAME"]
-plugin_dir = Path(os.environ["PLUGIN_DIR"]).expanduser().resolve()
+source_path = os.environ["SOURCE_PATH"]
 plugin_name = os.environ["PLUGIN_NAME"]
-marketplace_root = marketplace_file.parent
 
 if marketplace_file.exists():
     data = json.loads(marketplace_file.read_text())
 else:
     data = {}
-
-try:
-    rel_path = plugin_dir.relative_to(marketplace_root)
-except ValueError as error:
-    raise SystemExit(
-        f"Plugin dir must be inside the marketplace root ({marketplace_root}) "
-        "so marketplace source.path can stay relative."
-    ) from error
-
-source_path = f"./{rel_path.as_posix()}"
 
 data["name"] = marketplace_name
 data.setdefault("interface", {}).setdefault("displayName", "Local Plugins")
@@ -224,11 +212,12 @@ if [[ "$skip_codex" == true ]]; then
   echo "Skipped Codex registration."
 elif command -v codex >/dev/null 2>&1; then
   echo "Registering marketplace in Codex"
-  codex plugin marketplace add "$codex_marketplace_root"
+  codex plugin marketplace add "$marketplace_root"
 
   if codex plugin add --help >/dev/null 2>&1; then
     echo "Installing $plugin_id with Codex CLI"
     codex plugin add "$plugin_id" --json
+    echo "Start a new Codex thread before using newly installed skills."
   else
     echo "Codex CLI has no 'plugin add' command; enabling $plugin_id in config as a legacy fallback"
     CODEX_CONFIG_FILE="$HOME/.codex/config.toml" \
@@ -263,11 +252,12 @@ else:
 config_file.write_text(text)
 print(f"{plugin_id} enabled in {config_file}")
 PY
+    echo "Start a new Codex thread before using newly enabled skills."
   fi
 else
   echo "Codex CLI not found. Run this after installing Codex CLI:"
-  echo "  codex plugin marketplace add $codex_marketplace_root"
-  echo "  codex plugin add $plugin_id"
+  printf '  codex plugin marketplace add %q\n' "$marketplace_root"
+  printf '  codex plugin add %q\n' "$plugin_id"
   echo "For a legacy Codex CLI without 'plugin add', enable [plugins.\"$plugin_id\"] in ~/.codex/config.toml."
 fi
 
@@ -284,5 +274,3 @@ if [[ "$skip_deps" == false ]]; then
 else
   echo "Skipped dependency installer."
 fi
-
-echo "Done. Start a new Codex thread before using newly installed skills."

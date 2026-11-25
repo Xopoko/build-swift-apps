@@ -12,17 +12,8 @@
   <b>Codex</b> · <b>Claude Code</b> · <b>Cursor</b> · <b>pi</b> · <b>Manual skill installs</b>
 </p>
 
-Build Swift Apps is a multi-agent skill pack for practical Apple-platform
-development. It focuses on the workflows that usually decide whether an AI
-coding session is useful in a real Swift repository: building the app, running
-it on a simulator, understanding failures, improving SwiftUI and AppKit code,
-profiling performance, auditing Xcode build times, and preparing apps for
-release.
-
-The deepest coverage is for iOS and macOS, but the skills are written for
-Apple-platform Swift work in general. They are intentionally generic: no
-private project names, no private workflows, and no assumptions about
-one app architecture.
+The pack covers iOS Simulator, SwiftUI and AppKit, Xcode and SwiftPM builds,
+Tuist projects, and release workflows for iOS and macOS.
 
 ## Quick Start
 
@@ -53,9 +44,6 @@ Then start a new Codex thread and ask for a focused workflow:
 
 ### Claude Code
 
-This repository includes Claude Code plugin metadata under `.claude-plugin/`.
-After the repository is public or accessible to your GitHub account:
-
 ```text
 /plugin marketplace add Xopoko/build-swift-apps
 /plugin install build-swift-apps@build-swift-apps
@@ -73,130 +61,10 @@ cd "$HOME/.claude/plugins/marketplaces/build-swift-apps"
 Claude Code namespaces plugin skills, so invoke them as
 `/build-swift-apps:<skill-name>` when calling skills explicitly.
 
-### Cursor
-
-This repository includes Cursor plugin metadata under `.cursor-plugin/`.
-Use Cursor's plugin install or local testing flow once the repository is
-available to your Cursor workspace. The same `skills/` directory is packaged for
-Cursor, and `AGENTS.md` provides repository-level guidance for agents that read
-the open instruction format.
-
-### Dependency Check
-
-The skills can run with partial dependencies. Check the current machine first:
-
-```bash
-./scripts/doctor.sh --all
-```
-
-Install only the tool groups you need:
-
-```bash
-./scripts/install-deps.sh --profile core --profile mcp
-./scripts/install-deps.sh --profile tuist --profile performance --dry-run
-./scripts/install-deps.sh --all --skip ettrace --skip ipsw
-```
-
-See [docs/INSTALL.md](docs/INSTALL.md) for full install instructions,
-dependency profiles, and manual setup notes.
-
-## Token Efficiency
-
-Build Swift Apps keeps full skill instructions on demand and exposes concise
-routing metadata for skill selection. The static estimates below serialize each
-skill name, description, and source-relative file pointer with
-`scripts/token-report.py`, using `tiktoken` and the `o200k_base` encoding.
-
-This is a source comparison, not proof of runtime- or model-visible context.
-Hosts may add namespaces or origin URLs, omit fields, or pack the catalog in a
-different shape. Measure the active runtime separately when that distinction
-changes a decision.
-
-| Metric | Tokens | Notes |
-| --- | ---: | --- |
-| Source routing estimate | 3,922 | Name, description, and source-relative file pointer for all 61 skills. |
-| On-demand skill bodies | 37,791 | Full body text loaded only when a skill is selected. |
-
-| Skill | Source routing estimate | On-demand body |
-| --- | ---: | ---: |
-| `app-icon-studio` | 61 | 984 |
-| `apple-dev-research` | 58 | 503 |
-| `apple-firmware-inspector` | 71 | 676 |
-| `appstore-ads-operator` | 61 | 843 |
-| `appstore-archive-uploader` | 64 | 843 |
-| `appstore-aso-auditor` | 64 | 687 |
-| `appstore-build-monitor` | 53 | 334 |
-| `appstore-connect-cli` | 64 | 531 |
-| `appstore-crash-insights` | 56 | 525 |
-| `appstore-id-resolver` | 57 | 356 |
-| `appstore-metadata-localizer` | 75 | 425 |
-| `appstore-metadata-sync` | 73 | 436 |
-| `appstore-notary-runner` | 67 | 528 |
-| `appstore-pricing-planner` | 66 | 402 |
-| `appstore-record-creator` | 58 | 570 |
-| `appstore-release-director` | 67 | 726 |
-| `appstore-release-notes-writer` | 69 | 688 |
-| `appstore-release-planner` | 68 | 722 |
-| `appstore-revenuecat-sync` | 70 | 784 |
-| `appstore-review-readiness` | 73 | 440 |
-| `appstore-screenshot-pipeline` | 63 | 1,056 |
-| `appstore-screenshot-studio` | 62 | 696 |
-| `appstore-screenshot-validator` | 60 | 518 |
-| `appstore-signing-setup` | 59 | 646 |
-| `appstore-subscription-localizer` | 71 | 402 |
-| `appstore-testflight-coordinator` | 54 | 346 |
-| `appstore-wall-publisher` | 62 | 373 |
-| `appstore-workflow-runner` | 65 | 793 |
-| `build-swift-apps` | 83 | 981 |
-| `ios-ettrace-profiler` | 57 | 1,080 |
-| `ios-intents-architect` | 65 | 542 |
-| `ios-liquid-glass-designer` | 70 | 452 |
-| `ios-memgraph-inspector` | 65 | 624 |
-| `ios-rocketsim-operator` | 54 | 529 |
-| `ios-simulator-browser` | 63 | 848 |
-| `ios-simulator-debugger` | 71 | 507 |
-| `ios-swiftui-architect` | 66 | 691 |
-| `macos-appkit-bridge` | 70 | 566 |
-| `macos-liquid-glass-designer` | 66 | 593 |
-| `macos-notarization-packager` | 70 | 384 |
-| `macos-runtime-debugger` | 73 | 974 |
-| `macos-signing-inspector` | 63 | 528 |
-| `macos-swiftpm-runner` | 72 | 323 |
-| `macos-swiftui-architect` | 73 | 821 |
-| `macos-telemetry-probe` | 60 | 455 |
-| `macos-test-diagnoser` | 70 | 617 |
-| `macos-view-architect` | 60 | 500 |
-| `macos-window-architect` | 68 | 799 |
-| `swiftpm-build-inspector` | 58 | 536 |
-| `swiftui-performance-inspector` | 61 | 543 |
-| `swiftui-view-architect` | 58 | 481 |
-| `tuist-flaky-test-stabilizer` | 63 | 597 |
-| `tuist-generation-doctor` | 61 | 672 |
-| `tuist-migration-planner` | 64 | 620 |
-| `tuist-workspace-navigator` | 62 | 543 |
-| `xcode-build-baseline` | 56 | 711 |
-| `xcode-build-strategist` | 59 | 1,005 |
-| `xcode-build-tuner` | 59 | 837 |
-| `xcode-compile-profiler` | 61 | 582 |
-| `xcode-project-auditor` | 57 | 523 |
-| `xcode-ui-test-stabilizer` | 73 | 494 |
-
-Measured with `exact` token counting and the `o200k_base` encoding.
-Regenerate the report after skill edits:
-
-```bash
-python3 scripts/token-report.py
-```
+See the [installation guide](docs/INSTALL.md) for Cursor, pi, manual installs,
+and optional dependencies.
 
 ## Included Skills
-
-The skill IDs follow a deliberate naming system:
-
-- `app-icon-studio` for cross-platform Apple app icon generation and export.
-- `appstore-*` for App Store Connect, TestFlight, screenshots, metadata, pricing, and release operations.
-- `ios-*` and `macos-*` for platform-specific runtime, UI, packaging, and debugging work.
-- `swiftui-*`, `xcode-*`, `swiftpm-*`, `tuist-*`, and `apple-*` for framework, build, package, project-generation, and research workflows.
-- Role nouns describe the agent's posture: `architect`, `inspector`, `strategist`, `tuner`, `director`, `studio`, `operator`, `coordinator`, and `runner`.
 
 ### Build, Run, Debug, And Test
 
@@ -303,21 +171,8 @@ The same repository is packaged for several agent ecosystems:
 
 ## Host Dependencies
 
-The plugin exposes host requirements through the doctor profiles below.
-Tool-dependent skills name their primary dependencies; run the relevant profile
-before relying on them. Dependency profiles are:
-
-| Profile | Main tools |
-| --- | --- |
-| `core` | Xcode, Swift, `xcodebuild`, `xcrun`, `git`, `python3`, signing and plist tools. |
-| `mcp` | Node.js, `npm`, and `npx` for bundled MCP servers and browser-preview helpers. |
-| `github` | `gh` for GitHub-oriented publishing and issue or PR workflows. |
-| `tuist` | `mise` and `tuist@latest`. |
-| `app-store` | `asc`, `notarytool`, `stapler`, signing tools, and App Store Connect credentials. |
-| `screenshots` | AXe (`axe`) for `asc screenshots capture/run`, plus Node.js and the bundled `appstore-screenshot-studio` script dependency: `sharp`. |
-| `performance` | `ettrace`, Xcode tools, Python helper scripts, and dSYM utilities. |
-| `firmware` | `ipsw`. |
-| `simulator` | RocketSim.app with its bundled Agent Skill and CLI, plus Node/npx for `serve-sim` browser mirroring. |
+Run the doctor profile for the tools you plan to use. The [installation guide](docs/INSTALL.md#dependency-profiles)
+lists what each profile checks and installs.
 
 ## Repository Layout
 
@@ -331,25 +186,16 @@ before relying on them. Dependency profiles are:
 ├── commands/             # Short command entrypoints
 ├── docs/                 # Installation and operational documentation
 ├── NOTICE                # Required copyright and permission notices
-├── references/           # Plugin-level audits, ledgers, and routing notes
 ├── scripts/              # Install, dependency, doctor, and validation helpers
 ├── shared/               # Shared scripts, references, schemas, and support docs
 └── skills/               # Installable Agent Skills, one directory per workflow
 ```
 
-## Quality Bar
-
-- Evidence first: build, run, test, profile, or inspect before making broad claims.
-- Recommend-first for risky build and project changes: benchmark, plan, approve, then fix.
-- Scoped edits: prefer the local project's patterns over generic rewrites.
-- No private/internal workflows: this repository is meant to be reusable by any Apple-platform developer.
-- Cross-agent compatibility: when a skill is added, update Codex, Claude, Cursor, pi, README, and `AGENTS.md` surfaces together.
-
 ## Validation
 
 ```bash
 ./scripts/validate-package.sh
-./scripts/doctor.sh --all
+./scripts/doctor.sh --profile core --profile mcp --strict
 ```
 
 `validate-package.sh` checks JSON manifests, script syntax, skill frontmatter,

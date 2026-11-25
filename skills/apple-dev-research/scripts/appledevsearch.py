@@ -127,21 +127,16 @@ def render_text_results(
     query: str | None = None,
     title_only: bool = False,
 ) -> None:
+    value = total.get("value") if isinstance(total, dict) else None
+    suffix = "+" if isinstance(total, dict) and total.get("relation") == "gte" else ""
     if mode == "search":
-        relation = total.get("relation") if isinstance(total, dict) else None
-        value = total.get("value") if isinstance(total, dict) else None
         if value is not None:
-            suffix = "+" if relation == "gte" else ""
             print(f"Results: {value}{suffix}")
         print(f"Mode: {'title-only' if title_only else 'full-text'}")
         print(f"Query: {query}")
         print(f"Search URL: {build_search_url(query or '', title_only)}")
-    elif mode == "recent":
-        relation = total.get("relation") if isinstance(total, dict) else None
-        value = total.get("value") if isinstance(total, dict) else None
-        if value is not None:
-            suffix = "+" if relation == "gte" else ""
-            print(f"Recent articles available: {value}{suffix}")
+    elif value is not None:
+        print(f"Recent articles available: {value}{suffix}")
 
     if not hits:
         print("No results.")
@@ -162,72 +157,55 @@ def main() -> int:
     try:
         if args.counts:
             counts = fetch_json("/counts", args.timeout)
+            article_count, blog_count = counts["articleCount"], counts["blogCount"]
+            if type(article_count) is not int or type(blog_count) is not int:
+                raise ValueError("expected numeric article and blog counts")
             if args.json:
                 print(json.dumps(counts, ensure_ascii=False, indent=2))
             else:
-                print(f"Articles: {counts.get('articleCount', 'unknown')}")
-                print(f"Blogs: {counts.get('blogCount', 'unknown')}")
+                print(f"Articles: {article_count}")
+                print(f"Blogs: {blog_count}")
             return 0
 
         if args.recent:
             payload = fetch_json("/recent", args.timeout)
-            raw_hits = payload.get("hits", {}).get("hits", [])
-            items = [simplify_hit(hit) for hit in raw_hits[: args.limit]]
-            if args.json:
-                print(
-                    json.dumps(
-                        {
-                            "mode": "recent",
-                            "total": payload.get("hits", {}).get("total"),
-                            "results": items,
-                        },
-                        ensure_ascii=False,
-                        indent=2,
-                    )
-                )
-            else:
-                render_text_results(
-                    mode="recent",
-                    hits=items,
-                    total=payload.get("hits", {}).get("total"),
-                )
-            return 0
+            mode, query = "recent", None
+            details = {}
+        else:
+            mode, query = "search", args.query.strip()
+            payload = fetch_json(
+                "/search", args.timeout,
+                params={"q": query, "titleOnly": str(args.title_only).lower()},
+            )
+            details = {
+                "query": query,
+                "titleOnly": args.title_only,
+                "searchUrl": build_search_url(query, args.title_only),
+            }
 
-        payload = fetch_json(
-            "/search",
-            args.timeout,
-            params={
-                "q": args.query.strip(),
-                "titleOnly": str(args.title_only).lower(),
-            },
-        )
-        raw_hits = payload.get("hits", {}).get("hits", [])
+        raw_hits = payload["hits"]["hits"]
+        if not isinstance(raw_hits, list):
+            raise ValueError("expected a list of search hits")
+        total = payload["hits"].get("total")
         items = [simplify_hit(hit) for hit in raw_hits[: args.limit]]
         if args.json:
             print(
                 json.dumps(
-                    {
-                        "mode": "search",
-                        "query": args.query.strip(),
-                        "titleOnly": args.title_only,
-                        "searchUrl": build_search_url(args.query.strip(), args.title_only),
-                        "total": payload.get("hits", {}).get("total"),
-                        "results": items,
-                    },
+                    {"mode": mode, **details, "total": total, "results": items},
                     ensure_ascii=False,
                     indent=2,
                 )
             )
         else:
             render_text_results(
-                mode="search",
+                mode=mode,
                 hits=items,
-                total=payload.get("hits", {}).get("total"),
-                query=args.query.strip(),
+                total=total,
+                query=query,
                 title_only=args.title_only,
             )
         return 0
-    except Exception as exc:
+    except (AttributeError, KeyError, OSError, TypeError, ValueError) as exc:
         print(f"appledevsearch.py failed: {exc}", file=sys.stderr)
         return 1
 

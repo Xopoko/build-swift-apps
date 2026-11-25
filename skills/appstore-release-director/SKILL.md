@@ -19,7 +19,7 @@ Broad release orchestration. For focused `asc` work, delegate to `appstore-conne
    - app record, platform, bundle, app info, categories, pricing/availability, age rating, privacy/support URLs, screenshots, App Privacy, review details, release option;
    - for subscriptions, verify products and Terms/EULA link. Standard EULA: `https://www.apple.com/legal/internet-services/itunes/dev/stdeula/`.
 4. Compliance preflight:
-   - production runtime config, legal URLs return 2xx/3xx, encryption/export compliance, privacy/tracking claims match code/SDKs.
+   - production runtime config, legal URLs return a successful GET response after redirects, encryption/export compliance, privacy/tracking claims match code/SDKs.
 5. Build/test/archive/export/upload:
    - choose unique build number from live ASC state;
    - run required tests/smoke checks;

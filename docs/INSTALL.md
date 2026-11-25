@@ -46,8 +46,8 @@ The default installer:
 
 - clones or updates the plugin at `~/.agents/plugins/plugins/build-swift-apps`
 - writes or updates `~/.agents/plugins/marketplace.json`
-- registers the local marketplace with Codex and enables
-  `build-swift-apps@local` in `~/.codex/config.toml` when the `codex` CLI exists
+- registers the marketplace and installs `build-swift-apps@local` with the
+  Codex CLI. Older CLI versions can enable it through `~/.codex/config.toml`
 - offers to install the default dependency profiles: `core` and `mcp`
 
 Start a new Codex thread after installing or reinstalling the plugin so new
@@ -55,22 +55,19 @@ skills and MCP servers are loaded.
 
 ## Install From A Custom Location
 
-Use `--plugin-dir` when you want the personal marketplace to point at a
-specific managed checkout. Keep the checkout under the directory that contains
-`marketplace.json`; the marketplace entry intentionally uses a relative local
-path.
+Use `--plugin-dir` for another checkout under your home directory. For a
+separate marketplace, put the checkout under the marketplace root and use
+`.agents/plugins/marketplace.json` inside that root.
 
 ```bash
+marketplace_root="$PWD/team-marketplace"
 ./scripts/install-local-plugin.sh \
-  --repo-url https://github.com/Xopoko/build-swift-apps.git \
-  --plugin-dir "$HOME/.agents/plugins/plugins/build-swift-apps" \
-  --marketplace-file "$HOME/.agents/plugins/marketplace.json" \
-  --marketplace-name local
+  --plugin-dir "$marketplace_root/plugins/build-swift-apps" \
+  --marketplace-file "$marketplace_root/.agents/plugins/marketplace.json" \
+  --marketplace-name team-swift
 ```
 
-If you need a repo-local or team-local marketplace, put both the marketplace
-file and plugin checkout under the same root and pass both paths explicitly.
-Use `--skip-codex` when you only want to update `marketplace.json`.
+Use `--skip-codex` to skip registration and installation in Codex.
 
 ## Install For Other Agents
 
@@ -79,8 +76,6 @@ Use `--skip-codex` when you only want to update `marketplace.json`.
 This repository ships Claude Code plugin metadata in `.claude-plugin/`. The
 marketplace manifest points at this repository root, while skills, commands,
 MCP config, and support files stay at the plugin root.
-
-After the repository is public or available to your GitHub account:
 
 ```text
 /plugin marketplace add Xopoko/build-swift-apps
@@ -140,15 +135,19 @@ pi install https://github.com/Xopoko/build-swift-apps
 
 ### Manual Skill Install
 
-Every skill is a self-contained directory under `skills/`. Agents that support
-plain Agent Skills can install all skills or individual directories:
+For plain Agent Skills, keep the checkout intact and point the agent at its
+`skills/` directory if it supports a custom location. For an agent that reads
+skills from a fixed directory and follows symlinks, link the skills you need:
 
 ```bash
-cp -R skills/* "$AGENT_SKILLS_DIR/"
+mkdir -p "$AGENT_SKILLS_DIR"
+ln -s "$PWD/skills/macos-signing-inspector" "$AGENT_SKILLS_DIR/"
 ```
 
-When installing manually, also copy any referenced `shared/` files if the agent
-does not preserve repository-relative paths.
+You can copy an individual skill if it only uses files in its own directory.
+Skills that link to siblings or `shared/` need the original layout. Manual
+installation provides the skill files. Configure any MCP server they require in
+your agent separately.
 
 ## Dependency Profiles
 
@@ -218,13 +217,9 @@ Accept the Xcode license if Xcode prompts for it before builds can run.
 
 ### MCP Servers
 
-The plugin includes MCP server definitions that use `npx`:
-
-- `xcodebuildmcp` for simulator, UI automation, debugging, and logs
-- `apple-docs` through `mcp-remote`
-
-The first run may download npm packages. If you do not want MCP tooling on a
-machine, skip the `mcp` profile and disable or ignore MCP-dependent skills.
+The bundled `xcodebuildmcp` server runs through `npx` for simulator operations,
+UI automation, debugging, and logs. Its first run may download the npm package.
+`apple-docs` uses the hosted MCP endpoint configured in `.mcp.json`.
 
 ### Tuist
 
@@ -351,13 +346,15 @@ generates a disposable Xcode host project outside the user's source tree.
 
 ## Updating
 
-From the plugin checkout:
+From the default checkout, pull the source and reinstall it in Codex:
 
 ```bash
 git pull --ff-only
-codex plugin marketplace add "$HOME"
-./scripts/doctor.sh --all
+./scripts/install-local-plugin.sh --skip-deps
 ```
+
+For a custom checkout or marketplace, pass the same paths and marketplace name
+you used to install it. Start a new Codex chat after reinstalling.
 
 For Claude Code:
 
@@ -367,12 +364,3 @@ claude plugin update build-swift-apps@build-swift-apps
 cd "$HOME/.claude/plugins/marketplaces/build-swift-apps"
 ./scripts/install-deps.sh --profile screenshots --yes
 ```
-
-Then ensure `~/.codex/config.toml` contains:
-
-```toml
-[plugins."build-swift-apps@local"]
-enabled = true
-```
-
-Use a new Codex thread after reinstalling.

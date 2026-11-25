@@ -11,14 +11,26 @@ run_case() {
   local checkout_state="${3:-existing}"
   local fake_bin="$fixture_root/bin"
   local test_home="$fixture_root/home"
-  local plugin_dir="$test_home/.agents/plugins/plugins/build-swift-apps"
+  local marketplace_root="$test_home"
+  local plugin_dir="$marketplace_root/.agents/plugins/plugins/build-swift-apps"
   local call_log="$fixture_root/codex-calls.log"
   local git_call_log="$fixture_root/git-calls.log"
   local output="$fixture_root/install.out"
   local run_path="$fake_bin:/usr/bin:/bin"
+  local installer_args=(--marketplace-name fixture --skip-deps)
+  local install_status
+
+  if [[ "$checkout_state" == "custom" ]]; then
+    marketplace_root="$fixture_root/Team Marketplace"
+    plugin_dir="$marketplace_root/checkouts/swift plugin"
+    installer_args+=(
+      --plugin-dir "$plugin_dir"
+      --marketplace-file "$marketplace_root/.agents/plugins/marketplace.json"
+    )
+  fi
 
   mkdir -p "$fake_bin"
-  if [[ "$checkout_state" == "existing" ]]; then
+  if [[ "$checkout_state" != "clean" ]]; then
     mkdir -p "$plugin_dir/.git"
   else
     mkdir -p "$(dirname "$plugin_dir")"
@@ -61,7 +73,7 @@ SH
     chmod +x "$fake_bin/codex"
   else
     local tool
-    for tool in bash dirname ln mkdir readlink; do
+    for tool in bash dirname mkdir; do
       ln -s "$(command -v "$tool")" "$fake_bin/$tool"
     done
     run_path="$fake_bin"
@@ -72,7 +84,7 @@ SH
     CODEX_TEST_CALL_LOG="$call_log" \
     CODEX_TEST_MODE="$mode" \
     GIT_TEST_CALL_LOG="$git_call_log" \
-      "$installer" --marketplace-name fixture --skip-deps >"$output"; then
+      "$installer" "${installer_args[@]}" >"$output"; then
     install_status=0
   else
     install_status=$?
@@ -81,6 +93,20 @@ SH
   if [[ "$checkout_state" == "clean" ]]; then
     grep -Fx "clone https://github.com/Xopoko/build-swift-apps.git $plugin_dir" "$git_call_log" >/dev/null
   fi
+
+  python3 - "$marketplace_root" "$plugin_dir" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+root, checkout = map(Path, sys.argv[1:])
+marketplace = json.loads((root / ".agents/plugins/marketplace.json").read_text())
+assert marketplace["name"] == "fixture"
+source = marketplace["plugins"][0]["source"]["path"]
+assert source.startswith("./"), source
+assert (root / source).resolve() == checkout.resolve(), source
+PY
+  [[ ! -L "$marketplace_root/plugins/build-swift-apps" ]]
 
   if [[ "$mode" == "no-codex" ]]; then
     [[ "$install_status" -eq 0 ]]
@@ -91,7 +117,7 @@ SH
     return
   fi
 
-  grep -Fx "plugin marketplace add $test_home" "$call_log" >/dev/null
+  grep -Fx "plugin marketplace add $marketplace_root" "$call_log" >/dev/null
   grep -Fx "plugin add --help" "$call_log" >/dev/null
 
   if [[ "$mode" == "install-failure" ]]; then
@@ -113,13 +139,15 @@ SH
   fi
 }
 
-fixture_root="$(mktemp -d)"
-trap 'rm -rf "$fixture_root"' EXIT
+test_root="$(mktemp -d)"
+test_root="$(cd "$test_root" && pwd -P)"
+trap 'rm -rf "$test_root"' EXIT
 
-run_case current "$fixture_root/current"
-run_case current "$fixture_root/clean" clean
-run_case legacy "$fixture_root/legacy"
-run_case install-failure "$fixture_root/install-failure"
-run_case no-codex "$fixture_root/no-codex"
+run_case current "$test_root/current"
+run_case current "$test_root/clean" clean
+run_case current "$test_root/custom" custom
+run_case legacy "$test_root/legacy"
+run_case install-failure "$test_root/install-failure"
+run_case no-codex "$test_root/no-codex"
 
 echo "install-local-plugin tests passed"

@@ -18,6 +18,9 @@
       "type": "string",
       "format": "date-time"
     },
+    "exit_code": {
+      "type": "integer"
+    },
     "build": {
       "type": "object",
       "required": [
@@ -144,7 +147,8 @@
           "enum": [
             "clean",
             "cached-clean",
-            "incremental"
+            "incremental",
+            "zero-change"
           ]
         },
         "duration_seconds": {
@@ -208,19 +212,19 @@
           "minimum": 0
         },
         "min_seconds": {
-          "type": "number",
+          "type": ["number", "null"],
           "minimum": 0
         },
         "max_seconds": {
-          "type": "number",
+          "type": ["number", "null"],
           "minimum": 0
         },
         "median_seconds": {
-          "type": "number",
+          "type": ["number", "null"],
           "minimum": 0
         },
         "average_seconds": {
-          "type": "number",
+          "type": ["number", "null"],
           "minimum": 0
         }
       },

@@ -96,9 +96,6 @@ if [[ ! -d "$app_path" ]]; then
 fi
 
 app_path="$(cd "$(dirname "$app_path")" && pwd)/$(basename "$app_path")"
-mkdir -p "$out_dir"
-out_dir="$(cd "$out_dir" && pwd)"
-candidates_file="$out_dir/dsym-candidates.txt"
 
 if [[ -f "$app_path/Info.plist" ]]; then
   executable="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' "$app_path/Info.plist")"
@@ -111,6 +108,20 @@ if [[ ! -f "$app_binary" ]]; then
   echo "error: app executable not found: $app_binary" >&2
   exit 1
 fi
+
+if [[ ${#required_frameworks[@]} -gt 0 ]]; then
+  for name in "${required_frameworks[@]}"; do
+    name="${name%.framework}"
+    if [[ "$name" == */* || ! -d "$app_path/Frameworks/$name.framework" ]]; then
+      echo "error: required embedded framework not found: $name" >&2
+      exit 1
+    fi
+  done
+fi
+
+mkdir -p "$out_dir"
+out_dir="$(cd "$out_dir" && pwd)"
+candidates_file="$out_dir/dsym-candidates.txt"
 
 default_roots=(
   "$(dirname "$app_path")"
@@ -137,9 +148,11 @@ fi
 
 if [[ ${#extra_dsyms[@]} -gt 0 ]]; then
   for dsym in "${extra_dsyms[@]}"; do
-    if [[ -d "$dsym" ]]; then
-      printf '%s\n' "$dsym" >> "$candidates_file"
+    if [[ ! -d "$dsym" ]]; then
+      echo "error: --extra-dsym directory not found: $dsym" >&2
+      exit 1
     fi
+    printf '%s\n' "$dsym" >> "$candidates_file"
   done
 fi
 
@@ -165,12 +178,26 @@ contains_required_framework() {
   return 1
 }
 
+dsym_matches() {
+  local dsym="$1" uuid dsym_uuids
+  shift
+  dsym_uuids="$(dwarfdump --uuid "$dsym" 2>/dev/null | awk '{ print $2 }')" || return 1
+  for uuid in "$@"; do
+    grep -Fxq "$uuid" <<< "$dsym_uuids" || return 1
+  done
+}
+
 copy_matching_dsym() {
   local binary="$1"
   local label="$2"
   local required="$3"
 
   if [[ ! -f "$binary" ]]; then
+    if [[ "$required" == "required" ]]; then
+      echo "error: required $label executable not found: $binary" >&2
+      return 1
+    fi
+    echo "warning: $label executable not found: $binary" >&2
     return 0
   fi
 
@@ -190,22 +217,8 @@ copy_matching_dsym() {
   fi
 
   local match=""
-  local candidate_uuids=""
-  local has_all_uuids=""
   while IFS= read -r candidate; do
-    candidate_uuids="$(dwarfdump --uuid "$candidate" 2>/dev/null | awk '{ print $2 }' || true)"
-    if [[ -z "$candidate_uuids" ]]; then
-      continue
-    fi
-    has_all_uuids=true
-    for uuid in "${binary_uuids[@]}"; do
-      if ! grep -Fxq "$uuid" <<< "$candidate_uuids"; then
-        has_all_uuids=false
-        break
-      fi
-    done
-
-    if [[ "$has_all_uuids" == "true" ]]; then
+    if dsym_matches "$candidate" "${binary_uuids[@]}"; then
       match="$candidate"
       break
     fi
@@ -222,8 +235,14 @@ copy_matching_dsym() {
   fi
 
   local dest="$out_dir/$(basename "$match")"
-  rm -rf "$dest"
-  cp -R "$match" "$dest"
+  if [[ -e "$dest" || -L "$dest" ]]; then
+    if ! dsym_matches "$dest" "${binary_uuids[@]}"; then
+      echo "error: dSYM destination already exists with different symbols: $dest" >&2
+      return 1
+    fi
+  else
+    cp -R "$match" "$dest"
+  fi
   printf 'matched %s UUIDs %s -> %s\n' "$label" "${binary_uuids[*]}" "$dest"
 }
 

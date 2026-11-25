@@ -1,9 +1,5 @@
 # App Store Metadata Sync Command Reference
 
-Use this reference only after `appstore-metadata-sync` is selected and the agent
-needs concrete `asc` commands for canonical metadata JSON, quick edits, keyword
-sync, alternate `.strings` flows, or legacy fastlane migration.
-
 ## Canonical Workflow
 
 ```bash

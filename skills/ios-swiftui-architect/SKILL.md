@@ -18,7 +18,7 @@ Use for iOS SwiftUI UI structure and component choices. Read the nearest local e
 - Prefer `@State`, `@Binding`, `@Observable`, and `@Environment`; avoid unnecessary view models.
 - If iOS 16 or earlier is supported, use `ObservableObject` with `@StateObject` at the owner and `@ObservedObject` for injection.
 - Keep views small, composed, and project-formatted.
-- Use `.task`/`.task(id:)` with loading/error states; read `references/async-state.md` for cancellation/debouncing.
+- Use [view-owned async tasks](../../shared/swiftui/async-state.md) for loading, cancellation, and debouncing.
 - Put shared app services in `@Environment`; keep feature-local dependencies as explicit inputs.
 - Prefer newest SwiftUI APIs that match deployment target and call out minimum OS.
 - Maintain legacy patterns only inside legacy files.
@@ -62,7 +62,6 @@ Choose ownership first; do not introduce a reference model when value state is e
 - `references/sheets.md`
 - `references/deeplinks.md`
 - `references/app-wiring.md`
-- `references/async-state.md`
 - `references/previews.md`
 - `references/performance.md`
 

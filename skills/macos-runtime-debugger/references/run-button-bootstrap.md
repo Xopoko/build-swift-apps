@@ -1,178 +1,51 @@
-# Run Button Bootstrap
+# Reusable macOS Build and Run
 
-This is the canonical bootstrap contract for the macOS Build plugin's local run
-loop.
+Set up a durable loop when the user requests one or when they need repeated
+launches and the project has no suitable entrypoint. Reuse working scripts,
+schemes, products, and run actions. Create or refresh an executable
+`script/build_and_run.sh` when that is the chosen entrypoint.
 
-Use this bootstrap only when the user explicitly requests a reusable run loop,
-or when a project lacks an adequate macOS run entrypoint and repeated use makes
-one clearly worthwhile. Do not bootstrap durable files for a one-shot build,
-launch, log, or debug task.
+Resolve paths relative to the script's project root so the loop can run from
+another working directory. Stop only the previous instance of the selected
+app or executable. Build the selected Xcode scheme or SwiftPM product and
+stop on failure before attempting launch. Open a GUI app with
+`/usr/bin/open -n "$app_bundle"`. Run a CLI product directly.
 
-1. Inspect existing repository scripts, Xcode schemes, package products, and
-   host actions; reuse them when they already provide the requested loop.
-2. Create or refresh one project-local `script/build_and_run.sh` only when the
-   explicit bootstrap remains useful.
-3. Make it executable and use it as the single kill + build + run entrypoint.
-4. Support optional `--debug`, `--logs`, `--telemetry`, and `--verify` flags.
-5. Write `.codex/environments/environment.toml` only when the user explicitly
-   asks for a Codex Run action. Preserve unrelated existing actions.
+| Mode | Behavior after a successful build |
+| --- | --- |
+| No flag | Launch the fresh bundle or executable. |
+| `--debug` | Debug the selected executable with `lldb`. Preserve the bundle context for GUI apps. |
+| `--logs` | Launch and stream unified logs filtered to the selected process. |
+| `--telemetry` | Launch and stream logs for the app's configured subsystem. |
+| `--verify` | Check that the launched app is running or that a short-lived CLI exited successfully. Match the fresh process to the build's executable path. |
 
-## `script/build_and_run.sh`
+Run the requested mode after setup and report its result.
 
-Use one project-specific script with a tiny mode switch and a default no-flag
-path that just kills, builds, and launches. Keep raw executable launch only for
-true command-line tools. For SwiftPM AppKit/SwiftUI GUI apps, stage a
-project-local `.app` bundle and launch that bundle with `/usr/bin/open -n`.
+## SwiftPM GUI Bundle
 
-### SwiftPM CLI executable
+Use the executable returned by the project's SwiftPM build. Put it under
+`Contents/MacOS/` in a project-local `.app` bundle. Set these values in
+`Contents/Info.plist` from the app's identity and deployment target.
 
-Use this shape for true command-line tools:
+| Key | Value |
+| --- | --- |
+| `CFBundlePackageType` | `APPL` |
+| `CFBundleExecutable` | File name of the staged executable |
+| `CFBundleIdentifier` | The app's bundle identifier |
+| `CFBundleName` | The app's name |
+| `LSMinimumSystemVersion` | The app's minimum macOS version |
+| `NSPrincipalClass` | `NSApplication` for the minimal AppKit or SwiftUI host |
 
-```bash
-#!/usr/bin/env bash
-set -euo pipefail
+Copy any resources the app needs. Launch the bundle with `/usr/bin/open -n`.
 
-MODE="${1:-run}"
-APP_NAME="MyTool"
+## Codex Run Action
 
-pkill -x "$APP_NAME" >/dev/null 2>&1 || true
-
-swift build
-APP_BINARY="$(swift build --show-bin-path)/$APP_NAME"
-
-case "$MODE" in
-  run)
-    "$APP_BINARY"
-    ;;
-  --debug|debug)
-    lldb -- "$APP_BINARY"
-    ;;
-  --logs|logs)
-    "$APP_BINARY" &
-    /usr/bin/log stream --info --style compact --predicate "process == \"$APP_NAME\""
-    ;;
-  --telemetry|telemetry)
-    "$APP_BINARY" &
-    /usr/bin/log stream --info --style compact --predicate "subsystem == \"com.example.MyTool\""
-    ;;
-  --verify|verify)
-    "$APP_BINARY" &
-    sleep 1
-    pgrep -x "$APP_NAME" >/dev/null
-    ;;
-  *)
-    echo "usage: $0 [run|--debug|--logs|--telemetry|--verify]" >&2
-    exit 2
-    ;;
-esac
-```
-
-### SwiftPM AppKit/SwiftUI GUI app
-
-Use this shape for SwiftPM GUI apps so they launch as a real foreground app
-bundle with Dock activation and bundle metadata:
-
-```bash
-#!/usr/bin/env bash
-set -euo pipefail
-
-MODE="${1:-run}"
-APP_NAME="MyApp"
-BUNDLE_ID="com.example.MyApp"
-MIN_SYSTEM_VERSION="14.0"
-
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-DIST_DIR="$ROOT_DIR/dist"
-APP_BUNDLE="$DIST_DIR/$APP_NAME.app"
-APP_CONTENTS="$APP_BUNDLE/Contents"
-APP_MACOS="$APP_CONTENTS/MacOS"
-APP_BINARY="$APP_MACOS/$APP_NAME"
-INFO_PLIST="$APP_CONTENTS/Info.plist"
-
-pkill -x "$APP_NAME" >/dev/null 2>&1 || true
-
-swift build
-BUILD_BINARY="$(swift build --show-bin-path)/$APP_NAME"
-
-rm -rf "$APP_BUNDLE"
-mkdir -p "$APP_MACOS"
-cp "$BUILD_BINARY" "$APP_BINARY"
-chmod +x "$APP_BINARY"
-
-cat >"$INFO_PLIST" <<PLIST
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-  <key>CFBundleExecutable</key>
-  <string>$APP_NAME</string>
-  <key>CFBundleIdentifier</key>
-  <string>$BUNDLE_ID</string>
-  <key>CFBundleName</key>
-  <string>$APP_NAME</string>
-  <key>CFBundlePackageType</key>
-  <string>APPL</string>
-  <key>LSMinimumSystemVersion</key>
-  <string>$MIN_SYSTEM_VERSION</string>
-  <key>NSPrincipalClass</key>
-  <string>NSApplication</string>
-</dict>
-</plist>
-PLIST
-
-open_app() {
-  /usr/bin/open -n "$APP_BUNDLE"
-}
-
-case "$MODE" in
-  run)
-    open_app
-    ;;
-  --debug|debug)
-    lldb -- "$APP_BINARY"
-    ;;
-  --logs|logs)
-    open_app
-    /usr/bin/log stream --info --style compact --predicate "process == \"$APP_NAME\""
-    ;;
-  --telemetry|telemetry)
-    open_app
-    /usr/bin/log stream --info --style compact --predicate "subsystem == \"$BUNDLE_ID\""
-    ;;
-  --verify|verify)
-    open_app
-    sleep 1
-    pgrep -x "$APP_NAME" >/dev/null
-    ;;
-  *)
-    echo "usage: $0 [run|--debug|--logs|--telemetry|--verify]" >&2
-    exit 2
-    ;;
-esac
-```
-
-Launching a SwiftPM GUI binary directly can produce no Dock icon, no foreground
-activation, and missing bundle identifier warnings. If the `.app` bundle opens
-but the main window still does not come forward, the app entrypoint may need
-`NSApp.setActivationPolicy(.regular)` and
-`NSApp.activate(ignoringOtherApps: true)`.
-
-Adapt the build step for Xcode projects by replacing `swift build` with
-`xcodebuild -project ...` or `xcodebuild -workspace ...`, then launch the built
-`.app` binary from DerivedData or a deterministic project-local build path. Keep
-the one-script interface and mode flags the same.
-
-## Optional `.codex/environments/environment.toml`
-
-Only when the user asks for a Codex Run action, write or update the environment
-file at this exact path:
-
-`.codex/environments/environment.toml`
-
-with this action shape:
+When requested, update `.codex/environments/environment.toml` after the
+entrypoint works. Point the existing Run action at the chosen script or add
+one if absent. Preserve unrelated setup and actions. For a new file using
+`script/build_and_run.sh`, use this shape.
 
 ```toml
-# THIS IS AUTOGENERATED. DO NOT EDIT MANUALLY
 version = 1
 name = "<project-name>"
 
@@ -184,7 +57,3 @@ name = "Run"
 icon = "run"
 command = "./script/build_and_run.sh"
 ```
-
-If the project already has an environment file, preserve unrelated setup and
-actions. Update an existing `Run` action to point at
-`./script/build_and_run.sh` instead of adding a duplicate.

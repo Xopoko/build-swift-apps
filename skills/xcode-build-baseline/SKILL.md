@@ -14,12 +14,11 @@ Measure before recommending build-time changes. Do not edit project files while 
 ## Rules
 
 - Keep workspace/project, scheme, configuration, destination, DerivedData path, and warm-up rules consistent.
-- Pin the toolchain: verify the active Xcode with `xcode-select -p` and record it in the artifact. When several Xcode versions are installed, switch with `sudo xcode-select -s /Applications/Xcode.app/Contents/Developer` before the first measured run, never mid-series — a toolchain switch invalidates every prior measurement.
+- Keep the Xcode version fixed. Set `DEVELOPER_DIR` for the benchmark process when the project needs a different Xcode installation.
 - Capture clean and incremental behavior separately.
 - Write timestamped JSON artifacts under `.build-benchmark/`.
 - Report medians and spread, not only the fastest run.
 - For iOS Simulator, resolve an installed iPhone/iOS pair; prefer `OS=latest` only when Xcode accepts it.
-- In git worktrees, create missing package `exclude:` directories such as `__Snapshots__` before dependency resolution, or SPM can crash.
 
 ## Inputs
 
@@ -28,12 +27,11 @@ Infer or ask for workspace/project, scheme, configuration, destination, simulato
 ## Default Run
 
 1. Normalize the build command and record every cache-affecting flag.
-2. Warm up once only if needed to prove the command succeeds.
+2. Run one untimed validation build, or use `--skip-warmup` if validation is already complete.
 3. Run 3 clean builds.
-4. If `COMPILATION_CACHE_ENABLE_CACHING = YES`, run 3 cached-clean builds; use `--no-cached-clean` only when intentionally skipped.
-5. Run 3 zero-change builds with no `--touch-file`; this measures fixed overhead from dependency planning, scripts, codesign, validation, and related phases.
-6. Optionally run 3 incremental builds with `--touch-file path/to/SomeFile.swift`.
-7. Preserve raw logs, summaries, and JSON artifacts.
+4. Run 3 zero-change builds, or supply `--touch-file path/to/SomeFile.swift` to measure rebuilds after touching a source file. Run the helper with each input separately if you need both results.
+5. If `COMPILATION_CACHE_ENABLE_CACHING = YES` is detected, run 3 cached-clean builds using temporary DerivedData. Use `--no-cached-clean` to omit that phase.
+6. Preserve raw logs and the JSON artifact.
 
 Preferred helper:
 
@@ -56,6 +54,5 @@ If the user only requested measurement, stop there. For optimization, hand the a
 
 ## Resources
 
-- `references/benchmarking-workflow.md`
 - `../../shared/build-optimization/references/benchmark-artifacts.md`
 - `../../shared/build-optimization/schemas/build-benchmark.schema.json`

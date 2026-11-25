@@ -66,6 +66,7 @@ If tests are not available or a simulator is unavailable, record that explicitly
 ## Archive
 
 ```bash
+set -o pipefail
 mkdir -p "$release_dir"
 
 xcodebuild archive \
@@ -104,9 +105,8 @@ plutil -p "$release_dir/ExportOptions.plist"
 ## Export IPA
 
 ```bash
+set -o pipefail
 export_dir="$release_dir/export"
-rm -rf "$export_dir"
-mkdir -p "$export_dir"
 
 xcodebuild -exportArchive \
   -archivePath "$release_dir/$scheme.xcarchive" \
@@ -115,16 +115,18 @@ xcodebuild -exportArchive \
   | tee "$release_dir/export.log"
 ```
 
-Find the IPA:
+Use a fresh export directory for each run. Find the IPA and record its checksum:
 
 ```bash
 find "$export_dir" -maxdepth 1 -name '*.ipa' -print
-shasum -a 256 "$export_dir/$scheme.ipa" | tee "$release_dir/ipa.sha256"
+shasum -a 256 "$export_dir/$scheme.ipa" > "$release_dir/ipa.sha256"
 ```
 
 ## Preflight
 
-Run the helper against the archived app Info.plist:
+Run the helper against the archived app Info.plist and exported IPA. It checks
+the bundle ID, version, and build against the archive and reports the SHA-256.
+Run App Store validation separately to check upload eligibility.
 
 ```bash
 python3 <skill-dir>/scripts/appstore_preflight.py \
@@ -143,6 +145,7 @@ Add project-specific checks for runtime configuration. For example, inspect a ru
 ## Validate IPA
 
 ```bash
+set -o pipefail
 xcrun altool --validate-app \
   -f "$export_dir/$scheme.ipa" \
   --type ios \
@@ -155,6 +158,7 @@ xcrun altool --validate-app \
 ## Upload IPA
 
 ```bash
+set -o pipefail
 xcrun altool --upload-app \
   -f "$export_dir/$scheme.ipa" \
   --type ios \

@@ -1,24 +1,17 @@
 # App Store Screenshot Validator Command Reference
 
-Use this reference only after `appstore-screenshot-validator` is selected and
-the agent needs concrete `asc`, `sips`, or upload commands.
-
 ## Source Of Truth
 
-Do not hard-code Apple screenshot size tables. Query current ASC data:
+Query current ASC data for each device family the app supports:
 
 ```bash
 asc screenshots sizes --output table
 asc screenshots sizes --all --output table
 ```
 
-For apps that run on each device family, the current required anchors are the
-iPhone 6.9-inch slot (`IPHONE_69`) and iPad 13-inch slot
-(`IPAD_PRO_3GEN_129`). Apple accepts the iPhone 6.5-inch slot when 6.9-inch
-screenshots are not provided. Use `--all` to resolve every accepted iPhone
-size, Apple TV, Mac, Vision Pro, iMessage, or Watch slot before resizing.
-
 ## ASC Validation
+
+Use the actual device types selected from the size list. For example:
 
 ```bash
 asc screenshots validate --path "./screenshots/iphone" --device-type "IPHONE_69" --output table
@@ -27,16 +20,8 @@ asc screenshots validate --path "./screenshots/ipad" --device-type "IPAD_PRO_3GE
 
 ## Filename Cleanup
 
-Sanitize filenames when screenshots contain hidden Unicode spaces:
-
-```bash
-python3 -c "import os
-for f in os.listdir('.'):
-    clean = f.replace('\u202f', ' ')
-    if f != clean:
-        os.rename(f, clean)
-        print(f'Renamed: {clean}')"
-```
+Replace hidden spaces in output filenames when copying screenshots into the
+upload directory. Check for filename collisions before writing the copies.
 
 ## Inspect, Strip Alpha, Resize, Convert
 
@@ -81,8 +66,5 @@ asc screenshots upload --version-localization "LOC_ID" --path "./resized" --devi
 asc screenshots upload --version-localization "LOC_ID" --path "./resized" --device-type "IPHONE_69"
 ```
 
-## Guardrails
-
-- Preserve originals by writing to a separate directory.
-- Do not stretch across incompatible aspect ratios unless the user accepts the visual tradeoff.
-- Prefer `asc screenshots validate` over visual inspection before upload.
+Open the final images after conversion to check for stretching, clipping, or
+visual changes the upload validation cannot detect.

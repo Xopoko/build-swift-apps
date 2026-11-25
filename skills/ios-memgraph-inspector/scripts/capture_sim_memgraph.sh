@@ -124,16 +124,13 @@ metadata="$out_dir/$safe_bundle-$pid-$timestamp.metadata.txt"
   echo "leaks_output: $leaks_output"
 } > "$metadata"
 
-set +e
-leaks "--outputGraph=$memgraph" "$pid" > "$leaks_output" 2>&1
-leaks_status=$?
-set -e
+leaks_status=0
+leaks "--outputGraph=$memgraph" "$pid" > "$leaks_output" 2>&1 || leaks_status=$?
 
 echo "leaks_exit_status: $leaks_status" >> "$metadata"
 
-if [[ ! -f "$memgraph" ]]; then
-  echo "memgraph_missing: true" >> "$metadata"
-  echo "leaks failed to create a memgraph; see: $leaks_output" >&2
+if [[ "$leaks_status" -gt 1 || ! -s "$memgraph" ]]; then
+  echo "leaks failed to capture a usable memgraph (exit $leaks_status); see: $leaks_output" >&2
   echo "metadata: $metadata" >&2
   exit 1
 fi

@@ -27,11 +27,10 @@ Use this file to find component and cross-cutting guidance. Each entry lists whe
 - Title menus: `references/title-menus.md` — Use for filter or context menus in the navigation title.
 - Menu bar commands: `references/menu-bar.md` — Use when adding or customizing macOS/iPadOS menu bar commands.
 - Loading & placeholders: `references/loading-placeholders.md` — Use for redacted skeletons, empty states, and loading UX.
-- Lightweight clients: `references/lightweight-clients.md` — Use for small, closure-based API clients injected into stores.
 
 ## Cross-cutting references
 
 - App wiring and dependency graph: `references/app-wiring.md` — Use to wire the app shell, install shared dependencies, and decide what belongs in the environment.
-- Async state and task lifecycle: `references/async-state.md` — Use when a view loads data, reacts to changing input, or needs cancellation/debouncing guidance.
+- [Async state and task lifecycle](../../../shared/swiftui/async-state.md) for view-owned loading and search.
 - Previews: `references/previews.md` — Use when adding `#Preview`, fixtures, mock environments, or isolated preview setup.
 - Performance guardrails: `references/performance.md` — Use when a screen is large, scroll-heavy, frequently updated, or showing signs of avoidable re-renders.

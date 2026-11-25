@@ -21,11 +21,7 @@ Use for project- and target-level build inefficiencies. Recommend first and requ
   and avoid speculative Podfile or generated Pods-project tuning
 - Xcode 16.4+ Task Backtraces for tasks that rerun unexpectedly
 
-## Required Checklist
-
-Every audit includes a build settings checklist for Debug and Release using `[x]`/`[ ]`. Scope is build performance only; do not flag language-migration settings such as `SWIFT_STRICT_CONCURRENCY` or `SWIFT_UPCOMING_FEATURE_*`.
-
-Apple-aligned checks: accurate target dependencies, schemes in Dependency Order, scripts with declared inputs/outputs, `.xcfilelist` for many files, consistent explicit module settings, and module-map readiness.
+When a finding depends on a setting, check the effective value for the affected target, configuration, and destination with `xcodebuild -showBuildSettings`. Read the project or xcconfig to locate its source before proposing an edit.
 
 ## Typical Wins
 

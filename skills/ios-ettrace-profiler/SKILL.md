@@ -22,8 +22,7 @@ Capture one focused, symbolicated ETTrace profile from an iOS simulator app. Pai
 ## Setup
 
 ```bash
-RUN_DIR="${RUN_DIR:-$(mktemp -d "${TMPDIR:-/tmp}/codex-ios-ettrace.XXXXXX")}"
-mkdir -p "$RUN_DIR"
+RUN_DIR="$(mktemp -d "${TMPDIR:-/tmp}/codex-ios-ettrace.XXXXXX")"
 brew install emergetools/homebrew-tap/ettrace
 ```
 
@@ -44,11 +43,10 @@ SKILL_DIR="<absolute skill dir>"
 APP="<built simulator App.app>"
 DSYMS="$RUN_DIR/dsyms"
 "$SKILL_DIR/scripts/collect_ios_dsyms.sh" \
-  --app "$APP" --out-dir "$DSYMS" \
-  --search-root "$(dirname "$APP")" --search-root "$PWD" \
-  --extra-dsym "$RUN_DIR/ETTrace-iphonesimulator.xcarchive/dSYMs/ETTrace.framework.dSYM"
+  --app "$APP" --out-dir "$DSYMS"
 ```
 
+Pass `--extra-dsym <path>` for a known dSYM outside the build search roots.
 Add `--require-framework <Name>` for app-owned dynamic frameworks. Use `--require-all-frameworks` only when every embedded framework should have symbols. If required dSYMs are missing, rebuild that exact app with dSYM generation or add the right build output as a search root. Use `dwarfdump --uuid` when symbolication looks suspicious. Meaningful first-party "have library but no symbol" lines fail the trace; small system/ETTrace buckets are usually acceptable.
 
 ## Capture
@@ -58,20 +56,10 @@ Run with a TTY and answer prompts with `write_stdin`.
 ```bash
 cd "$RUN_DIR"
 CAPTURE_MARKER="$RUN_DIR/.ettrace-capture-start"; : > "$CAPTURE_MARKER"
-find "$RUN_DIR" -maxdepth 1 \( -name 'output.json' -o -name 'output_*.json' \) -delete
 ettrace --simulator --launch --verbose --dsyms "$DSYMS"
 ```
 
-For runtime flow, omit `--launch`:
-
-```bash
-cd "$RUN_DIR"
-CAPTURE_MARKER="$RUN_DIR/.ettrace-capture-start"; : > "$CAPTURE_MARKER"
-find "$RUN_DIR" -maxdepth 1 \( -name 'output.json' -o -name 'output_*.json' \) -delete
-ettrace --simulator --verbose --dsyms "$DSYMS"
-```
-
-Use `--launch` only for startup/first render. For first launch after install, set `ETTraceRunAtStartup=YES`, run `ettrace --simulator`, then launch from the home screen. Add `--multi-thread` only when needed.
+Use a fresh run directory for each capture. Omit `--launch` when profiling an already running app. For first launch after install, set `ETTraceRunAtStartup=YES`, run `ettrace --simulator`, then launch from the home screen. Add `--multi-thread` only when needed.
 
 ## Preserve And Report
 

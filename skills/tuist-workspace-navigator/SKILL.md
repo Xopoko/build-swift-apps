@@ -30,8 +30,7 @@ tuist generate AppFeature AppFeatureTests --no-open
 tuist generate tag:feature:payments --no-open
 ```
 
-Use target tags consistently for teams, layers, and features so agents can
-scope generation and testing without guessing target names.
+Use tags already defined in the project's manifests.
 
 ## Manifest Guidance
 
@@ -70,12 +69,7 @@ that the selector did not match.
 
 ## Troubleshooting
 
-- Missing products: run `tuist install`, then regenerate.
-- Type not found: check excluded source folders and generated files.
-- Resource not found at runtime: inspect resource globs and package resources.
-- Undefined symbols: verify SDK dependencies and product type overrides.
-- Objective-C category crash: add `-ObjC` or targeted `-force_load` where the
-  consuming target needs it.
+If generation, build, or launch fails, use the [Tuist generation doctor](../tuist-generation-doctor/SKILL.md).
 
 Report the generated workspace path, scheme, command, and final build/test
 result.

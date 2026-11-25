@@ -10,8 +10,6 @@ Claude Code, Cursor, pi, and manual skill installs.
   `SKILL.md` entrypoint and any local scripts or references that skill needs.
 - `shared/` contains canonical support files used by multiple skills. Link to
   shared files instead of duplicating long guidance.
-- `references/` contains plugin-level audits, ledgers, and routing notes that
-  should not live in hot skill files.
 - `commands/` contains short command entrypoints that delegate to canonical
   skills.
 - `.codex-plugin/`, `.claude-plugin/`, `.cursor-plugin/`, `agents/`, and
@@ -44,7 +42,8 @@ generic and reusable.
 
 ## Rules For Editing
 
-- Prefer small, focused skills over broad catch-all instructions.
+- Keep separate skills when they serve different requests, need different
+  tools, or produce different evidence.
 - Put repeated logic in `shared/` and reference it from skills.
 - Do not copy private/internal workflows into this repository.
 - Keep skill descriptions trigger-friendly and specific.
@@ -64,7 +63,7 @@ Run these before committing:
 
 ```bash
 ./scripts/validate-package.sh
-./scripts/doctor.sh --profile core --profile mcp
+./scripts/doctor.sh --profile core --profile mcp --strict
 ```
 
 `doctor.sh --all` can report optional missing tools on a healthy machine. Treat

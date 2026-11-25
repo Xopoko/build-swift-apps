@@ -1,45 +1,13 @@
 ---
 name: macos-view-architect
-description: "macOS SwiftUI view structure: refactor oversized scenes into subviews, explicit roots, scoped state, command/toolbar ownership, and narrow AppKit bridges."
+description: Refactor macOS SwiftUI root views while preserving window-scoped state, focused commands, toolbars, and AppKit boundaries.
 ---
 
 # macOS View Architect
 
-Refactor macOS SwiftUI toward explicit scene structure and focused files. Use `macos-swiftui-architect` for missing desktop patterns and `macos-appkit-bridge` for true AppKit boundaries.
+Use [SwiftUI view refactoring](../swiftui-view-architect/SKILL.md) for extraction and state ownership. Apply these macOS checks when splitting a root view:
 
-## Rules
-
-- Model scenes explicitly: main window, settings, utility windows, inspectors, menu bar extras.
-- Keep predictable order unless local style is stronger: environment, inputs, state, non-view computed vars, init, body, view helpers, actions.
-- Split responsibilities:
-  - `App/<AppName>App.swift`: `@main` app and minimal delegate only.
-  - `Views/*`: root composition and feature UI.
-  - `Models/*`: values, IDs, selection enums.
-  - `Stores/*`: state stores.
-  - `Services/*`: network, app-server, process clients.
-  - `Support/*`: small formatters/resolvers/extensions.
-- Accept one-file apps only for tiny throwaway snippets: ~50 lines, one screen, no persistence/network/process client/reusable models.
-- Prefer dedicated subview types over many computed `some View` fragments; pass explicit data, bindings, and actions.
-- Keep root layout stable around selection/scenes/commands; avoid top-level branch swaps.
-- Extract non-trivial actions, command routing, and toolbar behavior from `body`.
-- Use `@SceneStorage` for per-window ephemeral state and `@AppStorage` for durable preferences.
-- Keep AppKit bridges isolated behind small wrappers/helpers.
-- For modern `@Observable` owners, use `@State`; on older targets use `@StateObject`/`@ObservedObject`.
-
-## Workflow
-
-1. Identify scene boundary and whether the file owns too many responsibilities.
-2. Reorder top-to-bottom.
-3. Extract sidebar rows, detail panels, inspectors, toolbar content, and utility surfaces into subviews/files.
-4. Stabilize selection/layout.
-5. Move action/command/toolbar logic into named helpers or types.
-6. Narrow AppKit edges.
-7. Build after each major split and keep behavior intact unless requested.
-
-## Smells
-
-- One root view owns window scaffolding, settings, toolbar, commands, service clients, and detail layout.
-- iOS push navigation forced into a Mac sidebar-detail problem.
-- Several booleans for mutually exclusive inspectors/sheets/windows.
-- AppKit objects passed through unrelated SwiftUI layers.
-- Large computed view fragments replacing real subviews.
+- Keep sidebar selection and inspector state with the window that owns them so opening a second window does not change the first.
+- Trace which window or focused view handles each menu command and toolbar action. Verify shortcuts and inactive-window behavior after moving their code.
+- Keep Settings, utility windows, and menu bar extras at their scene boundaries. See [macOS SwiftUI scenes](../macos-swiftui-architect/SKILL.md) when changing how those scenes are presented.
+- Keep AppKit objects with the code that needs them. See [AppKit bridges](../macos-appkit-bridge/SKILL.md) when the responsibility belongs to an AppKit API.

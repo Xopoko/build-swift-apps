@@ -1,8 +1,5 @@
 # App Store Notary Runner Command Reference
 
-Use this reference only after `appstore-notary-runner` is selected and the
-agent needs concrete commands for macOS Developer ID notarization.
-
 ## Preflight
 
 ```bash
@@ -12,21 +9,15 @@ security find-identity -v -p codesigning | grep "Developer ID Application"
 If missing, create the certificate in Apple Developer. ASC API cannot create
 Developer ID certificates.
 
-For trust errors such as `Invalid trust settings` or `errSecInternalComponent`:
+For trust errors such as `Invalid trust settings` or `errSecInternalComponent`,
+inspect the trust settings. Identify the specific certificate and override before
+changing trust settings.
 
 ```bash
-security dump-trust-settings 2>&1 | grep -A1 "Developer ID"
-security find-certificate -c "Developer ID Application" -p ~/Library/Keychains/login.keychain-db > /tmp/devid-cert.pem
-security remove-trusted-cert /tmp/devid-cert.pem
+security dump-trust-settings
 ```
 
-Verify chain/timestamp after export:
-
-```bash
-codesign -dvvv "/tmp/YourAppExport/YourApp.app" 2>&1 | grep -E "Authority|Timestamp"
-```
-
-## Archive, Export, Submit
+## Archive And Export
 
 ```bash
 xcodebuild archive -scheme "YourMacScheme" -configuration Release \
@@ -39,47 +30,76 @@ your `teamID`.
 ```bash
 xcodebuild -exportArchive -archivePath /tmp/YourApp.xcarchive \
   -exportPath /tmp/YourAppExport -exportOptionsPlist ExportOptions.plist
-ditto -c -k --keepParent "/tmp/YourAppExport/YourApp.app" "/tmp/YourAppExport/YourApp.zip"
-asc notarization submit --file "/tmp/YourAppExport/YourApp.zip" --wait
 ```
 
-Custom polling:
+Verify the code signature and check the reported authority and timestamp after
+export:
 
 ```bash
-asc notarization submit --file "/tmp/YourAppExport/YourApp.zip" --wait --poll-interval 30s --timeout 1h
+app="/tmp/YourAppExport/YourApp.app"
+codesign --verify --deep --strict --verbose=2 "$app"
+codesign -dvvv "$app"
 ```
 
-## Status, Logs, Stapling
+## Submit The Distribution Artifact
+
+For ZIP distribution:
+
+```bash
+artifact="/tmp/YourAppExport/YourApp.zip"
+ditto -c -k --keepParent "$app" "$artifact"
+```
+
+For DMG distribution, build the final disk image before submission:
+
+```bash
+artifact="/tmp/YourApp.dmg"
+hdiutil create -volname "YourApp" -srcfolder "$app" -format UDZO "$artifact"
+```
+
+For an unsigned flat installer, use a separate Developer ID Installer certificate:
+
+```bash
+artifact="/tmp/YourApp-signed.pkg"
+productsign --sign "Developer ID Installer: YOUR NAME (TEAM_ID)" unsigned.pkg "$artifact"
+```
+
+Once the chosen artifact exists, confirm the flags with `asc notarization submit --help` and submit it:
+
+```bash
+asc notarization submit --file "$artifact" --wait
+```
+
+## Status And Stapling
 
 ```bash
 asc notarization status --id "SUBMISSION_ID" --output table
 asc notarization log --id "SUBMISSION_ID"
 asc notarization list --limit 5 --output table
-xcrun stapler staple "/tmp/YourAppExport/YourApp.app"
 ```
 
-For DMG:
+After the submission reaches `Accepted`, staple and verify the exact DMG or PKG
+that was submitted:
 
 ```bash
-hdiutil create -volname "YourApp" -srcfolder "/tmp/YourAppExport/YourApp.app" -ov -format UDZO "/tmp/YourApp.dmg"
-xcrun stapler staple "/tmp/YourApp.dmg"
+xcrun stapler staple "$artifact"
+xcrun stapler validate "$artifact"
 ```
 
-For PKG, use a separate Developer ID Installer certificate:
+For ZIP distribution, staple and verify the app, then create a new ZIP containing
+that stapled app:
 
 ```bash
-productsign --sign "Developer ID Installer: YOUR NAME (TEAM_ID)" unsigned.pkg signed.pkg
-asc notarization submit --file signed.pkg --wait
+xcrun stapler staple "$app"
+xcrun stapler validate "$app"
+ditto -c -k --keepParent "$app" "/tmp/YourAppExport/YourApp-stapled.zip"
 ```
 
 ## Troubleshooting
 
-- Invalid trust settings: remove custom trust overrides as above.
 - Not Developer ID signed: re-export with `method=developer-id`.
 - Missing secure timestamp: use `xcodebuild -exportArchive` or manual `codesign --timestamp`.
 - Large upload timeout: `ASC_UPLOAD_TIMEOUT=5m asc notarization submit --file ./LargeApp.zip --wait`.
 - Invalid result: fetch `asc notarization log --id ...`; common causes are unsigned nested binaries, missing hardened runtime, or embedded libraries without timestamps.
 
-Notes: `asc notarization` uses Apple Notary API v2, streams uploads to Apple's
-S3 bucket, supports multipart over 5 GB, and should be checked with `asc
-notarization submit --help`.
+See Apple's [notarization workflow](https://developer.apple.com/documentation/security/customizing-the-notarization-workflow) for accepted archive types and stapling rules.

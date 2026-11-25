@@ -11,26 +11,12 @@ For go/no-go planning, first-submission strategy, or choosing which release skil
 
 Preconditions: auth configured; app/version/build IDs resolved; build processing complete unless using `--wait`; metadata, app info, screenshots, review details, content rights, encryption, pricing, availability, and App Privacy expected complete.
 
-## Command Plan Helper
-
-For a deterministic dry-run command plan, run the helper from the plugin root:
-
-```bash
-python3 "$PLUGIN_ROOT/skills/appstore-review-readiness/scripts/review_readiness_plan.py" \
-  --app "APP_ID" --version "1.2.3" --platform IOS --build "BUILD_ID" \
-  --version-id "VERSION_ID" --submission-id "SUBMISSION_ID" \
-  --metadata-dir "./metadata" --include-submit
-```
-
-The helper prints commands only; it does not call ASC, mutate review state, or read credentials. Pass `--json` for machine-readable output. Pass `--confirming-actions` only after manually verifying that generated `--confirm` commands are intended.
-
 ## Workflow
 
-1. Generate the helper plan unless the user requested one specific command.
-2. Run read-only readiness checks first: processed build state, normal validate, strict validate, and version-id validate when available.
-3. Repair blockers in the smallest owning surface: encryption, content rights, metadata, screenshots, IAP/subscriptions, or App Privacy.
-4. Submit only after dry-run output is clean and the user has clearly selected the build/version to send.
-5. Monitor by app, version ID, or submission ID; cancel only when the active submission is identified and the user intends cancellation.
+1. Check that the intended build is processed. Run strict validation for the target version, using the version ID if available.
+2. Repair the reported blockers in the relevant area: encryption, content rights, metadata, screenshots, IAP/subscriptions, or App Privacy.
+3. Submit only after dry-run output is clean and the user has clearly selected the build/version to send.
+4. Monitor by app, version ID, or submission ID. Cancel only when the active submission is identified and the user intends cancellation.
 
 For macOS App Store review, use the same flow with `--platform MAC_OS`.
 

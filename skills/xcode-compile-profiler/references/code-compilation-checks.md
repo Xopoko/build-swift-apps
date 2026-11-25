@@ -8,9 +8,8 @@ Use this reference when a build benchmark shows compilation dominating build tim
 - build log compile tasks
 - `-warn-long-function-bodies`
 - `-warn-long-expression-type-checking`
-- `-debug-time-compilation` (per-file compile time ranking)
 - `-debug-time-function-bodies` (unfiltered per-function timing)
-- `-driver-time-compilation` (driver overhead)
+- `-driver-time-compilation` (Swift driver job timing)
 - `-stats-output-dir` (detailed compiler statistics as JSON)
 
 ## Triage Questions
@@ -18,7 +17,7 @@ Use this reference when a build benchmark shows compilation dominating build tim
 1. Is one file or expression dominating compile time?
 2. Is the issue mostly Swift type-checking, mixed-language bridging, or header import churn?
 3. Are multiple files in the same module paying the same module-setup cost repeatedly?
-4. Is `SwiftEmitModule` disproportionately large for any target? If a single-line change triggers 60s+ of module emission, the target is likely too large or heavily macro-dependent.
+4. Which targets spend time in `SwiftEmitModule` for representative changes? Compare the module variants and dependencies before proposing a split.
 5. Does `Planning Swift module` dominate incremental builds? If modules are replanned but no compiles are scheduled, build inputs are being invalidated unexpectedly.
 
 ## Checklist
@@ -64,8 +63,7 @@ Use this reference when a build benchmark shows compilation dominating build tim
 ### SwiftUI view decomposition
 
 - Extract subviews into dedicated `struct View` types instead of using `@ViewBuilder` helper properties. Separate structs reduce the type-checker scope per `body` property.
-- Break monolithic `body` properties (roughly 50+ lines) into smaller composed subviews. Large result-builder bodies are among the most expensive expressions to type-check.
-- Avoid deeply nested `Group`/`VStack`/`HStack` hierarchies within a single body.
+- Use the measured warning to identify the expensive expression, then rerun the same diagnostic build after extracting it.
 
 ### Closure and chain patterns
 

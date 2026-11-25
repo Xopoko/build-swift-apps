@@ -15,18 +15,6 @@ Use `appstore-pricing-planner` for price points, availability, or schedules. Use
 - `APP_ID`, group/subscription/IAP IDs resolved.
 - Products already exist.
 
-## Command Plan Helper
-
-For a deterministic command plan, run the helper from the plugin root:
-
-```bash
-python3 "$PLUGIN_ROOT/skills/appstore-subscription-localizer/scripts/subscription_localization_plan.py" \
-  --app "APP_ID" --group-id "GROUP_ID" --subscription-id "SUB_ID" --iap-id "IAP_ID" \
-  --locale "en-US,fr-FR" --name "Display Name"
-```
-
-The helper prints commands only; it does not call ASC or change localizations. Create/update commands require `--confirming-actions`. Pass `--json` for machine-readable output.
-
 ## Workflow
 
 1. Resolve `APP_ID`, group IDs, subscription IDs, IAP IDs, and existing localization IDs before mutation.

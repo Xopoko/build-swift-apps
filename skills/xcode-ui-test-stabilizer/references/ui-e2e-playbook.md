@@ -1,33 +1,18 @@
-# UI E2E Playbook (Generic)
+# Xcode UI Test Playbook
 
 ## Quick start
 
-Run a single UI test (use the script bundled with this skill):
-
-```
-ENV_FILE=.env \
-PROJECT="MyApp.xcodeproj" \
-SCHEME="MyApp" \
-DESTINATION="platform=macOS" \
-TEST_NAME="MyAppUITests/MyAppUITests/testHappyPath" \
-./scripts/run_ui_test.sh
+```bash
+RESULT_DIR="$(mktemp -d)"
+xcodebuild test -project "MyApp.xcodeproj" -scheme "MyApp" \
+  -destination "platform=macOS" \
+  -only-testing:"MyAppUITests/MyAppUITests/testHappyPath" \
+  -resultBundlePath "$RESULT_DIR/Test.xcresult"
 ```
 
-Or run directly:
-
-```
-xcodebuild test -project "MyApp.xcodeproj" -scheme "MyApp" -destination "platform=macOS" -only-testing:"MyAppUITests/MyAppUITests/testHappyPath"
-```
-
-## Environment-driven stability (project-defined)
-
-These are patterns, not fixed names. Add flags that your app understands:
-
-- `UI_TEST=1` to enable test-only behavior.
-- `UI_TEST_PROMPT=<text>` to prefill a TextEditor and avoid typing flakiness.
-- `UI_TEST_AUTO_APPROVE=1` to bypass blocking approvals.
-- `UI_TEST_WINDOW_TWEAKS=1` to force focus and prevent miniaturization.
-- `TEST_LOG_PATH`, `BUILD_LOG_PATH` to capture app/build logs.
+Use `-workspace` for a workspace. For iOS tests, choose the Simulator
+destination by UDID. Use `XCUIApplication.launchEnvironment` for any test
+fixtures already supported by the project.
 
 ## Focus and window activation
 
@@ -36,9 +21,9 @@ Symptoms:
 - Window exists but is not focused, causing keystrokes to misroute.
 
 Mitigations:
-- App-level: on UI-test flag, call `NSApp.activate(ignoringOtherApps: true)` and `makeKeyAndOrderFront`.
-- View-level: use a window accessor to deminiaturize and bring to front.
-- Test-level: call `app.activate()` and wait for `.runningForeground` before interactions.
+- Wait for `app.wait(for: .runningForeground, timeout: ...)` and the intended
+  window or control before sending input. Use `app.activate()` when the test
+  needs to bring the app back to the foreground.
 
 ## Input stability (TextEditor/custom inputs)
 
@@ -46,8 +31,8 @@ Symptoms:
 - Typing causes focus loss, weird sounds, or missing characters.
 
 Fixes:
-- Prefer env-injected defaults over `typeText`.
-- If typing is unavoidable: click field, wait briefly, type in small chunks, assert field value.
+- Seed long text as a fixture when typing is outside the test scope.
+- For input tests, focus the specific field, type the text, and assert its value.
 
 ## Deterministic wait conditions
 
@@ -59,17 +44,6 @@ Fallbacks:
 - parse app logs for state transitions (e.g. `ready`, `error`)
 - enforce timeouts on every wait
 
-## Attachments on failure
-
-Always attach:
-- UI test log
-- app log
-- build log
-- screenshot
-
-## Common failure modes (generic)
-
-- Backgrounded app or missing window: fix activation logic and add retries.
-- Persistent store mismatch: use in-memory store for UI tests.
-- Long-running operations: add a polling loop with a deadline.
-- CI-only failures: increase timeouts and reduce animation or background work under UI-test flags.
+On failure, retain the `.xcresult` and relevant application logs. Add an
+`XCTAttachment` for a screenshot when the result bundle lacks the state needed
+to diagnose the interaction.

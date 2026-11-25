@@ -27,9 +27,8 @@ Use when compile time, type checking, or mixed-language compilation is the bottl
 - diagnostics:
   - `-Xfrontend -warn-long-expression-type-checking=<ms>`
   - `-Xfrontend -warn-long-function-bodies=<ms>`
-  - `-Xfrontend -debug-time-compilation`
   - `-Xfrontend -debug-time-function-bodies`
-  - `-Xswiftc -driver-time-compilation`
+  - `-driver-time-compilation` for Swift driver job timing
   - `-Xfrontend -stats-output-dir <path>`
 
 Preferred script:
@@ -46,7 +45,7 @@ python3 "$PLUGIN_ROOT/shared/build-optimization/scripts/diagnose_compilation.py"
 
 ## Checks
 
-Look first for missing explicit types in expensive expressions, deeply chained expressions, delegates typed as `AnyObject`, oversized bridging surfaces, unqualified header imports, non-`final` classes, broad `public/open` symbols, monolithic SwiftUI `body`, and closures without helpful type annotations.
+Investigate the code and modules the diagnostics identify. Try explicit types or simpler expressions for measured type-check hot spots. Check imports, bridging headers, and module options when the timing points to dependency or module work.
 
 ## Output
 

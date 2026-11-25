@@ -24,23 +24,9 @@ assets.
 5. Refine one square `1024x1024` PNG master. Prefer no alpha for shared
    iOS/macOS assets and App Store readiness. Avoid text, screenshots, tiny
    details, and baked iOS rounded corners.
-6. Locate existing assets and preserve configured names:
-   ```bash
-   rg --files | rg 'Assets\.xcassets|AppIcon\.appiconset|\.icns$|Info\.plist|Contents\.json'
-   rg 'ASSETCATALOG_COMPILER_APPICON_NAME|CFBundleIconFile|CFBundleIconName|AppIcon'
-   ```
-7. Generate or replace the platform asset:
-   ```bash
-   # iOS asset catalog
-   python3 <skill-dir>/scripts/generate_appiconset.py master-icon.png path/to/AppIcon.appiconset --platform ios --replace
-
-   # macOS asset catalog
-   python3 <skill-dir>/scripts/generate_appiconset.py master-icon.png path/to/AppIcon.appiconset --platform macos --replace
-
-   # macOS bundle icon
-   python3 <skill-dir>/scripts/generate_appiconset.py master-icon.png path/to/AppIcon.icns --platform macos --format icns --replace
-   ```
-8. Build/run and inspect the installed icon: simulator/home screen for iOS, or
+6. Locate the existing asset and generate the platform output using the
+   [project replacement procedure](references/app-icon-checklist.md#project-replacement-procedure).
+7. Build/run and inspect the installed icon: simulator/home screen for iOS, or
    the built `.app` bundle, Dock, Finder, and `Info.plist` for macOS. Clear icon
    caches or reinstall when the old icon is cached.
 

@@ -1,6 +1,6 @@
 ---
 name: xcode-build-tuner
-description: Implement approved Xcode build-speed fixes after strategist approval or explicit requests covering build settings, script phases, Swift compilation, or SwiftPM graphs; re-benchmark results.
+description: Apply and re-benchmark approved Xcode build-speed fixes in build settings, script phases, Swift code, or SwiftPM graphs.
 ---
 
 # Xcode Build Tuner
@@ -13,11 +13,10 @@ Implement only approved build optimization changes, verify compilation, and prov
 
 ## Rules
 
-- Require either checked items in `.build-benchmark/optimization-plan.md` or an explicit user instruction.
+- Apply changes covered by the user's request or approval.
 - Apply one logical fix at a time; keep edits reviewable and reversible.
 - Re-benchmark after changes and report wall-clock deltas.
 - If a speculative change regresses or shows no useful benefit, flag it and recommend revert when appropriate.
-- Do not revert recommended build settings only because one noisy benchmark failed to improve.
 
 ## Fix Types
 
@@ -45,8 +44,7 @@ Implement only approved build optimization changes, verify compilation, and prov
 
 - Evaluate wall-clock time first; cumulative task time is supporting evidence.
 - A slower standard clean build can still be acceptable when cached clean or incremental builds improve.
-- Keep best-practice settings even without immediate measurable improvement; they align with current Xcode direction and may compound later.
-- For speculative source/script/graph changes, recommend revert if all measured build types regress or if there is no median/cached/incremental benefit.
+- Repeat inconclusive measurements when practical. If a change shows no measurable benefit, keep it only when it has a separate, documented benefit within the user's request.
 - Distinguish "outlier reduction only" from true median improvement.
 
 ## Report
@@ -58,7 +56,7 @@ Clean build: X.Xs (was Y.Ys) - Z.Zs faster/slower.
 Incremental build: X.Xs (was Y.Ys) - Z.Zs faster/slower.
 ```
 
-Then include files changed, status per fix (`Kept`, `Kept (best practice)`, `Reverted`, `Blocked`, `No improvement`), confidence/noise notes, and any deviation from the approved plan. If task work decreased but wall-clock did not, say that parallel Xcode work hid the improvement.
+Include changed files, any reverted changes, and uncertainty that affects the comparison. If cumulative task time fell while elapsed time stayed the same, report both observations.
 
 ## References
 

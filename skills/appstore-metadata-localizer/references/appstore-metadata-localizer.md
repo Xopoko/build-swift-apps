@@ -1,9 +1,5 @@
 # App Store Metadata Localizer Reference
 
-Use this reference only after `appstore-metadata-localizer` is selected and the
-agent needs concrete ASC localization commands, supported locale lists, or
-translation rules.
-
 ## ASC Rules
 
 - Confirm flags first: `asc localizations --help`, `download --help`, `upload --help`, `asc apps info edit --help`.
@@ -18,11 +14,6 @@ translation rules.
 - Before planning coverage, query the current version-specific set with
   `asc localizations supported-locales --version "VERSION_ID" --output table`.
   Treat that live response as authoritative.
-- App Store locales (2026-08-11 reference snapshot): `ar-SA, bn-BD, ca, cs,
-  da, de-DE, el, en-AU, en-CA, en-GB, en-US, es-ES, es-MX, fi, fr-CA, fr-FR,
-  gu-IN, he, hi, hr, hu, id, it, ja, kn-IN, ko, ml-IN, mr-IN, ms, nl-NL, no,
-  or-IN, pa-IN, pl, pt-BR, pt-PT, ro, ru, sk, sl-SI, sv, ta-IN, te-IN, th, tr,
-  uk, ur-PK, vi, zh-Hans, zh-Hant`.
 
 ## Resolve IDs
 
@@ -57,7 +48,14 @@ Write `.strings` files:
 
 ## Upload And Verify
 
-Upload only after approval:
+Validate the `.strings` files before uploading:
+
+```bash
+asc localizations upload --version "VERSION_ID" --path "./localizations" --dry-run
+asc localizations upload --app "APP_ID" --type app-info --app-info "APP_INFO_ID" --path "./app-info-localizations" --dry-run
+```
+
+Upload only when validation passes and the changes are approved:
 
 ```bash
 asc localizations upload --version "VERSION_ID" --path "./localizations"
@@ -80,4 +78,3 @@ asc localizations list --app "APP_ID" --type app-info --app-info "APP_INFO_ID" -
 - `promotionalText`: localized hook, <= 170 chars.
 - `subtitle`: creative adaptation, <= 30 chars.
 - `name`: keep original unless the user explicitly asks to translate.
-- For updates, download current localization, show a diff, get approval, then upload.

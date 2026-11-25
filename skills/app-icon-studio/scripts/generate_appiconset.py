@@ -136,38 +136,14 @@ def build_contents(images):
     }
 
 
-def remove_existing(path: Path):
-    if path.is_dir():
-        shutil.rmtree(path)
-    else:
-        path.unlink()
-
-
-def prepare_output(path: Path, replace: bool, make_dir: bool):
-    if path.exists():
-        if not replace:
-            print(f"error: output exists; pass --replace to overwrite: {path}", file=sys.stderr)
-            return False
-        remove_existing(path)
-    if make_dir:
-        path.mkdir(parents=True, exist_ok=True)
-    else:
-        path.parent.mkdir(parents=True, exist_ok=True)
-    return True
-
-
-def generate_appiconset(source: Path, output: Path, platform: str, replace: bool):
-    if not prepare_output(output, replace, make_dir=True):
-        return 2
-
+def generate_appiconset(source: Path, output: Path, platform: str):
+    output.mkdir()
     images = []
-    generated = {}
     for idiom, size, scale in appiconset_specs(platform):
         pixels = pixel_size(size, scale)
         filename = filename_for(idiom, size, scale)
         destination = output / filename
         run_sips(source, destination, pixels)
-        generated[filename] = pixels
         images.append(
             {
                 "filename": filename,
@@ -178,14 +154,10 @@ def generate_appiconset(source: Path, output: Path, platform: str, replace: bool
         )
 
     (output / "Contents.json").write_text(json.dumps(build_contents(images), indent=2) + "\n")
-    print(f"Generated {len(generated)} app icon images in {output}")
-    return 0
+    return len(images)
 
 
-def generate_icns(source: Path, output: Path, replace: bool):
-    if not prepare_output(output, replace, make_dir=False):
-        return 2
-
+def generate_icns(source: Path, output: Path):
     with tempfile.TemporaryDirectory(suffix=".iconset") as temporary:
         iconset = Path(temporary)
         for _idiom, size, scale in MACOS_ICON_SPECS:
@@ -193,9 +165,6 @@ def generate_icns(source: Path, output: Path, replace: bool):
             destination = iconset / iconset_filename(size, scale)
             run_sips(source, destination, pixels)
         run_iconutil(iconset, output)
-
-    print(f"Generated macOS .icns in {output}")
-    return 0
 
 
 def parse_args():
@@ -215,7 +184,7 @@ def parse_args():
         choices=("appiconset", "icns"),
         help="Output format. Defaults to icns for .icns outputs, otherwise appiconset.",
     )
-    parser.add_argument("--replace", action="store_true", help="Delete an existing output first.")
+    parser.add_argument("--replace", action="store_true", help="Replace an existing icon asset after generation.")
     parser.add_argument("--strict", action="store_true", help="Fail on undersized sources or iOS alpha issues.")
     return parser.parse_args()
 
@@ -223,7 +192,8 @@ def parse_args():
 def main() -> int:
     args = parse_args()
     source = args.source_png.expanduser().resolve()
-    output = args.output.expanduser().resolve()
+    target = args.output.expanduser()
+    output = target.parent.resolve() / target.name
     output_format = args.format or ("icns" if output.suffix == ".icns" else "appiconset")
 
     if shutil.which("sips") is None:
@@ -238,13 +208,13 @@ def main() -> int:
         print("error: .icns output is only valid for --platform macos or universal", file=sys.stderr)
         return 2
 
-    if not source.exists():
+    if not source.is_file():
         print(f"error: source file does not exist: {source}", file=sys.stderr)
         return 2
 
     try:
         width, height, has_alpha = read_png_info(source)
-    except ValueError as exc:
+    except (OSError, ValueError, struct.error) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
 
@@ -270,18 +240,46 @@ def main() -> int:
             print(f"error: {error}", file=sys.stderr)
         return 2
 
+    if output.is_symlink() or source == output or output in source.parents:
+        print(f"error: output must be separate from the source and cannot be a symlink: {output}", file=sys.stderr)
+        return 2
+    if output.exists():
+        if not args.replace:
+            print(f"error: output exists; pass --replace to overwrite: {output}", file=sys.stderr)
+            return 2
+        expected_type = output.is_dir() if output_format == "appiconset" else output.is_file()
+        if output.suffix != f".{output_format}" or not expected_type:
+            print(f"error: existing output is not a .{output_format} asset: {output}", file=sys.stderr)
+            return 2
+
     try:
-        if output_format == "icns":
-            status = generate_icns(source, output, args.replace)
-        else:
-            status = generate_appiconset(source, output, args.platform, args.replace)
-    except RuntimeError as exc:
+        output.parent.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=output.parent) as temporary:
+            staged = Path(temporary) / ("new." + output_format)
+            if output_format == "icns":
+                generate_icns(source, staged)
+                message = f"Generated macOS .icns in {output}"
+            else:
+                count = generate_appiconset(source, staged, args.platform)
+                message = f"Generated {count} app icon images in {output}"
+
+            if not args.replace and (output.exists() or output.is_symlink()):
+                raise RuntimeError(f"output was created during generation: {output}")
+            if output_format == "appiconset" and output.is_dir() and not output.is_symlink():
+                previous = Path(temporary) / "previous.appiconset"
+                output.rename(previous)
+                try:
+                    staged.rename(output)
+                except OSError:
+                    previous.rename(output)
+                    raise
+            else:
+                staged.replace(output)
+    except (OSError, RuntimeError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
 
-    if status != 0:
-        return status
-
+    print(message)
     for warning in warnings:
         print(f"warning: {warning}")
     return 0

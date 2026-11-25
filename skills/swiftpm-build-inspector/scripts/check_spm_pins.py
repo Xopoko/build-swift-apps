@@ -8,18 +8,18 @@ import re
 import subprocess
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 
 _PKG_REF_RE = re.compile(
     r"(/\*\s*XCRemoteSwiftPackageReference\s+\"(?P<name>[^\"]+)\"\s*\*/\s*=\s*\{[^}]*?"
-    r"repositoryURL\s*=\s*\"(?P<url>[^\"]+)\"[^}]*?"
+    r"repositoryURL\s*=\s*(?:\"(?P<quoted_url>[^\"]+)\"|(?P<url>[^\s;]+))[^}]*?"
     r"requirement\s*=\s*\{(?P<req>[^}]*)\})",
     re.DOTALL,
 )
 
 _KIND_RE = re.compile(r"kind\s*=\s*(\w+)\s*;")
-_BRANCH_RE = re.compile(r"branch\s*=\s*(\w+)\s*;")
+_BRANCH_RE = re.compile(r'branch\s*=\s*(?:"([^"]+)"|([^\s;]+))\s*;')
 
 
 def parse_args() -> argparse.Namespace:
@@ -43,7 +43,7 @@ def find_branch_pins(pbxproj: str) -> List[Dict[str, str]]:
     results: List[Dict[str, str]] = []
     for match in _PKG_REF_RE.finditer(pbxproj):
         name = match.group("name")
-        url = match.group("url")
+        url = match.group("quoted_url") or match.group("url")
         req = match.group("req")
         kind_match = _KIND_RE.search(req)
         if not kind_match:
@@ -52,7 +52,7 @@ def find_branch_pins(pbxproj: str) -> List[Dict[str, str]]:
         if kind != "branch":
             continue
         branch_match = _BRANCH_RE.search(req)
-        branch = branch_match.group(1) if branch_match else "unknown"
+        branch = (branch_match.group(1) or branch_match.group(2)) if branch_match else "unknown"
         results.append({"name": name, "url": url, "branch": branch})
     return results
 
@@ -60,21 +60,24 @@ def find_branch_pins(pbxproj: str) -> List[Dict[str, str]]:
 def check_tags(url: str) -> List[str]:
     try:
         result = subprocess.run(
-            ["git", "ls-remote", "--tags", url],
+            ["git", "ls-remote", "--tags", "--refs", "--", url],
             capture_output=True,
             text=True,
             timeout=15,
         )
-        if result.returncode != 0:
-            return []
-        tags: List[str] = []
-        for line in result.stdout.strip().splitlines():
-            ref = line.split("\t")[-1] if "\t" in line else ""
-            if ref.startswith("refs/tags/") and not ref.endswith("^{}"):
-                tags.append(ref.replace("refs/tags/", ""))
-        return tags
-    except (subprocess.TimeoutExpired, FileNotFoundError):
-        return []
+    except subprocess.TimeoutExpired as error:
+        raise RuntimeError("git ls-remote timed out") from error
+    except OSError as error:
+        raise RuntimeError(f"Could not run git ls-remote: {error.strerror}") from error
+    if result.returncode != 0:
+        raise RuntimeError(f"git ls-remote failed (exit {result.returncode})")
+
+    prefix = "refs/tags/"
+    return [
+        ref[len(prefix):]
+        for line in result.stdout.splitlines()
+        if (ref := line.partition("\t")[2]).startswith(prefix)
+    ]
 
 
 def main() -> int:
@@ -87,31 +90,32 @@ def main() -> int:
     pbxproj = pbxproj_path.read_text()
     pins = find_branch_pins(pbxproj)
 
-    if not pins:
+    if not pins and not args.json:
         print("No branch-pinned SPM dependencies found.")
         return 0
 
     results: List[Dict] = []
     for pin in pins:
-        tags = check_tags(pin["url"])
-        entry = {
-            "name": pin["name"],
-            "url": pin["url"],
-            "branch": pin["branch"],
-            "tags_available": len(tags) > 0,
-            "latest_tags": tags[-5:] if tags else [],
-        }
-        results.append(entry)
+        try:
+            tags = check_tags(pin["url"])
+        except RuntimeError as error:
+            results.append({**pin, "tags_available": None, "tags": None, "error": str(error)})
+        else:
+            results.append({**pin, "tags_available": bool(tags), "tags": tags})
 
     if args.json:
         print(json.dumps(results, indent=2))
     else:
         for r in results:
-            status = "tags available" if r["tags_available"] else "no tags (pin to revision)"
-            latest = f" (latest: {', '.join(r['latest_tags'])})" if r["latest_tags"] else ""
-            print(f"  {r['name']}: branch={r['branch']} -> {status}{latest}")
+            label = f"{r['name']}: branch={r['branch']}"
+            if "error" in r:
+                print(f"{label}: {r['error']}", file=sys.stderr)
+            elif r["tags"]:
+                print(f"{label}: {len(r['tags'])} tags (e.g. {', '.join(r['tags'][:5])})")
+            else:
+                print(f"{label}: no tags")
 
-    return 0
+    return 1 if any("error" in r for r in results) else 0
 
 
 if __name__ == "__main__":

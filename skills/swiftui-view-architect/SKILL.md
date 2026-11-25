@@ -1,52 +1,14 @@
 ---
 name: swiftui-view-architect
-description: Refactor oversized SwiftUI view files into stable, dedicated subviews with MV-first data flow, explicit dependencies, extracted actions, and correct Observation usage.
+description: Refactor SwiftUI views by splitting independent sections, clarifying state ownership, and moving domain logic out of view bodies while preserving behavior.
 ---
 
 # SwiftUI View Architect
 
-Default to vanilla SwiftUI: local state in views, shared dependencies in environment/services, business logic outside view bodies, and view models only when requested or already present.
+1. Identify sections with separate responsibilities and record the current layout, navigation, and state behavior.
+2. Extract those sections into views with explicit values, bindings, or actions. Follow local file organization.
+3. Keep state with the nearest owner that needs its lifetime. Use `@State` for local values and owned `@Observable` references on supported platforms. For `ObservableObject`, use `@StateObject` for ownership and `@ObservedObject` for injection.
+4. Keep domain logic in the project's models or services. Use a presentation model when the feature needs shared presentation state or an adapter with a separate lifetime. Keep one source of truth when refactoring existing state.
+5. Build and check that the extracted views preserve parent state, navigation, and selection. Keep local conditions inside the subtree they affect when replacing a whole branch would reset unrelated state.
 
-## Ordering
-
-Preserve stronger local conventions; otherwise order stored members top-to-bottom:
-
-1. environment
-2. `let` inputs
-3. `@State`/other stored properties
-4. non-view computed vars
-5. `init`
-6. `body`
-7. view builders/helpers
-8. actions/async helpers
-
-## Rules
-
-- Prefer MV over MVVM. Do not introduce a view model just to mirror local state or wrap environment dependencies.
-- Split long bodies into dedicated `View` types with explicit inputs/bindings/callbacks. Keep computed `some View` helpers small and rare.
-- Extract non-trivial button actions and side effects from `body`; call private methods, and move real domain logic into services/models.
-- Keep a stable root view tree. Avoid top-level `if/else` swapping entire root branches; localize conditions in sections/modifiers/overlays/toolbars.
-- If a view model exists, prefer non-optional state initialized in `init`:
-  ```swift
-  @State private var viewModel: SomeViewModel
-  init(dependency: Dependency) {
-    _viewModel = State(initialValue: SomeViewModel(dependency: dependency))
-  }
-  ```
-- For `@Observable` owners on iOS 17+, store as `@State` and pass explicitly. For iOS 16 or earlier, use `@StateObject` owner and `@ObservedObject` injection.
-- Keep behavior/layout intact unless the user asked for a product change.
-
-## Workflow
-
-1. Reorder the view.
-2. Move inline actions/effects out of `body`.
-3. Extract meaningful sections into dedicated subviews; move reusable/independent subviews to files.
-4. Stabilize root structure.
-5. Normalize view model and Observation usage.
-6. Build/test the touched surface.
-
-## Large Views
-
-For ~300+ line files, split aggressively into section views and small private helpers. `// MARK:` extensions can organize actions/helpers but are not a substitute for extracting real subviews.
-
-Reference: `references/mv-patterns.md`. Use current Apple docs when SwiftUI/Observation behavior may have changed.
+See [async state and task lifecycle](../../shared/swiftui/async-state.md) for view-owned loads and searches.

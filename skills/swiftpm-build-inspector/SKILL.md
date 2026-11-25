@@ -26,7 +26,7 @@ For branch-pinned dependencies:
 python3 "$PLUGIN_ROOT/skills/swiftpm-build-inspector/scripts/check_spm_pins.py" --project App.xcodeproj
 ```
 
-If tags exist, recommend tag pins when appropriate; otherwise recommend a revision hash for determinism. Distinguish intentional branch tracking from missing-tag upstreams.
+Check whether a listed tag is a compatible SwiftPM version before recommending it. A commit revision is an option when determinism is needed and no suitable version exists. A failed tag lookup leaves availability unknown. Preserve intentional branch tracking.
 
 ## Focus Areas
 
@@ -49,4 +49,8 @@ If the same module appears multiple times in timing output, investigate option/v
 
 For each finding include evidence, affected package/plugin, clean vs incremental impact, CI impact, estimated wait-time impact, and approval requirement. If the bottleneck is not package-related, hand off to `xcode-project-auditor` or `xcode-compile-profiler`.
 
-References: `references/spm-analysis-checks.md`, `../../shared/build-optimization/references/recommendation-format.md`, `build-optimization-sources.md`.
+References:
+
+- [SwiftPM checks](references/spm-analysis-checks.md)
+- [Recommendations](../../shared/build-optimization/references/recommendation-format.md)
+- [Build optimization sources](../../shared/build-optimization/references/build-optimization-sources.md)

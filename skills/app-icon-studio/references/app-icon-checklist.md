@@ -84,13 +84,17 @@ For manually packaged apps:
    rg 'ASSETCATALOG_COMPILER_APPICON_NAME|CFBundleIconFile|CFBundleIconName|AppIcon'
    ```
 
-3. Generate the replacement set:
+3. Generate the needed format in a temporary directory on macOS:
 
    ```bash
-   python3 <skill-dir>/scripts/generate_appiconset.py master-icon.png path/to/AppIcon.appiconset --platform ios --replace
-   python3 <skill-dir>/scripts/generate_appiconset.py master-icon.png path/to/AppIcon.appiconset --platform macos --replace
-   python3 <skill-dir>/scripts/generate_appiconset.py master-icon.png path/to/AppIcon.icns --platform macos --format icns --replace
+   SKILL_DIR="<absolute path to the loaded skill>"
+   OUT="$(mktemp -d)"
+   python3 "$SKILL_DIR/scripts/generate_appiconset.py" master-icon.png "$OUT/AppIcon.appiconset" --platform ios --strict
    ```
+
+   Use `--platform macos` for a macOS catalog, or `--platform macos` with an
+   `AppIcon.icns` output for a bundle icon. Inspect the existing catalog before
+   installing the result and retain any platform or appearance variants still in use.
 
 4. Build the app. If the old icon remains visible, reinstall the iOS app or
    restart Finder/Dock only after confirming the built bundle contains the new
