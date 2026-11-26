@@ -1,3 +1,7 @@
+---
+description: Inspect a macOS app's signing identity and entitlements.
+---
+
 # /macos-signing-inspect
 
 Use [macos-signing-inspector](../skills/macos-signing-inspector/SKILL.md).

@@ -1,32 +1,50 @@
 <p align="center">
-  <img src="assets/icon.png" width="128" alt="Build Swift Apps logo">
+  <img src="assets/build-swift-apps-small.png" width="104" alt="Build Swift Apps icon">
 </p>
 
 <h1 align="center">Build Swift Apps</h1>
 
 <p align="center">
-  Build, debug, profile, test, refactor, and release Swift apps across iOS and macOS.
+  <strong>Build, debug, and ship Swift apps with your coding agent.</strong>
 </p>
 
 <p align="center">
-  <b>Codex</b> · <b>Claude Code</b> · <b>Cursor</b> · <b>pi</b> · <b>Manual skill installs</b>
+  <a href="https://github.com/Xopoko/build-swift-apps/actions/workflows/ci.yml"><img src="https://github.com/Xopoko/build-swift-apps/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
 </p>
 
-The pack covers iOS Simulator, SwiftUI and AppKit, Xcode and SwiftPM builds,
-Tuist projects, and release workflows for iOS and macOS.
+Build Swift Apps is a pack of agent skills for iOS and macOS. It gives Codex,
+Claude Code, Cursor, and pi workflows for projects that use SwiftUI, AppKit,
+Xcode, Swift Package Manager, or Tuist.
 
-## Quick Start
+## What it does
 
-### Easiest: Ask Your Agent
+- Build and run on Simulator, inspect the UI and logs, or run SwiftUI package
+  previews with hot reload.
+- Refactor SwiftUI and AppKit code, stabilize UI tests, and investigate CPU,
+  memory, or rendering problems.
+- Measure clean and incremental builds before changing Xcode settings or the
+  SwiftPM dependency graph.
+- Check signing and notarization, validate App Store exports, and work with
+  TestFlight and App Store Connect.
 
-For most users, the simplest install path is to paste this prompt into the
-coding agent they already use:
+## Install
+
+Apple toolchain workflows need a Mac with Xcode. From Windows or Linux, run
+those steps on a Mac over SSH or through a configured remote XcodeBuildMCP
+connection. Source review and portable helpers can run wherever their own
+dependencies are available. [Host setup](docs/INSTALL.md#execution-host)
+
+Paste this into your coding agent for guided setup.
 
 ```text
-Install the Build Swift Apps plugin from https://github.com/Xopoko/build-swift-apps on this computer. Follow the repository installation instructions for the agent you are running in, install required dependencies, ask before installing optional tools, run the doctor checks, and report what was installed.
+Install Build Swift Apps from https://github.com/Xopoko/build-swift-apps.
+Follow the installation guide for this agent, run the doctor checks, and
+report the installed plugin and any missing dependencies.
 ```
 
 ### Codex
+
+On a Mac with `git` and `python3`, run these commands from a terminal.
 
 ```bash
 mkdir -p "$HOME/.agents/plugins/plugins"
@@ -38,9 +56,7 @@ cd "$HOME/.agents/plugins/plugins/build-swift-apps"
 ./scripts/doctor.sh --profile core --profile mcp
 ```
 
-Then start a new Codex thread and ask for a focused workflow:
-
-> Use the iOS debugger skill to build and run this app on a simulator, inspect the first screen, and summarize any runtime failures.
+Start a new Codex chat after installation.
 
 ### Claude Code
 
@@ -50,23 +66,31 @@ Then start a new Codex thread and ask for a focused workflow:
 /reload-plugins
 ```
 
-If you use the `appstore-screenshot-studio` skill in Claude Code, install its local Node helper
-dependency after the plugin is installed:
+For Cursor, pi, manual installs, and optional tools, see the
+[installation guide](docs/INSTALL.md).
 
-```bash
-cd "$HOME/.claude/plugins/marketplaces/build-swift-apps"
-./scripts/install-deps.sh --profile screenshots --yes
-```
+## Use it
 
-Claude Code namespaces plugin skills, so invoke them as
-`/build-swift-apps:<skill-name>` when calling skills explicitly.
+Open your Swift project in the agent and ask for an outcome. The
+`build-swift-apps` router points the agent to the relevant skill. You can also
+name the skill in your prompt. In Claude Code, call a skill with
+`/build-swift-apps:<skill-name>`.
 
-See the [installation guide](docs/INSTALL.md) for Cursor, pi, manual installs,
-and optional dependencies.
+> Use `ios-simulator-debugger` to build and run this app. Show the first
+> screen with `ios-simulator-browser` and summarize any launch errors.
 
-## Included Skills
+> Use `xcode-build-strategist` to measure clean and incremental builds.
+> Recommend changes based on the timing data.
 
-### Build, Run, Debug, And Test
+The [preview launcher](skills/ios-simulator-browser/SKILL.md#swiftui-preview-workflow)
+runs previews from SwiftUI packages in iOS Simulator.
+
+## Included skills
+
+<details>
+<summary>Browse every skill</summary>
+
+### Build, run, debug, and test
 
 | Skill | Purpose |
 | --- | --- |
@@ -77,7 +101,7 @@ and optional dependencies.
 | `xcode-ui-test-stabilizer` | Create, stabilize, and run Xcode UI tests with focused failure evidence. |
 | `macos-telemetry-probe` | Add lightweight `Logger` instrumentation and verify events through runtime logs. |
 
-### iOS Simulator, Profiling, And Runtime Evidence
+### iOS Simulator, profiling, and runtime evidence
 
 | Skill | Purpose |
 | --- | --- |
@@ -88,7 +112,7 @@ and optional dependencies.
 | `ios-memgraph-inspector` | Capture, inspect, and compare simulator memory graphs with `leaks` evidence. |
 | `swiftui-performance-inspector` | Audit SwiftUI performance from code structure before asking for profiling evidence. |
 
-### SwiftUI, AppKit, And Product UI
+### SwiftUI, AppKit, and product UI
 
 | Skill | Purpose |
 | --- | --- |
@@ -102,7 +126,7 @@ and optional dependencies.
 | `macos-liquid-glass-designer` | Adopt modern macOS SwiftUI design and Liquid Glass conventions. |
 | `ios-liquid-glass-designer` | Implement and review iOS 26+ Liquid Glass SwiftUI features. |
 
-### Xcode Build Performance
+### Xcode build performance
 
 | Skill | Purpose |
 | --- | --- |
@@ -113,7 +137,7 @@ and optional dependencies.
 | `swiftpm-build-inspector` | Analyze Swift Package Manager graph shape, plugins, pins, and module variants. |
 | `xcode-build-tuner` | Apply approved build optimizations and re-benchmark to prove impact. |
 
-### Release, Signing, And Distribution
+### Release, signing, and distribution
 
 | Skill | Purpose |
 | --- | --- |
@@ -141,7 +165,7 @@ Skills: `appstore-connect-cli`, `appstore-id-resolver`, `appstore-archive-upload
 `appstore-subscription-localizer`, `appstore-revenuecat-sync`,
 `appstore-crash-insights`, `appstore-workflow-runner`, `appstore-wall-publisher`.
 
-### Tuist And Generated Projects
+### Tuist and generated projects
 
 | Skill | Purpose |
 | --- | --- |
@@ -150,58 +174,58 @@ Skills: `appstore-connect-cli`, `appstore-id-resolver`, `appstore-archive-upload
 | `tuist-generation-doctor` | Reproduce and triage generation or post-generation build failures. |
 | `tuist-flaky-test-stabilizer` | Use Tuist test insights to investigate and fix flaky test cases. |
 
-### Research And Low-Level Apple Work
+### Research and low-level Apple work
 
 | Skill | Purpose |
 | --- | --- |
 | `apple-dev-research` | Search Apple Dev Search for Swift, SwiftUI, Xcode, iOS, and macOS community writing. |
 | `apple-firmware-inspector` | Use the `ipsw` CLI for Apple firmware, dyld shared cache, Mach-O, entitlements, and private API research. |
 
-## Multi-Agent Packaging
+</details>
 
-The same repository is packaged for several agent ecosystems:
+## Develop from source
 
-| Agent/tool | Files | Notes |
-| --- | --- | --- |
-| Codex | `.codex-plugin/plugin.json`, `.mcp.json`, `agents/openai.yaml`, `skills/*/agents/openai.yaml` | Native Codex plugin metadata, MCP server definitions, and OpenAI agent manifests. |
-| Claude Code | `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json` | Claude Code plugin and marketplace metadata. Skills live at the plugin root, not inside `.claude-plugin/`. |
-| Cursor | `.cursor-plugin/plugin.json` | Cursor plugin metadata with the same skill directory list. |
-| pi | `package.json` | `pi.skills` points at every packaged skill. |
-| Generic agents | `AGENTS.md` | Repository-level instructions for agents that support the open `AGENTS.md` convention. |
-
-## Host Dependencies
-
-Run the doctor profile for the tools you plan to use. The [installation guide](docs/INSTALL.md#dependency-profiles)
-lists what each profile checks and installs.
-
-## Repository Layout
-
-```text
-.
-├── .codex-plugin/        # Codex plugin manifest
-├── .claude-plugin/       # Claude Code plugin and marketplace manifests
-├── .cursor-plugin/       # Cursor plugin manifest
-├── agents/               # OpenAI/Codex agent metadata
-├── assets/               # Plugin icon assets
-├── commands/             # Short command entrypoints
-├── docs/                 # Installation and operational documentation
-├── NOTICE                # Required copyright and permission notices
-├── scripts/              # Install, dependency, doctor, and validation helpers
-├── shared/               # Shared scripts, references, schemas, and support docs
-└── skills/               # Installable Agent Skills, one directory per workflow
-```
-
-## Validation
+The plugin runs directly from its source files. On macOS or Linux, clone the
+repository and run these checks in Bash with Python 3 installed.
 
 ```bash
+git clone https://github.com/Xopoko/build-swift-apps.git
+cd build-swift-apps
 ./scripts/validate-package.sh
+python3 -B -m unittest discover -s scripts/tests
+bash scripts/tests/test-doctor.sh
+bash scripts/tests/test-install-deps.sh
+bash scripts/tests/test-install-local-plugin.sh
+```
+
+On Windows, use WSL for the Bash checks. Run the portable tests from a native
+terminal with `python -B -m unittest discover -s scripts/tests`.
+
+On a Mac with Xcode and Node.js, check the development environment as well.
+
+```bash
 ./scripts/doctor.sh --profile core --profile mcp --strict
 ```
 
-`validate-package.sh` checks JSON manifests, script syntax, skill frontmatter,
-multi-agent manifest coverage, and accidental private/work-specific terms.
+| Path | Contents |
+| --- | --- |
+| [`skills/`](skills/) | Each workflow's `SKILL.md`, with any scripts or references specific to it. |
+| [`shared/`](shared/) and [`commands/`](commands/) | Reusable helpers and short agent entry points. |
+| [`.codex-plugin/`](.codex-plugin/), [`.claude-plugin/`](.claude-plugin/), [`.cursor-plugin/`](.cursor-plugin/), and [`package.json`](package.json) | Agent packaging for Codex, Claude Code, Cursor, and pi. |
+| [`scripts/`](scripts/) and [`docs/`](docs/) | Installers, checks, tests, and setup guides. |
+
+[Contribution guide](CONTRIBUTING.md) and [changelog](CHANGELOG.md).
+
+## Privacy
+
+Build, test, and Simulator tools run on the configured host. Installing or
+updating tools may download dependencies. Apple documentation lookups through
+the bundled `apple-docs` MCP server send queries to its hosted endpoint. App
+Store workflows can send archives and metadata to Apple through the configured
+`asc` CLI. Your agent's settings govern how it handles project context.
+
+Report vulnerabilities through the [private reporting instructions](SECURITY.md).
 
 ## License
 
-MIT. See [LICENSE](LICENSE). Additional required notices are preserved in
-[NOTICE](NOTICE).
+[MIT license](LICENSE) and [third-party notices](NOTICE).

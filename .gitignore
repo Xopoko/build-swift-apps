@@ -1,10 +1,38 @@
 .DS_Store
 __pycache__/
 *.pyc
+.pytest_cache/
 node_modules/
+
+# Local credentials and signing assets
 .env
 .env.*
+!.env.example
+*.p8
+*.p12
+*.mobileprovision
+*.provisionprofile
+
+# Local work, reports, and build outputs
+/.local/
+/.private/
+/artifacts/
+/build/
+/dist/
+/drafts/
+/reports/
+/tmp/
+*.log
+*.memgraph
+*.trace
+
+# Xcode and SwiftPM
 DerivedData/
 .build/
 .swiftpm/
+xcuserdata/
+*.xcuserstate
+*.xcarchive/
 *.xcresult
+*.dSYM/
+*.ipa

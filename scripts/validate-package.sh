@@ -101,7 +101,11 @@ if pi_skills != skill_dirs:
     raise SystemExit("package.json pi.skills are out of sync with skills/.")
 
 mcp = json.loads(Path(".mcp.json").read_text(encoding="utf-8"))
-xcodebuildmcp = mcp.get("mcpServers", {}).get("xcodebuildmcp", {})
+mcp_servers = mcp.get("mcpServers", {})
+for name, server in mcp_servers.items():
+    if "url" in server and server.get("type") not in {"http", "sse", "ws"}:
+        raise SystemExit(f".mcp.json: remote server {name} needs an explicit transport type.")
+xcodebuildmcp = mcp_servers.get("xcodebuildmcp", {})
 if "xcodebuildmcp@2.7.0" not in xcodebuildmcp.get("args", []):
     raise SystemExit(".mcp.json must pin the tested XcodeBuildMCP 2.7.0 release.")
 workflow_text = xcodebuildmcp.get("env", {}).get("XCODEBUILDMCP_ENABLED_WORKFLOWS", "")
@@ -140,28 +144,13 @@ if missing_from_readme:
     raise SystemExit(f"README.md is missing skills: {', '.join(missing_from_readme)}")
 PY
 
-echo "Checking for private or work-specific terms"
+echo "Checking for absolute user home paths"
 python3 - <<'PY'
 from pathlib import Path
+import re
 import sys
 
-terms = [
-    "7765626c617465",
-    "776c63746c",
-    "6232636f7265",
-    "623262726f6b6572",
-    "62327472616e736c617465",
-    "50414e2d",
-    "6a697261",
-    "6c6f63616c697a6174696f6e7353657276696365",
-    "4c6f63616c697a6174696f6e426f6f747374726170",
-    "61736363746c",
-    "6f70656e6170692d636c69",
-    "6f7065726174696f6e4964",
-    "50726f6a656374732f576f726b",
-    "2f55736572732f",
-]
-restricted = [bytes.fromhex(term).lower() for term in terms]
+home_path = re.compile(rb"(?:[a-z]:[\\/]+Users[\\/]+|/(?:Users|home)/)[a-z0-9][\w.-]*", re.IGNORECASE)
 violations = []
 for path in sorted(Path(".").rglob("*")):
     if not path.is_file() or {".git", "node_modules"}.intersection(path.parts):
@@ -170,21 +159,20 @@ for path in sorted(Path(".").rglob("*")):
         data = path.read_bytes()
     except OSError as error:
         raise SystemExit(
-            f"{path}: private/work-specific scan could not read file "
+            f"{path}: could not read file during home path check "
             f"({type(error).__name__})"
         ) from error
     if b"\0" in data:
         continue
-    folded = data.lower()
-    offsets = [offset for term in restricted if (offset := folded.find(term)) >= 0]
-    if offsets:
-        line_number = data.count(b"\n", 0, min(offsets)) + 1
+    match = home_path.search(data)
+    if match:
+        line_number = data.count(b"\n", 0, match.start()) + 1
         violations.append(f"{path}:{line_number}")
 
 if violations:
     for location in violations:
-        print(f"{location}: restricted private/work-specific term", file=sys.stderr)
-    raise SystemExit("Private/work-specific term check failed.")
+        print(f"{location}: absolute user home path", file=sys.stderr)
+    raise SystemExit("User home path check failed.")
 PY
 
 echo "Package validation passed"

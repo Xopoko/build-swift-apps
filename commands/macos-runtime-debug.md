@@ -1,3 +1,7 @@
+---
+description: Build, run, debug, or inspect logs for a macOS app.
+---
+
 # /macos-runtime-debug
 
 Use [macos-runtime-debugger](../skills/macos-runtime-debugger/SKILL.md) and its

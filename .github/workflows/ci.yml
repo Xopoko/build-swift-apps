@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Checks (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-26, ubuntu-24.04, windows-2025]
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+
+      - name: Test Python helpers
+        run: python -B -m unittest discover -s scripts/tests -p "test_*.py" -v
+
+      - name: Check the simulator browser CLI entry point
+        run: node skills/ios-simulator-browser/scripts/swiftui-preview-browser.mjs --help
+
+      - name: Validate the package
+        if: runner.os != 'Windows'
+        shell: bash
+        run: bash scripts/validate-package.sh
+
+      - name: Test package scripts
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          bash scripts/tests/test-doctor.sh
+          bash scripts/tests/test-install-deps.sh
+          bash scripts/tests/test-install-local-plugin.sh
+
+      - name: Check Bash syntax with Git for Windows
+        if: runner.os == 'Windows'
+        shell: bash
+        run: git ls-files -z '*.sh' | xargs -0 -n 1 bash -n
+
+      - name: Check the Apple development environment
+        if: runner.os == 'macOS'
+        shell: bash
+        run: bash scripts/doctor.sh --profile core --profile mcp --strict

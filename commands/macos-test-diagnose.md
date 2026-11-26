@@ -1,3 +1,7 @@
+---
+description: Diagnose failing macOS tests.
+---
+
 # /macos-test-diagnose
 
 Use [macos-test-diagnoser](../skills/macos-test-diagnoser/SKILL.md).

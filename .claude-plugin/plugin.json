@@ -6,10 +6,10 @@
   "description": "Build, debug, profile, test, refactor, and release Swift apps across iOS, macOS, Xcode, SwiftUI, SwiftPM, Tuist, and App Store Connect.",
   "author": {
     "name": "Build Swift Apps Maintainers",
-    "email": "xopoko@users.noreply.github.com",
     "url": "https://github.com/Xopoko"
   },
   "homepage": "https://github.com/Xopoko/build-swift-apps",
+  "privacyPolicyUrl": "https://github.com/Xopoko/build-swift-apps#privacy",
   "repository": "https://github.com/Xopoko/build-swift-apps",
   "license": "MIT",
   "keywords": [

@@ -1,44 +1,43 @@
 # Contributing
 
-Contributions are welcome when they keep the plugin focused on reusable
-Swift and Apple-platform development workflows.
+Contributions are welcome for reusable Swift and Apple-platform development
+workflows.
 
-## Principles
+## Open an issue or pull request
 
-- Keep every skill narrow, actionable, and evidence-oriented.
-- Prefer references to `shared/` over duplicating long procedures.
-- Keep examples generic; do not include private names, project names,
-  credentials, or internal URLs.
-- Document every new required host tool in `docs/INSTALL.md`,
-  `scripts/doctor.sh`, and `scripts/install-deps.sh`.
-- Update all agent packaging surfaces when adding or removing skills.
+- Use the [issue templates](https://github.com/Xopoko/build-swift-apps/issues/new/choose)
+  for a reproducible bug or a proposed workflow. Report vulnerabilities
+  through the [private reporting process](SECURITY.md).
+- For a pull request, include the affected skill or script, the host and agent
+  you tested, and the results. Use a small, standalone sample project where
+  possible. Remove credentials, personal paths, and company details from
+  examples, logs, and screenshots before sharing them.
 
-## Before Opening A PR
+## Run the checks
+
+Run the package validator and tests from the repository root on macOS or Linux
+(including WSL).
 
 ```bash
 ./scripts/validate-package.sh
-./scripts/doctor.sh --profile core --profile mcp
+python3 -m unittest discover -s scripts/tests
+for test in scripts/tests/test-*.sh; do bash "$test" || exit 1; done
 ```
 
-If your change touches Codex plugin metadata and you have the Codex plugin
-validator available, also run it against the repository root:
+On a Mac with Xcode, check the required tools for Apple and MCP workflows.
 
 ```bash
-validate_plugin.py "$PWD"
+./scripts/doctor.sh --profile core --profile mcp --strict
 ```
 
-External contributors can still run `scripts/validate-package.sh` without a
-Codex-specific validator checkout.
+Windows can run the portable Python tests with
+`python -m unittest discover -s scripts/tests`.
 
-## Skill Changes
+## Change a skill
 
-When adding, removing, or renaming a skill, update:
+Keep each skill focused on one job. Link to shared material in
+[`shared/`](shared/) and keep examples reusable. When adding, renaming, or removing
+a skill, update the catalog and affected agent manifests together. For a new
+required tool, update the installation guide, doctor, and dependency installer.
 
-- `README.md`
-- `AGENTS.md`
-- `.cursor-plugin/plugin.json`
-- `package.json`
-- dependency documentation and scripts when new tools are required
-
-Keep `SKILL.md` frontmatter concise and trigger-friendly. The description should
-make it clear when an agent should load the skill.
+See [AGENTS.md](AGENTS.md) for the repository layout and packaging details.

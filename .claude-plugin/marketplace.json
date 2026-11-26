@@ -3,8 +3,7 @@
   "name": "build-swift-apps",
   "version": "0.3.15",
   "owner": {
-    "name": "Build Swift Apps Maintainers",
-    "email": "xopoko@users.noreply.github.com"
+    "name": "Build Swift Apps Maintainers"
   },
   "metadata": {
     "description": "Multi-skill Swift and Apple-platform development plugin for build, debug, simulator, SwiftUI, AppKit, performance, release, and Tuist workflows."
@@ -17,7 +16,6 @@
       "version": "0.3.15",
       "author": {
         "name": "Build Swift Apps Maintainers",
-        "email": "xopoko@users.noreply.github.com",
         "url": "https://github.com/Xopoko"
       },
       "license": "MIT",
